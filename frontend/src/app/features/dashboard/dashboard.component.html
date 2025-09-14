@@ -1,0 +1,17 @@
+<div class="dashboard">
+  <h1>Dashboard</h1>
+
+  <div *ngIf="loading" class="info">Cargando...</div>
+  <div *ngIf="error" class="error">{{ error }}</div>
+
+  <div class="grid" *ngIf="ocupacion?.length">
+    <div class="card" *ngFor="let c of ocupacion">
+      <div class="card-title">Celda {{ c.id || c.celda || c.id_celda }}</div>
+      <div class="card-body">{{ c | json }}</div>
+    </div>
+  </div>
+
+  <div *ngIf="!ocupacion || ocupacion.length === 0" class="info">
+    No hay datos. <button (click)="goToLogin()">Ir a login</button>
+  </div>
+</div>
