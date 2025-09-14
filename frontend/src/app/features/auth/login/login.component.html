@@ -1,0 +1,23 @@
+<div class="login-container">
+  <form class="login-card" (ngSubmit)="submit()">
+    <h2>Iniciar Sesión</h2>
+
+    <label class="field">
+      <span>Correo</span>
+      <input type="email" [(ngModel)]="correo" name="correo" required />
+    </label>
+
+    <label class="field">
+      <span>Contraseña</span>
+      <input type="password" [(ngModel)]="contrasena" name="contrasena" required />
+    </label>
+
+    <div class="row">
+      <label><input type="checkbox" [(ngModel)]="remember" name="remember" /> Recordarme</label>
+    </div>
+
+    <button type="submit" [disabled]="loading">{{ loading ? 'Ingresando...' : 'Ingresar' }}</button>
+
+    <p class="error" *ngIf="error">{{ error }}</p>
+  </form>
+</div>
