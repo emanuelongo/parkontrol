@@ -2,12 +2,12 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../../core/services/auth.service';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
@@ -27,12 +27,12 @@ export class LoginComponent {
       next: (res: any) => {
         const token = res.token || res.access_token || res.data?.token;
         const user = res.user || res.data?.user || null;
-  if (!token) {
+        if (!token) {
           this.error = 'Respuesta inválida del servidor';
           this.loading = false;
           return;
         }
-  this.auth.storeToken(token, user, this.remember);
+        this.auth.storeToken(token, user, this.remember);
         this.router.navigate(['/dashboard']);
       },
       error: (err) => {
