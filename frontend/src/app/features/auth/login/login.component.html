@@ -16,8 +16,10 @@
       <label><input type="checkbox" [(ngModel)]="remember" name="remember" /> Recordarme</label>
     </div>
 
-    <button type="submit" [disabled]="loading">{{ loading ? 'Ingresando...' : 'Ingresar' }}</button>
+  <button type="submit" [disabled]="loading">{{ loading ? 'Ingresando...' : 'Ingresar' }}</button>
 
-    <p class="error" *ngIf="error">{{ error }}</p>
+    <p class="error" *ngIf="!!error">{{ error }}</p>
+
+    <p class="muted">¿No tienes cuenta? <a routerLink="/register">Regístrate</a></p>
   </form>
 </div>
