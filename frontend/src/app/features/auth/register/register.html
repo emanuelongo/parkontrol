@@ -1,0 +1,50 @@
+<div class="register-container">
+	<form class="register-card" [formGroup]="form" (ngSubmit)="submit()">
+		<h2>Crear cuenta</h2>
+
+		<label class="field">
+			<span>Nombre de la organización</span>
+			<input type="text" formControlName="organization" placeholder="Mi Empresa S.A." />
+		</label>
+
+		<label class="field">
+			<span>Correo</span>
+			<input type="email" formControlName="email" placeholder="correo@empresa.com" />
+		</label>
+
+		<label class="field">
+			<span>Dirección</span>
+			<input type="text" formControlName="address" placeholder="Calle 123, Ciudad" />
+		</label>
+
+		<label class="field">
+			<span>Teléfono</span>
+			<input type="text" formControlName="phone" placeholder="(000) 000-0000" />
+		</label>
+
+				<label class="field">
+					<span>Contraseña</span>
+					<input type="password" formControlName="password" />
+					<div class="rules">
+				<div [class.ok]="ruleLength" [class.bad]="!ruleLength">Mínimo 6 caracteres</div>
+				<div [class.ok]="ruleNumber" [class.bad]="!ruleNumber">Al menos un número</div>
+				<div [class.ok]="ruleUpper" [class.bad]="!ruleUpper">Al menos una mayúscula</div>
+				<div [class.ok]="ruleSpecial" [class.bad]="!ruleSpecial">Al menos un caracter especial</div>
+			</div>
+		</label>
+
+				<label class="field">
+					<span>Confirmar contraseña</span>
+					<input type="password" formControlName="confirmPassword" />
+			<div class="mismatch" *ngIf="form.hasError('passwordMismatch') && form.get('confirmPassword')?.touched">
+				Las contraseñas no coinciden
+			</div>
+		</label>
+
+		<button type="submit" [disabled]="loading || form.invalid">{{ loading ? 'Creando...' : 'Crear cuenta' }}</button>
+
+		<p class="error" *ngIf="error">{{ error }}</p>
+
+		<p class="muted">¿Ya tienes cuenta? <a routerLink="/login">Iniciar sesión</a></p>
+	</form>
+</div>
