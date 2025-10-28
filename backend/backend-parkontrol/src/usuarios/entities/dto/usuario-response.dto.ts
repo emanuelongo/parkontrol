@@ -7,7 +7,6 @@ export class UsuarioResponseDto {
   correo: string;
   rol: RoleEnum;
   idEmpresa: number | null;
-  idParqueadero: number | null;
 
   constructor(usuario: Usuario){
     this.id = usuario.id;
@@ -15,6 +14,6 @@ export class UsuarioResponseDto {
     this.correo= usuario.correo;
     this.rol = usuario.rol.nombre;
     this.idEmpresa = usuario.empresa?.id ?? null;
-    this.idParqueadero = usuario.parqueadero?.id ?? null;
+
   }
 }

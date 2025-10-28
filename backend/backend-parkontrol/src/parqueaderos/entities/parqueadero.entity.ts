@@ -1,5 +1,4 @@
 import { Empresa } from "src/empresas/entities/empresa.entity";
-import { Usuario } from "src/usuarios/entities/usuario.entity";
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity('PARQUEADERO')
@@ -24,9 +23,4 @@ export class Parqueadero {
   @JoinColumn({ name: 'ID_EMPRESA' })
   empresa: Empresa;
 
-
-  @OneToMany(() => Usuario, (usuario) => usuario.parqueadero, {
-    cascade: ['insert', 'update']
-  })
-  operadores: Usuario[];
 }

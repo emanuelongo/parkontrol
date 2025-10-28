@@ -20,8 +20,4 @@ export class CreateUsuarioDto {
   @IsNotEmpty()
   @IsNumber()
   idEmpresa: number; 
-
-  @IsOptional()
-  @IsNumber()
-  idParqueadero?: number; // Solo se usa cuando el admin crea operadores
 }
