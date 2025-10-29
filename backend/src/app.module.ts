@@ -15,6 +15,7 @@ import { TarifasModule } from './tarifas/tarifas.module';
 import { PagosModule } from './pagos/pagos.module';
 import { FacturacionModule } from './facturacion/facturacion.module';
 import { ReportesModule } from './reportes/reportes.module';
+import { VistasModule } from './vistas/vistas.module';
 
 @Module({
   imports: [
@@ -53,6 +54,7 @@ import { ReportesModule } from './reportes/reportes.module';
     PagosModule,
     FacturacionModule,
     ReportesModule,
+    VistasModule,
   ],
   controllers: [AppController],
   providers: [AppService],
