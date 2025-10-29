@@ -1,0 +1,21 @@
+@use 'styles/tema-personalizado' as colores;
+@use '@angular/material' as mat;
+
+body {
+  background-color: mat.get-color-from-palette(colores.$color-primario, 700);
+  color: white;
+  font-family: 'Roboto', sans-serif;
+}
+
+.boton-principal {
+  background-color: mat.get-color-from-palette(colores.$color-primario);
+  color: white;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: mat.get-color-from-palette(colores.$color-acento, A200);
+  }
+}

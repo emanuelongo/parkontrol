@@ -1,0 +1,56 @@
+<form 
+    [formGroup]="usuarioForm" 
+    (ngSubmit)="registrarUsuario()" 
+    class="flex flex-col gap-4"
+>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Nombre</mat-label>
+    <input matInput formControlName="nombre" placeholder="Ingresa tu nombre" />
+  </mat-form-field>
+
+  @if (usuarioForm.get('nombre')?.dirty && usuarioForm.get('nombre')?.invalid) {
+    @if (usuarioForm.get('nombre')?.getError('required')) {
+      <div class="text-red-600 text-sm">El nombre es obligatorio.</div>
+    }
+    @if (usuarioForm.get('nombre')?.getError('minlength')) {
+      <div class="text-red-600 text-sm">Debe tener al menos 3 caracteres.</div>
+    }
+  }
+
+  <mat-form-field appearance="outline">
+    <mat-label>Correo</mat-label>
+    <input matInput formControlName="correo" type="email" placeholder="ejemplo@correo.com" />
+  </mat-form-field>
+
+  @if (usuarioForm.get('correo')?.dirty && usuarioForm.get('correo')?.invalid) {
+    @if (usuarioForm.get('correo')?.getError('required')) {
+      <div class="text-red-600 text-sm">El correo es obligatorio.</div>
+    }
+    @if (usuarioForm.get('correo')?.getError('email')) {
+      <div class="text-red-600 text-sm">Debe tener un formato válido.</div>
+    }
+  }
+
+  <mat-form-field appearance="outline">
+    <mat-label>Contraseña</mat-label>
+    <input matInput formControlName="contrasena" type="password" placeholder="******" />
+  </mat-form-field>
+
+  @if (usuarioForm.get('contrasena')?.dirty && usuarioForm.get('contrasena')?.invalid) {
+    @if (usuarioForm.get('contrasena')?.getError('required')) {
+      <div class="text-red-600 text-sm">La contraseña es obligatoria.</div>
+    }
+    @if (usuarioForm.get('contrasena')?.getError('minlength')) {
+      <div class="text-red-600 text-sm">Debe tener al menos 6 caracteres.</div>
+    }
+  }
+
+  @if (mensajeError) {
+    <div class="text-red-600 text-sm mb-2">{{ mensajeError }}</div>
+  }
+
+  <button mat-raised-button color="primary" [disabled]="usuarioForm.invalid || loading">
+    {{ loading ? 'Registrando...' : 'Registrar Usuario' }}
+  </button>
+</form>

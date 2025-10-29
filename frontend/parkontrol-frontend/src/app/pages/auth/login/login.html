@@ -1,0 +1,60 @@
+<div class="login-container ">
+    <div class="form-header">
+    <div class="header-main">
+      <div class="logo-container">
+        <img src="images/login-logo.png" alt="Parkontrol Logo" class="logo-image">
+      </div> 
+      <div class="title-section">
+        <h2 class="text-2xl font-semibold">Inicio de sesion</h2>
+        <p class="text-gray-600 mt-1 ">Ingresa como Administrador u operador</p>
+      </div>   
+    </div>
+  </div>
+  <form 
+    [formGroup]="loginForm" 
+    (ngSubmit)="login()"
+    class="form-group" 
+  >
+    <!-- CORREO -->
+    <mat-form-field appearance="outline" class="w-full">
+      <mat-label>Correo electrónico</mat-label>
+      <input matInput type="email" formControlName="correo" placeholder="ejemplo@correo.com" class="w-full" />
+
+      @if (loginForm.get('correo')?.dirty && loginForm.get('correo')?.invalid) {
+        @if (loginForm.get('correo')?.getError('required')) {
+          <div class="text-red-600 text-sm mt-1">El correo es obligatorio.</div>
+        }
+        @if (loginForm.get('correo')?.getError('email')) {
+          <div class="text-red-600 text-sm mt-1">Debe tener un formato válido.</div>
+        }
+      }
+    </mat-form-field>
+
+    <!-- CONTRASEÑA -->
+    <mat-form-field appearance="outline" class="w-full">
+      <mat-label>Contraseña</mat-label>
+      <input matInput type="password" formControlName="contrasena" placeholder="******" />
+
+      @if (loginForm.get('contrasena')?.dirty && loginForm.get('contrasena')?.invalid) {
+        @if (loginForm.get('contrasena')?.getError('required')) {
+          <div class="text-red-600 text-sm mt-1">La contraseña es obligatoria.</div>
+        }
+        @if (loginForm.get('contrasena')?.getError('minlength')) {
+          <div class="text-red-600 text-sm mt-1">Debe tener al menos 6 caracteres.</div>
+        }
+      }
+    </mat-form-field>
+
+    <!-- MENSAJE DE ERROR -->
+    @if (mensajeError) {
+      <div class="text-red-600 text-sm mb-2">{{ mensajeError }}</div>
+    }
+
+    <!-- BOTÓN -->
+    <div class="flex justify-end w-full">
+      <button mat-raised-button color="primary" [disabled]="loginForm.invalid">
+        Iniciar sesión
+      </button>
+    </div>
+  </form>
+</div>

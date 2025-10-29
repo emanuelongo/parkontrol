@@ -1,0 +1,39 @@
+<form 
+  [formGroup]="empresaForm" 
+  (ngSubmit)="crearEmpresa()"
+  class="flex flex-col gap-6 w-full max-w-md mx-auto"
+>
+  <mat-form-field appearance="outline" class="w-full">
+    <mat-label>NIT</mat-label>
+    <input matInput formControlName="nit" placeholder="Ej: 900123456" />
+
+    @if (empresaForm.get('nit')?.dirty && empresaForm.get('nit')?.invalid) {
+      @if (empresaForm.get('nit')?.getError('required')) {
+        <div class="text-red-600 text-sm mt-1">Es obligatorio llenar el campo.</div>
+      }
+      @if (empresaForm.get('nit')?.getError('minlength')) {
+        <div class="text-red-600 text-sm mt-1">Debe tener mínimo 5 caracteres.</div>
+      }
+    }
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="w-full">
+    <mat-label>Nombre de la empresa</mat-label>
+    <input matInput formControlName="nombre" placeholder="Ej: Parqueaderos S.A." />
+
+    @if (empresaForm.get('nombre')?.dirty && empresaForm.get('nombre')?.invalid) {
+      @if (empresaForm.get('nombre')?.getError('required')) {
+        <div class="text-red-600 text-sm mt-1">Es obligatorio llenar el campo.</div>
+      }
+      @if (empresaForm.get('nombre')?.getError('minlength')) {
+        <div class="text-red-600 text-sm mt-1">Debe tener mínimo 3 caracteres.</div>
+      }
+    }
+  </mat-form-field>
+
+  <div class="flex justify-end w-full">
+    <button mat-raised-button color="primary" [disabled]="empresaForm.invalid || loading">
+      {{ loading ? 'Creando...' : 'Crear empresa' }}
+    </button>
+  </div>
+</form>

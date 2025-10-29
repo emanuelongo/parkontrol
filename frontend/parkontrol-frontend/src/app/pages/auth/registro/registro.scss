@@ -1,0 +1,45 @@
+.registro-container {
+    display: flex;
+    width: 50%;
+    margin: auto;
+    padding: 1rem;
+    gap: 1rem;
+    background: #fff;
+    border-radius: 1rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.form-header {
+  border-right: 1px solid #e2e8f0;
+  padding-right: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.logo-image{
+
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+}
+
+.header-main {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+
+
+mat-horizontal-stepper {
+    margin: auto;
+    width: 65%;
+    background: transparent;
+
+}
+
+
+button[mat-raised-button] {
+  min-width: 120px;
+}

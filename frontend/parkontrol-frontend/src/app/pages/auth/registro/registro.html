@@ -1,0 +1,42 @@
+<div class="registro-container">
+  <div class="form-header">
+    <div class="header-main">
+      <div class="logo-container">
+        <img src="images/parkontrol-logo.png" alt="Parkontrol Logo" class="logo-image">
+      </div> 
+      <div class="title-section flex">
+        <h2 class="text-2xl font-semibold">Bienvenido a Parkontrol</h2>
+        <p class="text-gray-600 mt-1">Registra tu empresa y usuario</p>
+      </div>   
+    </div>
+  </div>
+  <mat-horizontal-stepper linear class="mt-12">
+    <!-- STEP 1: Empresa -->
+    <mat-step [completed]="empresaCompletada">
+
+      <ng-template matStepLabel>Registrar Empresa</ng-template>
+
+      <app-empresa-form (empresaCreada)="onEmpresaCreada($event)" ></app-empresa-form>
+
+      @if (empresaCompletada) {
+        <div class="flex justify-end mt-4">
+          <button mat-raised-button color="primary" matStepperNext>Siguiente</button>
+        </div>
+      }
+    </mat-step>
+
+    <!-- STEP 2: Usuario -->
+    <mat-step [completed]="usuarioCompletado">
+      <ng-template matStepLabel>Registrar Usuario</ng-template>
+
+      @if (idEmpresaCreada) {
+        <app-usuario-form
+          [idEmpresa]="idEmpresaCreada"
+          (usuarioCreado)="onUsuarioCreado($event)"
+        ></app-usuario-form>
+      } @else {
+        <p class="text-gray-600">Debe registrar primero la empresa.</p>
+      }
+    </mat-step>
+  </mat-horizontal-stepper>
+</div>

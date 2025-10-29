@@ -1,0 +1,68 @@
+.parqueadero-item {
+  border: 1px solid black;
+  padding: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  max-width: 300px;
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    border: 1px solid black;
+    padding: 0.5rem;
+
+    .info {
+      border: 1px solid black;
+      max-width: 80%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start; 
+      gap: 0.2rem;
+
+    }
+
+    .icon-header {
+      border: 1px solid black;
+      width: 40px;
+      height: 40px;
+    }
+  }
+
+  .ocupacion {
+    border: 1px solid black;
+    padding: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+
+    .tipos {
+      display: flex;
+      justify-content: space-between;
+      gap: 0.5rem;
+
+      .tipo {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        border: 1px dashed black;
+        padding: 0.25rem;
+
+        .icon {
+          width: 24px;
+          height: 24px;
+          border: 1px solid black;
+        }
+
+      }
+    }
+  }
+  
+  .acciones {
+    display: flex;
+    justify-content: center; 
+    margin-top: 0.5rem;
+    gap: 0.5rem;
+   }
+}
