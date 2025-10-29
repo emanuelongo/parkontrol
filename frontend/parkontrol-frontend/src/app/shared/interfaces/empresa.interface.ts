@@ -4,4 +4,5 @@ export interface Empresa {
   id: number;    
   nit: string;
   nombre: string;
+  usuarios?: Usuario[]
 }

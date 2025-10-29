@@ -3,8 +3,8 @@
     <div class="header">
         <div class="info">
             <h3>{{ parqueadero.nombre }}</h3>
-            <p>{{ parqueadero.direccion }}</p>
-            <p>Ingresos hoy: {{ parqueadero.ingresosHoy }}</p>
+            <p>{{ parqueadero.ubicacion }}</p>
+            <p>Capacidad total: {{ parqueadero.capacidadTotal }}</p>
         </div>
         <!-- Espacio para icono decorativo -->
         <div class="icon-header"></div>
@@ -17,25 +17,25 @@
             <div class="tipo">
                 <!-- icono carro -->
                 <div class="icon"></div>
-                <span>C: {{ parqueadero.ocupadasCarros }}</span>
+                <span>C:</span>
             </div>
             <div class="tipo">
                 <!-- icono moto -->
                 <div class="icon"></div>
-                <span>M: {{ parqueadero.ocupadasMotos }}</span>
+                <span>M: </span>
             </div>
             <div class="tipo">
                 <!-- icono bicicleta -->
                 <div class="icon"></div>
-                <span>B: {{ parqueadero.ocupadasBicicletas }}</span>
+                <span>B:</span>
             </div>
         </div>
     </div>
     
     <!-- Acciones -->
-    <div class="acciones">
-        <button>DETALLES</button>
-        <button>OPERADORES</button>
-    </div>
+    <div class="botones">
+        <button (click)="verDetalle()">Ver Detalles</button>
+        <button (click)="modificarTarifa()">Modificar Tarifas</button>
+      </div>
 
 </div>

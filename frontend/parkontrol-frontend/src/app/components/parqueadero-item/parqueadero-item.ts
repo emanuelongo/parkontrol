@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { ParqueaderoConRelacionesDto } from '../../models/parqueaderos/parqueadero-con-relaciones.dto';
 
 @Component({
   selector: 'app-parqueadero-item',
@@ -6,15 +7,19 @@ import { Component } from '@angular/core';
   templateUrl: './parqueadero-item.html',
   styleUrl: './parqueadero-item.scss',
 })
-export class ParqueaderoItem {
+export class ParqueaderoItemComponent {
 
-  parqueadero =  {
-    nombre: 'Parqueadero Norte - sede corporativa ',
-    direccion: 'Av. 30 # 45 - 12',
-    ingresosHoy: 9,
-    ocupadasMotos: 3,
-    ocupadasCarros: 5,
-    ocupadasBicicletas: 1
+  @Input() parqueadero!: ParqueaderoConRelacionesDto;
+  @Output() verDetalleParqueadero= new EventEmitter<number>();
+  @Output() abrirModalTarifa = new EventEmitter<number>();
+
+  verDetalle(){
+    this.verDetalleParqueadero.emit(this.parqueadero.id);
   }
+
+  modificarTarifa(){
+    this.abrirModalTarifa.emit(this.parqueadero.id);
+  }
+
 
 }

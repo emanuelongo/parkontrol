@@ -1,0 +1,186 @@
+import { Component, Inject, Input, OnInit } from '@angular/core';
+import { TarifaService } from '../../services/tarifa';
+import { TipoVehiculo } from '../../shared/interfaces/tipo-vehiculo.interface';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { Tarifa } from '../../shared/interfaces/tarifa.interface';
+import { TipoVehiculoService } from '../../services/tipo-vehiculo';
+import { CrearTarifaDto } from '../../models/tarifas/crear-tarifa.dto';
+import { TARIFAS_MOCK, TIPOS_VEHICULO_MOCK } from '../../services/tarifas-mock';
+import { MatTableModule } from '@angular/material/table';
+
+@Component({
+  selector: 'app-tarifa-modal',
+  standalone: true,
+  imports: [
+    ReactiveFormsModule,
+    MatDialogModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatTableModule,
+    MatSelectModule,
+    MatButtonModule,
+    MatTableModule,
+    MatIconModule,
+  ],
+  templateUrl: './tarifa-modal.html',
+  styleUrl: './tarifa-modal.scss',
+  providers: [
+    { provide: MAT_DIALOG_DATA, useValue: { idParqueadero: 1 } }, // dato simulado
+    { provide: MatDialogRef, useValue: null },                    // 👈 esto hace dialogRef = null
+  ],
+})
+export class TarifaModalComponent implements OnInit{
+
+  modoPrueba: boolean = true;
+  tarifas: Tarifa[]= [];
+  tiposVehiculo: TipoVehiculo[]= [];
+  tarifaForm: FormGroup
+
+  mensajeError ='';
+  loadingTarifa= false;
+  loadingTipoVehiculo= false;
+  editando= true;
+  tarifaEditandoId?: number;
+  huboCambios = false;
+  
+  constructor(
+    @Inject(MAT_DIALOG_DATA) public data: { idParqueadero: number },
+    private readonly tarifaService: TarifaService,
+    private readonly tipoVehiculoService: TipoVehiculoService,
+    private readonly dialogRef: MatDialogRef<TarifaModalComponent>,
+  ){
+
+    this.tarifaForm = new FormGroup({
+      tipoVehiculoId: new FormControl('', [Validators.required,]),
+      precioFraccionHora: new FormControl('', [
+        Validators.required,
+        Validators.min(0)
+      ]),
+      precioHoraAdicional: new FormControl('', [
+        Validators.required,
+        Validators.min(0)
+      ]),
+    })
+  }
+
+  ngOnInit(): void {
+    if (this.modoPrueba) {
+    this.tarifas = TARIFAS_MOCK;
+    this.tiposVehiculo = TIPOS_VEHICULO_MOCK;
+    if (!this.data) {
+    this.data = { idParqueadero: 1 }; // mock temporal
+    }
+    //TODO ACA ES PRUEBA
+    return;
+  }
+    this.cargarTarifas();
+    this.cargarTiposVehiculo();
+  }
+
+  cargarTarifas(){
+    this.loadingTarifa = true;
+    this.tarifaService.getTarifasByParqueadero(this.data.idParqueadero).subscribe({
+      next: (tarifas) => {
+        this.tarifas = tarifas;
+        this.loadingTarifa = false;
+      },
+      error: (err) => {
+        this.loadingTarifa = false;
+        this.mensajeError= 'No se cargaron las tarifas desde la base de datos';
+        console.error(err)
+      }
+    });
+  }
+
+  cargarTiposVehiculo(){
+    this.loadingTipoVehiculo= true;
+    this.tipoVehiculoService.obtenerTodos().subscribe({
+      next: (tiposVehiculo) => {
+        this.tiposVehiculo = tiposVehiculo;
+        this.loadingTipoVehiculo = false;
+      },
+      error: (err) => {
+        this.loadingTipoVehiculo = false;
+        this.mensajeError= 'No se cargaron las tipos de vehiculo desde la base de datos';
+        console.error(err)
+      }
+    });
+  
+  }
+
+  //sirve para actualizar / crear
+  guardarTarifa(){
+    if (this.tarifaForm.invalid) return;
+
+    const tarifaDto: CrearTarifaDto = {
+      ...this.tarifaForm.value,
+      idParqueadero: this.data.idParqueadero,
+    }
+
+    const peticion = this.editando
+    ? this.tarifaService.actualizarTarifa(this.data.idParqueadero, this.tarifaEditandoId!, tarifaDto)
+    : this.tarifaService.crearTarifa(tarifaDto);
+
+    peticion.subscribe({
+      next: (tarifa) => {
+        if(tarifa){
+          this.loadingTarifa= false;
+          this.huboCambios = false;
+          this.resetFormulario();
+          this.cargarTarifas();
+        }
+      },
+      error: (err) => {
+        this.loadingTarifa = false;
+        this.mensajeError = 'Error al guardar la tarifa.';
+        console.error(err);
+      }
+    });
+  }
+
+  editarTarifa(tarifa: Tarifa) {
+    this.editando = true;
+    this.tarifaEditandoId = tarifa.id;
+    
+    this.tarifaForm.patchValue({
+      tipoVehiculoId: tarifa.tipoVehiculo.id,
+      precioFraccionHora: tarifa.precioFraccionHora,
+      precioHoraAdicional: tarifa.precioHoraAdicional,
+    });
+  }
+
+  eliminarTarifa(idTarifa: number){
+    if (!confirm('¿Seguro deseas eliminar esta tarifa?')) return;
+
+    this.tarifaService.eliminarTarifa(this.data.idParqueadero, idTarifa).subscribe({
+      next: () => {
+        this.huboCambios= true
+        this.cargarTarifas();
+      },
+      error: (err) => {
+        this.mensajeError = 'Error al eliminar tarifa',
+        console.error(err);
+      } 
+    });
+  }
+
+  resetFormulario() {
+    this.tarifaForm.reset();
+    this.editando = false;
+    this.tarifaEditandoId = undefined;
+  }
+
+  cerrarModal(){
+    this.dialogRef.close(this.huboCambios);
+  }
+
+  
+
+
+}

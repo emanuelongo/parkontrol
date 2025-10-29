@@ -1,0 +1,91 @@
+<h2 class="text-xl font-semibold mb-4">Gestión de tarifas</h2>
+
+<form [formGroup]="tarifaForm" (ngSubmit)="guardarTarifa()">
+    <div class="flex-row">
+        <mat-form-field appearance="outline" class="flex-field">
+            <mat-label>Tipo de vehículo</mat-label>
+            <mat-select formControlName="tipoVehiculoId">
+            @for (tipo of tiposVehiculo; track tipo.id) {
+                <mat-option [value]="tipo.id">{{ tipo.nombre }}</mat-option>
+            }
+            </mat-select>
+            @if (tarifaForm.get('tipoVehiculoId')?.dirty && tarifaForm.get('tipoVehiculoId')?.invalid) {
+            <div class="text-red-600 text-sm mt-1">Seleccione un tipo de vehiculo.</div>
+            }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="flex-field" >
+            <mat-label>Precio fraccion hora</mat-label>
+            <input matInput type="number" formControlName="precioFraccionHora" />
+            @if (tarifaForm.get('precioFraccionHora')?.dirty && tarifaForm.get('precioFraccionHora')?.invalid) {
+            <div class="text-red-600 text-sm mt-1">Ingrese un valor valido (≥ 0).</div>
+            }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="flex-field" >
+            <mat-label>Precio hora adicional</mat-label>
+            <input matInput type="number" formControlName="precioHoraAdicional" />
+            @if (tarifaForm.get('precioHoraAdicional')?.dirty && tarifaForm.get('precioHoraAdicional')?.invalid) {
+            <div class="text-red-600 text-sm mt-1">Ingrese un valor valido (≥ 0).</div>
+            }
+        </mat-form-field>
+    </div>
+
+    <div class="flex justify-end gap-2">
+        <button mat-raised-button color="primary" [disabled]="tarifaForm.invalid || loadingTarifa">
+        {{ editando ? 'Actualizar' : 'Crear' }} tarifa
+        </button>
+        <button mat-stroked-button type="button" (click)="resetFormulario()">Cancelar</button>
+    </div>
+</form>
+
+<hr class="my-4" />
+
+<h3 class="text-lg font-medium mb-2">Tarifas registradas</h3>
+
+<div class="tabla-container">
+  @if (tarifas.length === 0) {
+    <p class="text-gray-500 text-sm">No hay tarifas registradas.</p>
+  } @else {
+    <table mat-table [dataSource]="tarifas" class="mat-elevation-z2 tabla-tarifas">
+
+      <!-- Tipo Vehículo -->
+      <ng-container matColumnDef="tipoVehiculo">
+        <th mat-header-cell *matHeaderCellDef>Tipo de vehiculo</th>
+        <td mat-cell *matCellDef="let tarifa">{{ tarifa.tipoVehiculo.nombre }}</td>
+      </ng-container>
+
+      <!-- Fracción -->
+      <ng-container matColumnDef="fraccion">
+        <th mat-header-cell *matHeaderCellDef>Fraccion hora (COP)</th>
+        <td mat-cell *matCellDef="let tarifa">{{ tarifa.precioFraccionHora  }}</td>
+      </ng-container>
+
+      <!-- Adicional -->
+      <ng-container matColumnDef="adicional">
+        <th mat-header-cell *matHeaderCellDef>Hora adicional (COP)</th>
+        <td mat-cell *matCellDef="let tarifa">{{ tarifa.precioHoraAdicional}}</td>
+      </ng-container>
+
+      <!-- Acciones -->
+      <ng-container matColumnDef="acciones">
+        <th mat-header-cell *matHeaderCellDef class="text-center">Acciones</th>
+        <td mat-cell *matCellDef="let tarifa" class="text-center">
+          <button mat-icon-button color="primary" (click)="editarTarifa(tarifa)">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button color="warn" (click)="eliminarTarifa(tarifa.id)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="['tipoVehiculo', 'fraccion', 'adicional', 'acciones']"></tr>
+      <tr mat-row *matRowDef="let row; columns: ['tipoVehiculo', 'fraccion', 'adicional', 'acciones'];"></tr>
+    </table>
+  }
+</div>
+
+<div class="flex justify-end mt-4">
+  <button mat-button (click)="cerrarModal()">Cerrar</button>
+</div>

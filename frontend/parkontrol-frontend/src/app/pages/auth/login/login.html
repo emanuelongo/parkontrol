@@ -45,12 +45,10 @@
       }
     </mat-form-field>
 
-    <!-- MENSAJE DE ERROR -->
     @if (mensajeError) {
       <div class="text-red-600 text-sm mb-2">{{ mensajeError }}</div>
     }
 
-    <!-- BOTÓN -->
     <div class="flex justify-end w-full">
       <button mat-raised-button color="primary" [disabled]="loginForm.invalid">
         Iniciar sesión

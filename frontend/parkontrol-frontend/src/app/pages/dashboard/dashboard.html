@@ -1,1 +1,24 @@
-<p>dashboard works!</p>
+<div class="dashboard">
+    
+    <!-- componente empresa info -->
+     <app-empresa-info
+     [empresa]="empresa"
+     [administrador]="usuario"
+     ></app-empresa-info>
+
+     @if(mensajeError){
+        <p>{{mensajeError}}</p>
+     }
+
+     @if(loadingEmpresa || loadingParqueaderos){
+        <p>Cargando informacion de la base de datos</p>
+     }
+
+     <!-- Lista de parqueaderos -->
+      <app-parqueadero-lista
+      [parqueaderos]="parqueaderos"
+      (verDetalleParqueadero)="onVerDetalleParqueadero($event)"
+      (abrirModalTarifa)="onAbrirModalTarifa($event)"
+      ></app-parqueadero-lista>
+
+</div>

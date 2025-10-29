@@ -1,0 +1,21 @@
+<div class="empresa-info">
+  <!-- Información de la empresa -->
+   @if(empresa){
+    <div class="empresa-container">
+        <h2>nombre: {{ empresa.nombre }}</h2>
+        <p>NIT: {{ empresa.nit }}</p>
+    </div>
+   }
+  
+
+    <!-- Información del administrador -->
+    @if(administrador){
+    <div class="administrador-container">
+        <h3>Administrador asignado</h3>
+        <p>Nombre: {{ administrador.nombre }}</p>
+        <p>Correo: {{ administrador.correo }}</p>
+        <p>Rol: {{ administrador.rol }}</p>
+    </div>
+    }
+
+</div>
