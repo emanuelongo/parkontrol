@@ -19,8 +19,8 @@ export class ReservasService {
     const vehiculo = await this.vehiculosService.findVehiculoById(createReservaDto.idVehiculo);
     const celda = await this.celdasService.findCeldaById(createReservaDto.idCelda);
 
-    if (celda.estado !== 'DISPONIBLE') {
-      throw new BadRequestException('La celda no está disponible');
+    if (celda.estado !== 'LIBRE') {
+      throw new BadRequestException('La celda no está LIBRE');
     }
 
     const reserva = this.reservaRepository.create({
@@ -49,7 +49,7 @@ export class ReservasService {
 
     const reservaActualizada = await this.reservaRepository.save(reserva);
 
-    await this.celdasService.actualizarEstado(reserva.celda.id, 'DISPONIBLE');
+    await this.celdasService.actualizarEstado(reserva.celda.id, 'LIBRE');
 
     return reservaActualizada;
   }
@@ -75,7 +75,7 @@ export class ReservasService {
 
   async findActivas(): Promise<Reserva[]> {
     return await this.reservaRepository.find({
-      where: { estado: 'ACTIVA' },
+      where: { estado: 'ABIERTA' },
       relations: ['vehiculo', 'vehiculo.tipoVehiculo', 'celda', 'celda.parqueadero'],
     });
   }
