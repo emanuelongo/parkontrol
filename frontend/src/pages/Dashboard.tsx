@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Card, Col, Row, Statistic, Table, Spin } from 'antd';
+import { Card, Col, Row, Statistic, Table, Select, Spin } from 'antd';
 import {
   CarOutlined,
   AppstoreOutlined,
@@ -14,12 +14,11 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [ocupacion, setOcupacion] = useState<OcupacionParqueadero[]>([]);
   const [reservasActivas, setReservasActivas] = useState<Reserva[]>([]);
-
-  const idEmpresa = 1;
+  const [idEmpresa, setIdEmpresa] = useState<number>(1);
 
   useEffect(() => {
     fetchDashboardData();
-  }, []);
+  }, [idEmpresa]);
 
   const fetchDashboardData = async () => {
     setLoading(true);
@@ -29,7 +28,7 @@ const Dashboard = () => {
         const ocupacionData = await vistasApi.getOcupacion(idEmpresa);
         setOcupacion(ocupacionData);
       } catch (ocupacionError) {
-        console.warn('No se pudo cargar datos de ocupación (puede que falte la vista en BD):', ocupacionError);
+        console.warn('No se pudo cargar datos de ocupacion:', ocupacionError);
         setOcupacion([]);
       }
       
@@ -89,7 +88,22 @@ const Dashboard = () => {
 
   return (
     <div>
-      <h1>Dashboard</h1>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
+        <h1>Dashboard</h1>
+        <div>
+          <span style={{ marginRight: 8 }}>Empresa:</span>
+          <Select
+            value={idEmpresa}
+            onChange={setIdEmpresa}
+            style={{ width: 200 }}
+          >
+            <Select.Option value={1}>Empresa 1</Select.Option>
+            <Select.Option value={2}>Empresa 2</Select.Option>
+            <Select.Option value={3}>Empresa 3</Select.Option>
+          </Select>
+        </div>
+      </div>
+
       <Row gutter={16} style={{ marginBottom: 24 }}>
         <Col span={6}>
           <Card>

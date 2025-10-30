@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Table, Button, Modal, Form, Input, InputNumber, message, Space, Popconfirm } from 'antd';
+import { Table, Button, Modal, Form, Input, InputNumber, message, Space, Popconfirm, Select } from 'antd';
 import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import type { Parqueadero } from '../types';
 import { parqueaderosApi } from '../api/parqueaderos';
@@ -9,15 +9,15 @@ const Parqueaderos = () => {
   const [loading, setLoading] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [editingId, setEditingId] = useState<number | null>(null);
+  const [idEmpresa, setIdEmpresa] = useState<number>(1);
   const [form] = Form.useForm();
 
-  const fetchParqueaderos = async (idEmpresa: number) => {
+  const fetchParqueaderos = async (empresaId: number) => {
     setLoading(true);
     try {
-      const data = await parqueaderosApi.getByEmpresa(idEmpresa);
+      const data = await parqueaderosApi.getByEmpresa(empresaId);
       setParqueaderos(data);
     } catch (error) {
-      // El error ya se muestra por el interceptor de axios
       console.error('Error al cargar parqueaderos:', error);
     } finally {
       setLoading(false);
@@ -25,8 +25,8 @@ const Parqueaderos = () => {
   };
 
   useEffect(() => {
-    fetchParqueaderos(1);
-  }, []);
+    fetchParqueaderos(idEmpresa);
+  }, [idEmpresa]);
 
   const handleCreate = () => {
     setEditingId(null);
@@ -114,7 +114,21 @@ const Parqueaderos = () => {
   return (
     <div>
       <div style={{ marginBottom: 16, display: 'flex', justifyContent: 'space-between' }}>
-        <h1>Parqueaderos</h1>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+          <h1>Parqueaderos</h1>
+          <div>
+            <span style={{ marginRight: 8 }}>Empresa:</span>
+            <Select
+              value={idEmpresa}
+              onChange={setIdEmpresa}
+              style={{ width: 150 }}
+            >
+              <Select.Option value={1}>Empresa 1</Select.Option>
+              <Select.Option value={2}>Empresa 2</Select.Option>
+              <Select.Option value={3}>Empresa 3</Select.Option>
+            </Select>
+          </div>
+        </div>
         <Button type="primary" icon={<PlusOutlined />} onClick={handleCreate}>
           Nuevo Parqueadero
         </Button>

@@ -9,6 +9,11 @@ import Celdas from './pages/Celdas';
 import Vehiculos from './pages/Vehiculos';
 import Reservas from './pages/Reservas';
 import Pagos from './pages/Pagos';
+import Usuarios from './pages/Usuarios';
+import Tarifas from './pages/Tarifas';
+import Facturacion from './pages/Facturacion';
+import Reportes from './pages/Reportes';
+import Vistas from './pages/Vistas';
 import TestNotifications from './components/TestNotifications';
 
 const queryClient = new QueryClient({
@@ -34,6 +39,11 @@ function App() {
               <Route path="vehiculos" element={<Vehiculos />} />
               <Route path="reservas" element={<Reservas />} />
               <Route path="pagos" element={<Pagos />} />
+              <Route path="usuarios" element={<Usuarios />} />
+              <Route path="tarifas" element={<Tarifas />} />
+              <Route path="facturacion" element={<Facturacion />} />
+              <Route path="reportes" element={<Reportes />} />
+              <Route path="vistas" element={<Vistas />} />
               <Route path="test-notificaciones" element={<TestNotifications />} />
             </Route>
           </Routes>

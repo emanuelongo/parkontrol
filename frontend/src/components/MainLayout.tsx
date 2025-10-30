@@ -8,6 +8,11 @@ import {
   DatabaseOutlined,
   ClockCircleOutlined,
   DollarOutlined,
+  UserOutlined,
+  TagOutlined,
+  FileTextOutlined,
+  BarChartOutlined,
+  EyeOutlined,
 } from '@ant-design/icons';
 
 const { Header, Sider, Content } = Layout;
@@ -39,7 +44,7 @@ const MainLayout = () => {
     {
       key: '/vehiculos',
       icon: <CarOutlined />,
-      label: 'Vehículos',
+      label: 'Vehiculos',
     },
     {
       key: '/reservas',
@@ -50,6 +55,31 @@ const MainLayout = () => {
       key: '/pagos',
       icon: <DollarOutlined />,
       label: 'Pagos',
+    },
+    {
+      key: '/usuarios',
+      icon: <UserOutlined />,
+      label: 'Usuarios',
+    },
+    {
+      key: '/tarifas',
+      icon: <TagOutlined />,
+      label: 'Tarifas',
+    },
+    {
+      key: '/facturacion',
+      icon: <FileTextOutlined />,
+      label: 'Facturacion',
+    },
+    {
+      key: '/reportes',
+      icon: <BarChartOutlined />,
+      label: 'Reportes',
+    },
+    {
+      key: '/vistas',
+      icon: <EyeOutlined />,
+      label: 'Vistas Oracle',
     },
   ];
 
