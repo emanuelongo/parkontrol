@@ -19,7 +19,7 @@ export class AuthService {
   ){}
 
   registrarUsuario(crearUsuarioDto: CreateUsuarioDto): Observable<UsuarioResponseDto>{
-    return this.httpClient.post<UsuarioResponseDto>(`${this.baseUrl}auth/registrar`, crearUsuarioDto)
+    return this.httpClient.post<UsuarioResponseDto>(`${this.baseUrl}auth/register`, crearUsuarioDto)
   }
 
   login(loginUsuarioDto: LoginUsuarioDto): Observable<LoginResponseDto>{

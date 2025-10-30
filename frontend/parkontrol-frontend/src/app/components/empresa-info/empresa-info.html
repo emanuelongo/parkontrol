@@ -3,7 +3,7 @@
    @if(empresa){
     <div class="empresa-container">
         <h2>nombre: {{ empresa.nombre }}</h2>
-        <p>NIT: {{ empresa.nit }}</p>
+        <p>ID: {{ empresa.id }}</p>
     </div>
    }
   
@@ -12,9 +12,8 @@
     @if(administrador){
     <div class="administrador-container">
         <h3>Administrador asignado</h3>
-        <p>Nombre: {{ administrador.nombre }}</p>
         <p>Correo: {{ administrador.correo }}</p>
-        <p>Rol: {{ administrador.rol }}</p>
+        <p>Rol: {{ administrador.nombreRol }}</p>
     </div>
     }
 

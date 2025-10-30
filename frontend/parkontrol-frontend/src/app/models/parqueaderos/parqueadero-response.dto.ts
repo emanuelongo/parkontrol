@@ -3,4 +3,5 @@ export interface ParqueaderoResponseDto {
   nombre: string;
   ubicacion: string;
   capacidadTotal: number;
+  idEmpresa: number;
 }

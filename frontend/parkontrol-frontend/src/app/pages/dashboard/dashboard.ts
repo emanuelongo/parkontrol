@@ -1,16 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { EmpresaResponseDto } from '../../models/empresas/empresa-response.dto';
-import { ParqueaderoConRelacionesDto } from '../../models/parqueaderos/parqueadero-con-relaciones.dto';
-import { UsuarioResponseDto } from '../../models/usuarios/usuario-response.dto';
 import { EmpresaService } from '../../services/empresa';
 import { ParqueaderoService } from '../../services/parqueadero';
 import { SessionService } from '../../services/session';
 import { EmpresaInfoComponent } from '../../components/empresa-info/empresa-info';
 import { ParqueaderoListaComponent } from '../../components/parqueadero-lista/parqueadero-lista';
-import { DetalleParqueaderoService } from '../../services/detalle-parqueadero';
 import { Router } from '@angular/router';
 import { TarifaModalComponent } from '../../components/tarifa-modal/tarifa-modal';
 import { MatDialog } from '@angular/material/dialog';
+import { UsuarioSessionDto } from '../../models/usuarios/usuario-session.dto';
+import { ParqueaderoResponseDto } from '../../models/parqueaderos/parqueadero-response.dto';
 
 @Component({
   selector: 'app-dashboard',
@@ -25,8 +24,8 @@ import { MatDialog } from '@angular/material/dialog';
 export class DashboardComponent implements OnInit{
 
   empresa?: EmpresaResponseDto;
-  parqueaderos: ParqueaderoConRelacionesDto[] = [];
-  usuario?: UsuarioResponseDto | null = null;
+  parqueaderos: ParqueaderoResponseDto[] = [];
+  usuario?: UsuarioSessionDto | null = null;
 
   loadingEmpresa = false;
   loadingParqueaderos=false;
@@ -39,7 +38,6 @@ export class DashboardComponent implements OnInit{
     private readonly empresaService: EmpresaService,
     private readonly parqueaderoService: ParqueaderoService,
     private readonly sessionService: SessionService,
-    private readonly detalleParqueaderoService: DetalleParqueaderoService,
     private readonly dialog: MatDialog,
     private router: Router,
   ){}
@@ -49,13 +47,13 @@ export class DashboardComponent implements OnInit{
 
     if(this.usuario?.idEmpresa) {
       this.cargarEmpresa(this.usuario.idEmpresa);
-      this.cargarParqueaderos(this.usuario.idEmpresa);
+      this.cargarParqueaderos();
     }
   }
 
   cargarEmpresa(idEmpresa: number){
     this.loadingEmpresa = true;
-    this.empresaService.obtenerEmpresaById(idEmpresa).subscribe({
+    this.empresaService.obtenerEmpresa().subscribe({
       next: (empresa) => {
         this.loadingEmpresa = false;
         this.empresa= empresa;
@@ -68,9 +66,10 @@ export class DashboardComponent implements OnInit{
     });
   }
 
-  cargarParqueaderos(idEmpresa: number){
+  cargarParqueaderos() {
     this.loadingParqueaderos = true;
-    this.parqueaderoService.getParqueaderosByEmpresa(idEmpresa).subscribe({
+
+    this.parqueaderoService.getParqueaderosByEmpresa().subscribe({
       next: (parqueaderos) => {
         this.loadingParqueaderos = false;
         this.parqueaderos = parqueaderos;
@@ -90,8 +89,7 @@ export class DashboardComponent implements OnInit{
       console.error('No se encontró el parqueadero en la lista');
       return;
     }
-
-    this.detalleParqueaderoService.setParqueadero(parqueadero);
+    //Le envio el id del parqueadero por la ruta 
     this.router.navigate(['parqueadero', parqueadero.id]);
 
 }
@@ -105,7 +103,7 @@ onAbrirModalTarifa(idParqueadero: number) {
 
   dialogRef.afterClosed().subscribe((actualizado) => {
     if (actualizado){
-      this.cargarParqueaderos(this.usuario!.idEmpresa!)
+      this.cargarParqueaderos();
     }
   })
 }

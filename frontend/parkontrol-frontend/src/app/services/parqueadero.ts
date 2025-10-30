@@ -3,6 +3,7 @@ import { appsSettings } from '../settings/app-settings';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ParqueaderoConRelacionesDto } from '../models/parqueaderos/parqueadero-con-relaciones.dto';
+import { ParqueaderoResponseDto } from '../models/parqueaderos/parqueadero-response.dto';
 
 @Injectable({
   providedIn: 'root'
@@ -13,8 +14,8 @@ export class ParqueaderoService {
   
   constructor(private readonly httpClient: HttpClient){}
 
-  getParqueaderosByEmpresa(empresaId: number): Observable<ParqueaderoConRelacionesDto[]>{
-    return this.httpClient.get<ParqueaderoConRelacionesDto[]>(`${this.baseUrl}empresa/${empresaId}/parqueaderos`);
+  getParqueaderosByEmpresa(): Observable<ParqueaderoResponseDto[]> {
+    return this.httpClient.get<ParqueaderoResponseDto[]>(`${this.baseUrl}parking-lots`);
   }
 
   getParqueaderoById(id: number): Observable<ParqueaderoConRelacionesDto>{

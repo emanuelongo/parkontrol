@@ -15,12 +15,12 @@ export class EmpresaService {
   
   constructor(private readonly httpClient: HttpClient){}
 
-  crearEmpresa(crearEmpresaDto: CrearEmpresaDto): Observable<Empresa>{
-    return this.httpClient.post<Empresa>(`${this.baseUrl}empresas`, crearEmpresaDto)
+  crearEmpresa(crearEmpresaDto: CrearEmpresaDto): Observable<EmpresaResponseDto> {
+    return this.httpClient.post<EmpresaResponseDto>(`${this.baseUrl}companies`, crearEmpresaDto);
   }
 
-  obtenerEmpresaById(empresaId: number): Observable<EmpresaResponseDto>{
-    return this.httpClient.get<EmpresaResponseDto>(`${this.baseUrl}empresas/${empresaId}`);
+  obtenerEmpresa(): Observable<EmpresaResponseDto> {
+    return this.httpClient.get<EmpresaResponseDto>(`${this.baseUrl}companies`);
   }
 
 }

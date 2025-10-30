@@ -1,9 +1,8 @@
 import { RoleEnum } from "../enums/role-enum.enum";
 
-export interface UsuarioResponseDto {
+export interface UsuarioSessionDto {
   id: number;
   correo: string;
-  nombre: string;
   nombreRol: RoleEnum;
   idEmpresa: number | null;
 }

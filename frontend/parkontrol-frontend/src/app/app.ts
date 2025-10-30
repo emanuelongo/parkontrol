@@ -7,7 +7,7 @@ import { TarifaModalComponent } from './components/tarifa-modal/tarifa-modal';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, Header, Footer, TarifaModalComponent],
+  imports: [RouterOutlet, Header, Footer],
   templateUrl: './app.html',
 })
 export class App {

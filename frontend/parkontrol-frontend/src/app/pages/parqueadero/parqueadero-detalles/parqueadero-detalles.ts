@@ -1,6 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ParqueaderoConRelacionesDto } from '../../../models/parqueaderos/parqueadero-con-relaciones.dto';
-import { DetalleParqueaderoService } from '../../../services/detalle-parqueadero';
+import { Component} from '@angular/core';
 import { Router } from '@angular/router';
 
 @Component({
@@ -9,25 +7,12 @@ import { Router } from '@angular/router';
   templateUrl: './parqueadero-detalles.html',
   styleUrl: './parqueadero-detalles.scss',
 })
-export class ParqueaderoDetallesComponent implements OnInit, OnDestroy{
+export class ParqueaderoDetallesComponent{
 
-  parqueadero?: ParqueaderoConRelacionesDto;
 
   constructor(
-    private readonly router: Router,
-    private readonly detalleParqueaderoService: DetalleParqueaderoService,
-  
+    private readonly router: Router,  
   ) {}
 
-  ngOnInit(): void {
-    this.parqueadero = this.detalleParqueaderoService.getParqueadero();
-    if(!this.parqueadero){
-      this.router.navigate(['/dashboard']);
-    }
-  }
-
-  ngOnDestroy(): void {
-    this.detalleParqueaderoService.limpiar();
-  }
 
 }

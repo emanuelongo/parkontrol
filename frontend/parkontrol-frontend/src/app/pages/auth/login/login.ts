@@ -7,6 +7,7 @@ import { LoginResponseDto } from '../../../models/auth/login-response.dto';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
+import { SessionService } from '../../../services/session';
 
 @Component({
   selector: 'app-login',
@@ -26,6 +27,7 @@ export class LoginComponent {
 
   constructor(
     private readonly authService: AuthService,
+    private readonly sessionService: SessionService,
     private readonly router: Router,
   ){
 
@@ -50,7 +52,7 @@ export class LoginComponent {
       next: (res: LoginResponseDto) => {
 
         if(res && res.access_token){
-          localStorage.setItem('access_token', res.access_token);
+          this.sessionService.guardarToken(res.access_token);
           this.router.navigate(['dashboard'])
         } 
       },

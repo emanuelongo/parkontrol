@@ -6,6 +6,7 @@ import { Empresa } from '../../shared/interfaces/empresa.interface';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
+import { EmpresaResponseDto } from '../../models/empresas/empresa-response.dto';
 
 @Component({
   selector: 'app-empresa-form',
@@ -48,21 +49,18 @@ export class EmpresaFormComponent {
       ...this.empresaForm.value,
     }
     this.loading=true;
-
     this.empresaService.crearEmpresa(crearEmpresaDto).subscribe({
-      next: (empresa:Empresa) => {
-        this.loading=false;
+      next: (empresa: EmpresaResponseDto) => {
+        this.loading = false;
         if (empresa && empresa.id) {
           this.empresaCreada.emit(empresa.id);
         }
       },
       error: (err) => {
         this.loading = false;
-        
-        if (err.status === 409) {
-          this.mensajeError = 'El NIT ya se encuentra registrado';
-        } else if (err.status === 400) {
-          this.mensajeError = 'Datos invalidos, revisa los campos';
+      
+        if (err.status === 400) {
+          this.mensajeError = 'Datos invalidos, revisa los campos.';
         } else {
           this.mensajeError = 'Error inesperado.';
           console.error(err);
@@ -70,6 +68,5 @@ export class EmpresaFormComponent {
       }
     });
   }
-
 
 }

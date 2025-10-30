@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { ParqueaderoConRelacionesDto } from '../../models/parqueaderos/parqueadero-con-relaciones.dto';
+import { ParqueaderoResponseDto } from '../../models/parqueaderos/parqueadero-response.dto';
 
 @Component({
   selector: 'app-parqueadero-item',
@@ -9,7 +9,7 @@ import { ParqueaderoConRelacionesDto } from '../../models/parqueaderos/parqueade
 })
 export class ParqueaderoItemComponent {
 
-  @Input() parqueadero!: ParqueaderoConRelacionesDto;
+  @Input() parqueadero!: ParqueaderoResponseDto;
   @Output() verDetalleParqueadero= new EventEmitter<number>();
   @Output() abrirModalTarifa = new EventEmitter<number>();
 

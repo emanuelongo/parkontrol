@@ -1,4 +1,4 @@
-import { Component, Inject, Input, OnInit } from '@angular/core';
+import { Component, Inject, Input, OnInit, Optional } from '@angular/core';
 import { TarifaService } from '../../services/tarifa';
 import { TipoVehiculo } from '../../shared/interfaces/tipo-vehiculo.interface';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -11,7 +11,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { Tarifa } from '../../shared/interfaces/tarifa.interface';
 import { TipoVehiculoService } from '../../services/tipo-vehiculo';
 import { CrearTarifaDto } from '../../models/tarifas/crear-tarifa.dto';
-import { TARIFAS_MOCK, TIPOS_VEHICULO_MOCK } from '../../services/tarifas-mock';
 import { MatTableModule } from '@angular/material/table';
 
 @Component({
@@ -25,19 +24,14 @@ import { MatTableModule } from '@angular/material/table';
     MatTableModule,
     MatSelectModule,
     MatButtonModule,
-    MatTableModule,
     MatIconModule,
   ],
   templateUrl: './tarifa-modal.html',
   styleUrl: './tarifa-modal.scss',
-  providers: [
-    { provide: MAT_DIALOG_DATA, useValue: { idParqueadero: 1 } }, // dato simulado
-    { provide: MatDialogRef, useValue: null },                    // 👈 esto hace dialogRef = null
-  ],
+
 })
 export class TarifaModalComponent implements OnInit{
 
-  modoPrueba: boolean = true;
   tarifas: Tarifa[]= [];
   tiposVehiculo: TipoVehiculo[]= [];
   tarifaForm: FormGroup
@@ -70,15 +64,6 @@ export class TarifaModalComponent implements OnInit{
   }
 
   ngOnInit(): void {
-    if (this.modoPrueba) {
-    this.tarifas = TARIFAS_MOCK;
-    this.tiposVehiculo = TIPOS_VEHICULO_MOCK;
-    if (!this.data) {
-    this.data = { idParqueadero: 1 }; // mock temporal
-    }
-    //TODO ACA ES PRUEBA
-    return;
-  }
     this.cargarTarifas();
     this.cargarTiposVehiculo();
   }

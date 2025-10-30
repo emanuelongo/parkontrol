@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { EmpresaResponseDto } from '../../models/empresas/empresa-response.dto';
-import { UsuarioResponseDto } from '../../models/usuarios/usuario-response.dto';
+import { UsuarioSessionDto } from '../../models/usuarios/usuario-session.dto';
 
 @Component({
   selector: 'app-empresa-info',
@@ -10,5 +10,5 @@ import { UsuarioResponseDto } from '../../models/usuarios/usuario-response.dto';
 })
 export class EmpresaInfoComponent {
   @Input() empresa?: EmpresaResponseDto;
-  @Input() administrador? : UsuarioResponseDto | null;
+  @Input() administrador? : UsuarioSessionDto | null;
 }
