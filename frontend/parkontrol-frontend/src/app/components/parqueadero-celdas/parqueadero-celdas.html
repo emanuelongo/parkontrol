@@ -1,0 +1,83 @@
+<div class="celdas-container">
+  <h2 class="title">Gestion de celdas</h2>
+
+  @if(loading){
+    <p>Cargando celdas...</p>
+  } @else {
+    @if(error){
+      <div class="error">{{ error }}</div>
+    } @else {
+        @if(celdas && celdas.length > 0){
+        <table mat-table class="mat-elevation-z2 tabla-celdas">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Tipo</th>
+                <th>Sensor</th>
+                <th>Estado</th>
+                <th>Últ. cambio</th>
+            </tr>
+            </thead>
+            <tbody>
+            @for(celda of celdas; track celda.id){
+                <tr>
+                <td>{{ celda.id }}</td>
+                <td>{{ celda.tipoCelda.nombre || celda.tipoCelda.id }}</td>
+                <td>{{ celda.sensor.nombre || celda.sensor.id }}</td>
+                <td>
+                    <button mat-stroked-button
+                            class="estado-btn"
+                            [class.libre]="celda.estado === 'LIBRE'"
+                            [class.ocupada]="celda.estado === 'OCUPADA'">
+                    {{ celda.estado }}
+                    </button>
+                </td>
+                <td>{{ celda.ultimoCambioEstado }}</td>
+                </tr>
+            }
+            </tbody>
+        </table>
+      } @else {
+        <p>No hay celdas registradas para este parqueadero.</p>
+      }
+    }
+  }
+
+  <hr />
+
+  <h3 class="subtitle">Crear celda</h3>
+  <form [formGroup]="crearForm" (ngSubmit)="submitCrear()">
+    <div class="form-row">
+      <mat-form-field appearance="outline" class="flex-field">
+        <mat-label>Tipo Celda (id)</mat-label>
+        <input matInput formControlName="idTipoCelda" type="number" />
+        @if (crearForm.get('idTipoCelda')?.dirty && crearForm.get('idTipoCelda')?.invalid) {
+          <div class="text-red-600 text-sm mt-1">Seleccione un tipo de celda válido.</div>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="flex-field">
+        <mat-label>Sensor (id)</mat-label>
+        <input matInput formControlName="idSensor" type="number" />
+        @if (crearForm.get('idSensor')?.dirty && crearForm.get('idSensor')?.invalid) {
+          <div class="text-red-600 text-sm mt-1">Seleccione un sensor válido.</div>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="flex-field">
+        <mat-label>Estado</mat-label>
+        <mat-select formControlName="estado">
+          <mat-option value="LIBRE">LIBRE</mat-option>
+          <mat-option value="OCUPADA">OCUPADA</mat-option>
+        </mat-select>
+        @if (crearForm.get('estado')?.dirty && crearForm.get('estado')?.invalid) {
+          <div class="text-red-600 text-sm mt-1">Seleccione el estado.</div>
+        }
+      </mat-form-field>
+
+      <div class="form-actions">
+        <button mat-flat-button color="primary" type="submit" [disabled]="crearForm.invalid || loading">Crear</button>
+      </div>
+    </div>
+  </form>
+</div>

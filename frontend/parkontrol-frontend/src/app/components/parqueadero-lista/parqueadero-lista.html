@@ -2,8 +2,8 @@
     @for (parqueadero of parqueaderos; track parqueadero.id){
         <app-parqueadero-item
             [parqueadero] = "parqueadero"
-            (verDetalle) = "onVerDetalleParqueadero(parqueadero.id)"
-            (modificarTarifa) = "onAbrirModalTarifa(parqueadero.id)"
+            (verDetalleParqueadero) = "onVerDetalleParqueadero(parqueadero.id)"
+            (abrirModalTarifa) = "onAbrirModalTarifa(parqueadero.id)"
         />
     }@empty {
         <h3>No se han registrado parqueaderos para tu empresa</h3>

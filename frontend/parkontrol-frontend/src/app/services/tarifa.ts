@@ -4,7 +4,7 @@ import { appsSettings } from '../settings/app-settings';
 import { Observable } from 'rxjs';
 import { CrearTarifaDto } from '../models/tarifas/crear-tarifa.dto';
 import { ActualizarTarifaDto } from '../models/tarifas/actualizar-tarifa.dto';
-import { Tarifa } from '../shared/interfaces/tarifa.interface';
+import { TarifaResponseDto } from '../models/tarifas/tarifa-response.dto';
 
 @Injectable({
   providedIn: 'root'
@@ -15,19 +15,19 @@ export class TarifaService {
   
   constructor(private readonly httpClient: HttpClient){}
 
-  getTarifasByParqueadero(idParqueadero: number): Observable<Tarifa[]>{
-    return this.httpClient.get<Tarifa[]>(`${this.baseUrl}parqueaderos/${idParqueadero}/tarifas`);
+  getTarifasByParqueadero(idParqueadero: number): Observable<TarifaResponseDto[]> {
+    return this.httpClient.get<TarifaResponseDto[]>(`${this.baseUrl}rates/parqueadero/${idParqueadero}`);
   }
 
-  crearTarifa(crearTarifaDto: CrearTarifaDto): Observable<Tarifa>{
-    return this.httpClient.post<Tarifa>(`${this.baseUrl}parqueaderos/${crearTarifaDto.idParqueadero}/tarifas`, crearTarifaDto);
+  crearTarifa(crearTarifaDto: CrearTarifaDto): Observable<TarifaResponseDto> {
+    return this.httpClient.post<TarifaResponseDto>(`${this.baseUrl}rates`, crearTarifaDto);
   }
 
-  actualizarTarifa(idParqueadero: number, idTarifa: number, actualizarTarifaDto : ActualizarTarifaDto): Observable<Tarifa>{
-    return this.httpClient.put<Tarifa>(`${this.baseUrl}parqueaderos/${idParqueadero}/tarifas/${idTarifa}`, actualizarTarifaDto);
+  actualizarTarifa(idTarifa: number, actualizarTarifaDto: ActualizarTarifaDto): Observable<TarifaResponseDto> {
+    return this.httpClient.patch<TarifaResponseDto>(`${this.baseUrl}rates/${idTarifa}`, actualizarTarifaDto);
   }
 
-  eliminarTarifa(idParqueadero: number, idTarifa: number): Observable<void>{
-    return this.httpClient.delete<void>(`${this.baseUrl}parqueaderos/${idParqueadero}/tarifas/${idTarifa}`);
+  eliminarTarifa(idTarifa: number): Observable<void> {
+    return this.httpClient.delete<void>(`${this.baseUrl}rates/${idTarifa}`);
   }
 }

@@ -1,1 +1,38 @@
-<p>parqueadero-detalles works!</p>
+<div class="detalle-container">
+
+  <!-- Sección superior: ocupación + info general -->
+  <div class="top-cards">
+
+    <!-- Card 1: Ocupación (2/3) -->
+    <div class="card ocupacion-card">
+      <app-parqueadero-ocupacion [idParqueadero]="parqueaderoId"></app-parqueadero-ocupacion>
+    </div>
+
+    <!-- Card 2: Información general (1/3) -->
+    <div class="card info-card">
+      @if(loading) {
+        <div class="loading">Cargando información...</div>
+      } @else {
+        @if(error) {
+          <div class="error">{{ error }}</div>
+        } @else {
+          @if(parqueadero) {
+            <div class="info-content">
+              <h4>Información del parqueadero</h4>
+              <div class="info-item"><strong>Nombre:</strong> {{ parqueadero.nombre }}</div>
+              <div class="info-item"><strong>Ubicación:</strong> {{ parqueadero.ubicacion }}</div>
+              <div class="info-item"><strong>Capacidad:</strong> {{ parqueadero.capacidadTotal }}</div>
+            </div>
+          }
+        }
+      }
+    </div>
+
+  </div>
+
+  <!-- Sección inferior: listado de celdas + formulario -->
+  <div class="celdas-section">
+    <app-parqueadero-celdas [idParqueadero]="parqueaderoId"></app-parqueadero-celdas>
+  </div>
+
+</div>

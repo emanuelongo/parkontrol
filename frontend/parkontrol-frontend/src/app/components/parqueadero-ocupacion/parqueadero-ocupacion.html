@@ -1,0 +1,37 @@
+// ...existing code...
+<mat-card class="ocupacion-card">
+  @if(loading){
+    <div class="spinner">
+      <mat-progress-spinner diameter="36" mode="indeterminate"></mat-progress-spinner>
+    </div>
+  } @else {
+    @if(error){
+      <div class="error">{{ error }}</div>
+    } @else {
+      @if(ocupacion){
+        <h3 class="title">{{ ocupacion.nombreParqueadero }}</h3>
+        <div class="datos">
+          <div class="dato">
+            <div class="label">Total celdas</div>
+            <div class="value">{{ ocupacion.totalCeldas }}</div>
+          </div>
+          <div class="dato">
+            <div class="label">Ocupadas</div>
+            <div class="value">{{ ocupacion.celdasOcupadas }}</div>
+          </div>
+          <div class="dato">
+            <div class="label">Libres</div>
+            <div class="value">{{ ocupacion.celdasLibres }}</div>
+          </div>
+          <div class="dato porcentaje">
+            <div class="label">Porcentaje</div>
+            <div class="value">{{ porcentajeOcupacion }}%</div>
+          </div>
+        </div>
+      } @else {
+        <div class="empty">No hay datos de ocupación.</div>
+      }
+    }
+  }
+</mat-card>
+// ...existing code...

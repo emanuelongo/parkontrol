@@ -12,6 +12,8 @@ import { Tarifa } from '../../shared/interfaces/tarifa.interface';
 import { TipoVehiculoService } from '../../services/tipo-vehiculo';
 import { CrearTarifaDto } from '../../models/tarifas/crear-tarifa.dto';
 import { MatTableModule } from '@angular/material/table';
+import { ActualizarTarifaDto } from '../../models/tarifas/actualizar-tarifa.dto';
+import { TarifaResponseDto } from '../../models/tarifas/tarifa-response.dto';
 
 @Component({
   selector: 'app-tarifa-modal',
@@ -32,7 +34,7 @@ import { MatTableModule } from '@angular/material/table';
 })
 export class TarifaModalComponent implements OnInit{
 
-  tarifas: Tarifa[]= [];
+  tarifas: TarifaResponseDto[]= []
   tiposVehiculo: TipoVehiculo[]= [];
   tarifaForm: FormGroup
 
@@ -95,60 +97,69 @@ export class TarifaModalComponent implements OnInit{
         this.mensajeError= 'No se cargaron las tipos de vehiculo desde la base de datos';
         console.error(err)
       }
-    });
-  
+    });  
   }
 
-  //sirve para actualizar / crear
   guardarTarifa(){
     if (this.tarifaForm.invalid) return;
 
-    const tarifaDto: CrearTarifaDto = {
-      ...this.tarifaForm.value,
+    this.loadingTarifa = true;
+    const form = this.tarifaForm.value;
+
+    const actualizarDto: ActualizarTarifaDto = {
+      precioFraccionHora: form.precioFraccionHora,
+      precioHoraAdicional: form.precioHoraAdicional,
+      idTipoVehiculo: form.tipoVehiculoId,
+    };
+
+    const crearDto: CrearTarifaDto = {
       idParqueadero: this.data.idParqueadero,
-    }
+      idTipoVehiculo: form.tipoVehiculoId,
+      precioFraccionHora: form.precioFraccionHora,
+      precioHoraAdicional: form.precioHoraAdicional
+    };
 
-    const peticion = this.editando
-    ? this.tarifaService.actualizarTarifa(this.data.idParqueadero, this.tarifaEditandoId!, tarifaDto)
-    : this.tarifaService.crearTarifa(tarifaDto);
+    const request$ = (this.editando && this.tarifaEditandoId)
+      ? this.tarifaService.actualizarTarifa(this.tarifaEditandoId, actualizarDto)
+      : this.tarifaService.crearTarifa(crearDto);
 
-    peticion.subscribe({
-      next: (tarifa) => {
-        if(tarifa){
-          this.loadingTarifa= false;
-          this.huboCambios = false;
+    request$
+      .subscribe({
+        next: () => {
+          this.huboCambios = true;
           this.resetFormulario();
           this.cargarTarifas();
+        },
+        error: (err) => {
+          this.mensajeError = this.editando ? 'Error al actualizar la tarifa.' : 'Error al crear la tarifa.';
+          console.error(err);
         }
-      },
-      error: (err) => {
-        this.loadingTarifa = false;
-        this.mensajeError = 'Error al guardar la tarifa.';
-        console.error(err);
-      }
     });
   }
 
-  editarTarifa(tarifa: Tarifa) {
+  
+  public editarTarifa(tarifa: TarifaResponseDto):void {
     this.editando = true;
     this.tarifaEditandoId = tarifa.id;
-    
     this.tarifaForm.patchValue({
       tipoVehiculoId: tarifa.tipoVehiculo.id,
       precioFraccionHora: tarifa.precioFraccionHora,
-      precioHoraAdicional: tarifa.precioHoraAdicional,
+      precioHoraAdicional: tarifa.precioHoraAdicional ?? null,
     });
   }
+
 
   eliminarTarifa(idTarifa: number){
     if (!confirm('¿Seguro deseas eliminar esta tarifa?')) return;
 
-    this.tarifaService.eliminarTarifa(this.data.idParqueadero, idTarifa).subscribe({
+    this.tarifaService.eliminarTarifa( idTarifa).subscribe({
       next: () => {
+        this.loadingTarifa = false;
         this.huboCambios= true
         this.cargarTarifas();
       },
       error: (err) => {
+        this.loadingTarifa = false;
         this.mensajeError = 'Error al eliminar tarifa',
         console.error(err);
       } 
@@ -164,8 +175,6 @@ export class TarifaModalComponent implements OnInit{
   cerrarModal(){
     this.dialogRef.close(this.huboCambios);
   }
-
-  
 
 
 }

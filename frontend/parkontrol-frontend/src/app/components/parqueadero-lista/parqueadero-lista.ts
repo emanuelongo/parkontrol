@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ParqueaderoItemComponent } from '../parqueadero-item/parqueadero-item';
-import { ParqueaderoConRelacionesDto } from '../../models/parqueaderos/parqueadero-con-relaciones.dto';
 import { ParqueaderoResponseDto } from '../../models/parqueaderos/parqueadero-response.dto';
 
 @Component({

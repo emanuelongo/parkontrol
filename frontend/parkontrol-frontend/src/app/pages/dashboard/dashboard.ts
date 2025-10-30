@@ -67,45 +67,51 @@ export class DashboardComponent implements OnInit{
   }
 
   cargarParqueaderos() {
-    this.loadingParqueaderos = true;
+    if (!this.sessionService.obtenerToken()) {
+      this.loadingParqueaderos = false;
+      this.mensajeError = 'No autenticado: token no encontrado';
+      console.error('Token ausente');
+      return;
+    }
+  
 
+    this.loadingParqueaderos = true;
     this.parqueaderoService.getParqueaderosByEmpresa().subscribe({
       next: (parqueaderos) => {
         this.loadingParqueaderos = false;
         this.parqueaderos = parqueaderos;
-      },
-      error: (err) => {
-        this.loadingParqueaderos = false;
-        this.mensajeError = 'No se pudo cargar los parqueaderos';
-        console.error(err);
+        },
+        error: (err) => {
+          this.loadingParqueaderos = false;
+          this.mensajeError = 'No se pudo cargar los parqueaderos';
+          console.error('cargarParqueaderos error:', err.status, err.error ?? err.message ?? err);
+          }
+        });
       }
-    });
-  }
 
-  onVerDetalleParqueadero(idParqueadero: number) {
-    const parqueadero = this.parqueaderos.find(p => p.id === idParqueadero);
+    onVerDetalleParqueadero(idParqueadero: number) {
+      const parqueadero = this.parqueaderos.find(p => p.id === idParqueadero);
 
-    if (!parqueadero) {
-      console.error('No se encontró el parqueadero en la lista');
-      return;
+      if (!parqueadero) {
+        console.error('No se encontró el parqueadero en la lista');
+        return;
+      }
+      //Le envio el id del parqueadero por la ruta 
+      this.router.navigate(['parqueadero', parqueadero.id]);
     }
-    //Le envio el id del parqueadero por la ruta 
-    this.router.navigate(['parqueadero', parqueadero.id]);
 
-}
+    onAbrirModalTarifa(idParqueadero: number) {
+      const dialogRef = this.dialog.open(TarifaModalComponent, {
+        width: '600px',
+        data: {idParqueadero},
+        disableClose: true,
+      })
 
-onAbrirModalTarifa(idParqueadero: number) {
-  const dialogRef = this.dialog.open(TarifaModalComponent, {
-    width: '600px',
-    data: {idParqueadero},
-    disableClose: true,
-  })
-
-  dialogRef.afterClosed().subscribe((actualizado) => {
-    if (actualizado){
-      this.cargarParqueaderos();
+      dialogRef.afterClosed().subscribe((actualizado) => {
+        if (actualizado){
+          this.cargarParqueaderos();
+        }
+      })
     }
-  })
-}
 
 }

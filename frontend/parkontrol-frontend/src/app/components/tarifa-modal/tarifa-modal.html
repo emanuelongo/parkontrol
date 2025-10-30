@@ -49,25 +49,25 @@
   } @else {
     <table mat-table [dataSource]="tarifas" class="mat-elevation-z2 tabla-tarifas">
 
-      <!-- Tipo Vehículo -->
+
       <ng-container matColumnDef="tipoVehiculo">
         <th mat-header-cell *matHeaderCellDef>Tipo de vehiculo</th>
         <td mat-cell *matCellDef="let tarifa">{{ tarifa.tipoVehiculo.nombre }}</td>
       </ng-container>
 
-      <!-- Fracción -->
+   
       <ng-container matColumnDef="fraccion">
         <th mat-header-cell *matHeaderCellDef>Fraccion hora (COP)</th>
         <td mat-cell *matCellDef="let tarifa">{{ tarifa.precioFraccionHora  }}</td>
       </ng-container>
 
-      <!-- Adicional -->
+ 
       <ng-container matColumnDef="adicional">
         <th mat-header-cell *matHeaderCellDef>Hora adicional (COP)</th>
         <td mat-cell *matCellDef="let tarifa">{{ tarifa.precioHoraAdicional}}</td>
       </ng-container>
 
-      <!-- Acciones -->
+   
       <ng-container matColumnDef="acciones">
         <th mat-header-cell *matHeaderCellDef class="text-center">Acciones</th>
         <td mat-cell *matCellDef="let tarifa" class="text-center">
