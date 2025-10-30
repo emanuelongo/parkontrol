@@ -9,12 +9,22 @@ import {
 import { vistasApi, type OcupacionParqueadero } from '../api/vistas';
 import { reservasApi } from '../api/reservas';
 import type { Reserva } from '../types';
+import { useEmpresas } from '../hooks/useEmpresas';
 
 const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [ocupacion, setOcupacion] = useState<OcupacionParqueadero[]>([]);
   const [reservasActivas, setReservasActivas] = useState<Reserva[]>([]);
-  const [idEmpresa, setIdEmpresa] = useState<number>(1);
+  const [idEmpresa, setIdEmpresa] = useState<number | undefined>();
+  
+  const { empresas, loading: loadingEmpresas } = useEmpresas();
+
+  // Set first empresa as default when loaded
+  useEffect(() => {
+    if (empresas.length > 0 && idEmpresa === undefined) {
+      setIdEmpresa(empresas[0].id);
+    }
+  }, [empresas, idEmpresa]);
 
   useEffect(() => {
     fetchDashboardData();
@@ -95,11 +105,15 @@ const Dashboard = () => {
           <Select
             value={idEmpresa}
             onChange={setIdEmpresa}
-            style={{ width: 200 }}
+            style={{ width: 250 }}
+            placeholder="Seleccionar empresa"
+            loading={loadingEmpresas}
           >
-            <Select.Option value={1}>Empresa 1</Select.Option>
-            <Select.Option value={2}>Empresa 2</Select.Option>
-            <Select.Option value={3}>Empresa 3</Select.Option>
+            {empresas.map((emp) => (
+              <Select.Option key={emp.id} value={emp.id}>
+                {emp.nombre}
+              </Select.Option>
+            ))}
           </Select>
         </div>
       </div>

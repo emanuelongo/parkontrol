@@ -36,4 +36,8 @@ export class EmpresasService {
         const empresa = await this.findEmpresaById(id);
         return new EmpresaResponseDto(empresa);
     }
+
+    async obtenerTodas(): Promise<EmpresaResponseDto[]> {
+        return this.findAll();
+    }
 }

@@ -3,13 +3,23 @@ import { Table, Button, Modal, Form, Input, InputNumber, message, Space, Popconf
 import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
 import type { Usuario } from '../types';
 import { usuariosApi } from '../api/usuarios';
+import { useEmpresas } from '../hooks/useEmpresas';
 
 const Usuarios = () => {
   const [usuarios, setUsuarios] = useState<Usuario[]>([]);
   const [loading, setLoading] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
-  const [idEmpresa, setIdEmpresa] = useState<number>(1);
+  const [idEmpresa, setIdEmpresa] = useState<number | undefined>();
   const [form] = Form.useForm();
+  
+  const { empresas, loading: loadingEmpresas } = useEmpresas();
+
+  // Set first empresa as default when loaded
+  useEffect(() => {
+    if (empresas.length > 0 && idEmpresa === undefined) {
+      setIdEmpresa(empresas[0].id);
+    }
+  }, [empresas, idEmpresa]);
 
   const fetchUsuarios = async (empresaId: number) => {
     setLoading(true);
@@ -24,7 +34,9 @@ const Usuarios = () => {
   };
 
   useEffect(() => {
-    fetchUsuarios(idEmpresa);
+    if (idEmpresa !== undefined) {
+      fetchUsuarios(idEmpresa);
+    }
   }, [idEmpresa]);
 
   const handleCreate = () => {
@@ -99,20 +111,24 @@ const Usuarios = () => {
   ];
 
   return (
-    <div style={{ padding: '24px' }}>
+    <div>
       <div style={{ marginBottom: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-          <h2>Gestion de Usuarios</h2>
+          <h1>Gestion de Usuarios</h1>
           <div>
             <span style={{ marginRight: 8 }}>Empresa:</span>
             <Select
               value={idEmpresa}
               onChange={setIdEmpresa}
-              style={{ width: 150 }}
+              style={{ width: 250 }}
+              placeholder="Seleccionar empresa"
+              loading={loadingEmpresas}
             >
-              <Select.Option value={1}>Empresa 1</Select.Option>
-              <Select.Option value={2}>Empresa 2</Select.Option>
-              <Select.Option value={3}>Empresa 3</Select.Option>
+              {empresas.map((emp) => (
+                <Select.Option key={emp.id} value={emp.id}>
+                  {emp.nombre}
+                </Select.Option>
+              ))}
             </Select>
           </div>
         </div>

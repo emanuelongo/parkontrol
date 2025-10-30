@@ -1,14 +1,27 @@
-import { useState } from 'react';
-import { Form, Input, Button, Card, message, Descriptions } from 'antd';
+import { useState, useEffect } from 'react';
+import { Form, Input, Button, Card, message, Descriptions, Select } from 'antd';
 import { SearchOutlined, PlusOutlined } from '@ant-design/icons';
 import type { Vehiculo } from '../types';
 import { vehiculosApi } from '../api/vehiculos';
+import { useParqueaderos } from '../hooks/useParqueaderos';
+import { useEmpresas } from '../hooks/useEmpresas';
 
 const Vehiculos = () => {
   const [vehiculo, setVehiculo] = useState<Vehiculo | null>(null);
   const [loading, setLoading] = useState(false);
+  const [idEmpresa, setIdEmpresa] = useState<number | undefined>();
   const [searchForm] = Form.useForm();
   const [createForm] = Form.useForm();
+  
+  const { empresas, loading: loadingEmpresas } = useEmpresas();
+  const { parqueaderos } = useParqueaderos(idEmpresa || 0);
+
+  // Set first empresa as default when loaded
+  useEffect(() => {
+    if (empresas.length > 0 && idEmpresa === undefined) {
+      setIdEmpresa(empresas[0].id);
+    }
+  }, [empresas, idEmpresa]);
 
   const handleSearch = async (values: { placa: string }) => {
     setLoading(true);
@@ -45,6 +58,18 @@ const Vehiculos = () => {
 
       <Card title="Buscar Vehículo" style={{ marginBottom: 24 }}>
         <Form form={searchForm} onFinish={handleSearch} layout="inline">
+          <Form.Item
+            name="idParqueadero"
+            rules={[{ required: true, message: 'Seleccione el parqueadero' }]}
+          >
+            <Select placeholder="Seleccionar parqueadero" style={{ width: 250 }}>
+              {parqueaderos.map((p) => (
+                <Select.Option key={p.id} value={p.id}>
+                  {p.nombre}
+                </Select.Option>
+              ))}
+            </Select>
+          </Form.Item>
           <Form.Item
             name="placa"
             rules={[{ required: true, message: 'Ingrese la placa' }]}

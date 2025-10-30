@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Table, Tabs, Card, Statistic, Row, Col, Select } from 'antd';
 import { CarOutlined, DollarOutlined, HistoryOutlined } from '@ant-design/icons';
 import { vistasApi } from '../api/vistas';
+import { useEmpresas } from '../hooks/useEmpresas';
 
 const { TabPane } = Tabs;
 
@@ -10,7 +11,16 @@ const Vistas = () => {
   const [historial, setHistorial] = useState<any[]>([]);
   const [ingresos, setIngresos] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
-  const [idEmpresa, setIdEmpresa] = useState<number>(1);
+  const [idEmpresa, setIdEmpresa] = useState<number | undefined>();
+  
+  const { empresas, loading: loadingEmpresas } = useEmpresas();
+
+  // Set first empresa as default when loaded
+  useEffect(() => {
+    if (empresas.length > 0 && idEmpresa === undefined) {
+      setIdEmpresa(empresas[0].id);
+    }
+  }, [empresas, idEmpresa]);
 
   const fetchOcupacion = async (empresaId: number) => {
     setLoading(true);
@@ -49,7 +59,9 @@ const Vistas = () => {
   };
 
   useEffect(() => {
-    fetchOcupacion(idEmpresa);
+    if (idEmpresa !== undefined) {
+      fetchOcupacion(idEmpresa);
+    }
     fetchHistorial();
     fetchIngresos();
   }, [idEmpresa]);
@@ -173,19 +185,23 @@ const Vistas = () => {
     : 0;
 
   return (
-    <div style={{ padding: '24px' }}>
+    <div>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
-        <h2>Vistas Oracle - Analisis de Datos</h2>
+        <h1>Vistas Oracle - Analisis de Datos</h1>
         <div>
           <span style={{ marginRight: 8 }}>Empresa:</span>
           <Select
             value={idEmpresa}
             onChange={setIdEmpresa}
-            style={{ width: 150 }}
+            style={{ width: 250 }}
+            placeholder="Seleccionar empresa"
+            loading={loadingEmpresas}
           >
-            <Select.Option value={1}>Empresa 1</Select.Option>
-            <Select.Option value={2}>Empresa 2</Select.Option>
-            <Select.Option value={3}>Empresa 3</Select.Option>
+            {empresas.map((emp) => (
+              <Select.Option key={emp.id} value={emp.id}>
+                {emp.nombre}
+              </Select.Option>
+            ))}
           </Select>
         </div>
       </div>
