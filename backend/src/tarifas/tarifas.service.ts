@@ -62,10 +62,27 @@ export class TarifasService {
       throw new NotFoundException(`No existe tarifa con id: ${id}`);
     }
 
-    await this.tarifaRepository.update(id, {
-      precioFraccionHora: updateData.precioFraccionHora ?? tarifa.precioFraccionHora,
-      precioHoraAdicional: updateData.precioHoraAdicional ?? tarifa.precioHoraAdicional,
-    });
+    const updateFields: string[] = [];
+    const updateValues: any[] = [];
+    let paramIndex = 1;
+
+    if (updateData.precioFraccionHora !== undefined) {
+      updateFields.push(`PRECIO_FRACCION_HORA = :${paramIndex}`);
+      updateValues.push(updateData.precioFraccionHora);
+      paramIndex++;
+    }
+
+    if (updateData.precioHoraAdicional !== undefined) {
+      updateFields.push(`PRECIO_HORA_ADICIONAL = :${paramIndex}`);
+      updateValues.push(updateData.precioHoraAdicional);
+      paramIndex++;
+    }
+
+    if (updateFields.length > 0) {
+      updateValues.push(id);
+      const query = `UPDATE TARIFA SET ${updateFields.join(', ')} WHERE ID_TARIFA = :${paramIndex}`;
+      await this.tarifaRepository.query(query, updateValues);
+    }
 
     const tarifaActualizada = await this.tarifaRepository.findOne({
       where: { id },
