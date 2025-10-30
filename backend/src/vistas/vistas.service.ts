@@ -30,58 +30,91 @@ export class VistasService {
     private readonly dataSource: DataSource,
   ) {}
 
-  async getOcupacionByEmpresa(idEmpresa: number): Promise<OcupacionParqueaderoView[]> {
-    return await this.ocupacionRepo.find({
-      where: { idEmpresa },
-    });
+  async getOcupacionByEmpresa(idEmpresa: number): Promise<any[]> {
+    return await this.dataSource.query(
+      `SELECT v.* FROM VW_OCUPACION_PARQUEADERO v 
+       JOIN PARQUEADERO p ON v.ID_PARQUEADERO = p.ID_PARQUEADERO 
+       WHERE p.ID_EMPRESA = :1`,
+      [idEmpresa]
+    );
   }
 
-  async getOcupacionByParqueadero(idParqueadero: number): Promise<OcupacionParqueaderoView | null> {
-    return await this.ocupacionRepo.findOne({
-      where: { idParqueadero },
-    });
+  async getOcupacionByParqueadero(idParqueadero: number): Promise<any> {
+    const result = await this.dataSource.query(
+      `SELECT * FROM VW_OCUPACION_PARQUEADERO WHERE ID_PARQUEADERO = :1`,
+      [idParqueadero]
+    );
+    return result[0] || null;
   }
 
-  async getHistorialByEmpresa(idEmpresa: number): Promise<HistorialReservasView[]> {
-    return await this.historialRepo.find({
-      where: { idEmpresa },
-    });
+  async getHistorialByEmpresa(idEmpresa: number): Promise<any[]> {
+    return await this.dataSource.query(
+      `SELECT v.* FROM VW_HISTORIAL_RESERVAS v 
+       JOIN CELDA c ON v.ID_CELDA = c.ID_CELDA 
+       JOIN PARQUEADERO p ON c.ID_PARQUEADERO = p.ID_PARQUEADERO 
+       WHERE p.ID_EMPRESA = :1`,
+      [idEmpresa]
+    );
   }
 
-  async getHistorialByPlacaAndParqueadero(placa: string, idParqueadero: number): Promise<HistorialReservasView[]> {
-    return await this.historialRepo.find({
-      where: { placa, idParqueadero },
-    });
+  async getHistorialByPlacaAndParqueadero(placa: string, idParqueadero: number): Promise<any[]> {
+    return await this.dataSource.query(
+      `SELECT v.* FROM VW_HISTORIAL_RESERVAS v 
+       JOIN CELDA c ON v.ID_CELDA = c.ID_CELDA 
+       WHERE v.PLACA = :1 AND c.ID_PARQUEADERO = :2`,
+      [placa, idParqueadero]
+    );
   }
 
-  async getFacturacionByEmpresa(idEmpresa: number): Promise<FacturacionCompletaView[]> {
-    return await this.facturacionRepo.find({
-      where: { idEmpresa },
-    });
+  async getFacturacionByEmpresa(idEmpresa: number): Promise<any[]> {
+    return await this.dataSource.query(
+      `SELECT v.* FROM VW_FACTURACION_COMPLETA v 
+       JOIN PAGO pg ON v.ID_PAGO = pg.ID_PAGO 
+       JOIN RESERVA r ON pg.ID_RESERVA = r.ID_RESERVA 
+       JOIN CELDA c ON r.ID_CELDA = c.ID_CELDA 
+       JOIN PARQUEADERO p ON c.ID_PARQUEADERO = p.ID_PARQUEADERO 
+       WHERE p.ID_EMPRESA = :1`,
+      [idEmpresa]
+    );
   }
 
-  async getFacturacionByDocumento(numeroDocumento: string, idEmpresa: number): Promise<FacturacionCompletaView[]> {
-    return await this.facturacionRepo.find({
-      where: { numeroDocumento, idEmpresa },
-    });
+  async getFacturacionByDocumento(numeroDocumento: string, idEmpresa: number): Promise<any[]> {
+    return await this.dataSource.query(
+      `SELECT v.* FROM VW_FACTURACION_COMPLETA v 
+       JOIN PAGO pg ON v.ID_PAGO = pg.ID_PAGO 
+       JOIN RESERVA r ON pg.ID_RESERVA = r.ID_RESERVA 
+       JOIN CELDA c ON r.ID_CELDA = c.ID_CELDA 
+       JOIN PARQUEADERO p ON c.ID_PARQUEADERO = p.ID_PARQUEADERO 
+       WHERE v.NUMERO_DOCUMENTO = :1 AND p.ID_EMPRESA = :2`,
+      [numeroDocumento, idEmpresa]
+    );
   }
 
-  async getIngresosByEmpresa(idEmpresa: number): Promise<IngresosPorParqueaderoMensualView[]> {
-    return await this.ingresosRepo.find({
-      where: { idEmpresa },
-    });
+  async getIngresosByEmpresa(idEmpresa: number): Promise<any[]> {
+    return await this.dataSource.query(
+      `SELECT v.* FROM VW_INGRESOS_POR_PARQUEADERO_MENSUAL v 
+       JOIN PARQUEADERO p ON v.PARQUEADERO = p.NOMBRE 
+       WHERE p.ID_EMPRESA = :1`,
+      [idEmpresa]
+    );
   }
 
-  async getIngresosByParqueadero(idParqueadero: number): Promise<IngresosPorParqueaderoMensualView[]> {
-    return await this.ingresosRepo.find({
-      where: { idParqueadero },
-    });
+  async getIngresosByParqueadero(idParqueadero: number): Promise<any[]> {
+    return await this.dataSource.query(
+      `SELECT v.* FROM VW_INGRESOS_POR_PARQUEADERO_MENSUAL v 
+       JOIN PARQUEADERO p ON v.PARQUEADERO = p.NOMBRE 
+       WHERE p.ID_PARQUEADERO = :1`,
+      [idParqueadero]
+    );
   }
 
-  async getIngresosByPeriodo(periodo: string, idEmpresa: number): Promise<IngresosPorParqueaderoMensualView[]> {
-    return await this.ingresosRepo.find({
-      where: { periodo, idEmpresa },
-    });
+  async getIngresosByPeriodo(periodo: string, idEmpresa: number): Promise<any[]> {
+    return await this.dataSource.query(
+      `SELECT v.* FROM VW_INGRESOS_POR_PARQUEADERO_MENSUAL v 
+       JOIN PARQUEADERO p ON v.PARQUEADERO = p.NOMBRE 
+       WHERE v.PERIODO = :1 AND p.ID_EMPRESA = :2`,
+      [periodo, idEmpresa]
+    );
   }
   async procesarPago(
     idReserva: number,
