@@ -41,29 +41,22 @@ const Parqueaderos = () => {
   };
 
   const handleSubmit = async () => {
-    console.log('🚀 [PARQUEADEROS] Iniciando handleSubmit...');
     try {
       const values = await form.validateFields();
-      console.log('📝 [PARQUEADEROS] Valores validados:', values);
+      console.log('[PARQUEADEROS] Valores:', values);
       
       if (editingId) {
         // TODO: Implementar actualización cuando exista el endpoint
-        message.info('Función de actualización pendiente');
+        message.info('Funcion de actualizacion pendiente');
       } else {
-        console.log('📤 [PARQUEADEROS] Enviando petición al backend...');
-        const result = await parqueaderosApi.create(values);
-        console.log('✅ [PARQUEADEROS] Respuesta exitosa:', result);
-        // El mensaje de éxito lo muestra el interceptor de axios
+        await parqueaderosApi.create(values);
+        // El interceptor muestra la notificacion automaticamente
       }
       setModalVisible(false);
       fetchParqueaderos(1);
     } catch (error) {
-      // El error ya se muestra por el interceptor de axios
-      console.error('❌ [PARQUEADEROS] Error capturado:', error);
-      // Backup: si el interceptor no muestra nada, mostramos nosotros
-      if (!error || !(error as any).response) {
-        message.error('⚠️ No se pudo conectar con el servidor. Verifica que el backend esté corriendo.', 5);
-      }
+      console.error('[PARQUEADEROS] Error:', error);
+      // El interceptor ya maneja los errores
     }
   };
 

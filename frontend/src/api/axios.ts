@@ -1,12 +1,13 @@
 import axios from 'axios';
 import { notification } from 'antd';
 
-// Configurar notification globalmente (MÁS VISIBLE que message)
+// Configurar notification globalmente
 notification.config({
   placement: 'topRight',
   top: 80,
   duration: 4,
   maxCount: 3,
+  rtl: false,
 });
 
 const api = axios.create({
@@ -14,25 +15,23 @@ const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
-  timeout: 10000, // 10 segundos timeout
+  timeout: 10000,
 });
 
 // Interceptor para manejar respuestas exitosas
 api.interceptors.response.use(
   (response) => {
-    // Si la respuesta es exitosa y hay un método específico (POST, PUT, PATCH, DELETE)
     const method = response.config.method?.toUpperCase();
     if (method && ['POST', 'PUT', 'PATCH', 'DELETE'].includes(method)) {
-      // Mostrar mensaje de éxito SIEMPRE
       const operacion = method === 'POST' ? 'creado' : 
                        method === 'PUT' || method === 'PATCH' ? 'actualizado' : 
                        'eliminado';
       
-      console.log('✅ OPERACIÓN EXITOSA:', operacion);
+      console.log('[EXITO] Operacion:', operacion);
       
-      // Usar notification en lugar de message (MÁS VISIBLE)
+      // Mostrar notificación de éxito
       notification.success({
-        message: '✅ Operación Exitosa',
+        message: 'Operacion Exitosa',
         description: `Registro ${operacion} correctamente`,
         placement: 'topRight',
         duration: 4,
@@ -41,18 +40,16 @@ api.interceptors.response.use(
     return response;
   },
   (error) => {
-    // SIEMPRE mostrar errores, sin importar qué
-    console.error('❌ ERROR COMPLETO:', error);
+    console.error('[ERROR] Error capturado:', error);
     
-    let errorMessage = '❌ Error desconocido';
-    let errorDetails = '';
+    let errorMessage = 'Error';
+    let errorDetails = 'Error desconocido';
     
     if (error.response) {
-      // El servidor respondió con un código de error
       const status = error.response.status;
       const data = error.response.data;
       
-      console.error('📡 Respuesta del servidor:', {
+      console.error('[ERROR] Respuesta del servidor:', {
         status,
         url: error.config?.url,
         method: error.config?.method,
@@ -61,33 +58,31 @@ api.interceptors.response.use(
       
       switch (status) {
         case 400:
-          errorMessage = '❌ Datos inválidos';
+          errorMessage = 'Datos invalidos';
           errorDetails = Array.isArray(data.message) 
             ? data.message.join(', ') 
             : data.message || 'Verifica los campos del formulario';
           break;
         case 404:
-          errorMessage = '❌ No encontrado';
+          errorMessage = 'No encontrado';
           errorDetails = 'El recurso solicitado no existe en la base de datos';
           break;
         case 500:
-          // Extraer el mensaje de error de Oracle si existe
           if (data.message && data.message.includes('ORA-')) {
             const oraError = data.message.match(/ORA-\d+/)?.[0];
-            errorMessage = `❌ Error de Base de Datos (${oraError})`;
-            errorDetails = data.message;
-            console.error('💾 ERROR DE BD COMPLETO:', data.message);
+            errorMessage = `Error de Base de Datos (${oraError})`;
+            errorDetails = data.message.substring(0, 200);
+            console.error('[ERROR] Error de BD:', data.message);
           } else {
-            errorMessage = '❌ Error del servidor';
+            errorMessage = 'Error del servidor';
             errorDetails = data.message || 'Error interno del servidor';
           }
           break;
         default:
-          errorMessage = `❌ Error ${status}`;
+          errorMessage = `Error ${status}`;
           errorDetails = data.message || error.message;
       }
       
-      // Usar notification para mejor visibilidad
       notification.error({
         message: errorMessage,
         description: errorDetails,
@@ -96,12 +91,11 @@ api.interceptors.response.use(
       });
       
     } else if (error.request) {
-      // La petición se hizo pero no hubo respuesta
-      errorMessage = '❌ BACKEND NO RESPONDE';
-      errorDetails = 'No se pudo conectar con http://localhost:3000. Verifica que el servidor esté corriendo.';
+      errorMessage = 'Backend no responde';
+      errorDetails = 'No se pudo conectar con el servidor. Verifica que este corriendo en http://localhost:3000';
       
-      console.error('🔌 Backend no responde - Request:', error.request);
-      console.error('🔌 URL intentada:', error.config?.url);
+      console.error('[ERROR] Backend no responde');
+      console.error('[ERROR] URL intentada:', error.config?.url);
       
       notification.error({
         message: errorMessage,
@@ -111,11 +105,10 @@ api.interceptors.response.use(
       });
       
     } else if (error.code === 'ECONNABORTED') {
-      // Timeout
-      errorMessage = '❌ TIMEOUT';
-      errorDetails = 'La operación tardó demasiado. El servidor no respondió a tiempo.';
+      errorMessage = 'Timeout';
+      errorDetails = 'El servidor no respondio a tiempo';
       
-      console.error('⏱️ Timeout del request');
+      console.error('[ERROR] Timeout');
       
       notification.error({
         message: errorMessage,
@@ -125,11 +118,10 @@ api.interceptors.response.use(
       });
       
     } else {
-      // Error al configurar la petición
-      errorMessage = '❌ Error de configuración';
+      errorMessage = 'Error de configuracion';
       errorDetails = error.message;
       
-      console.error('⚙️ Error de configuración:', error);
+      console.error('[ERROR] Error de configuracion:', error);
       
       notification.error({
         message: errorMessage,
