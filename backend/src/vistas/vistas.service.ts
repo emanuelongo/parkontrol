@@ -30,7 +30,11 @@ export class VistasService {
     private readonly dataSource: DataSource,
   ) {}
 
-  async getOcupacionByEmpresa(idEmpresa: number): Promise<any[]> {
+  async getOcupacionByEmpresa(idEmpresa: number | null): Promise<any[]> {
+    if (idEmpresa === null) {
+      return await this.dataSource.query(`SELECT * FROM VW_OCUPACION_PARQUEADERO`);
+    }
+    
     return await this.dataSource.query(
       `SELECT v.* FROM VW_OCUPACION_PARQUEADERO v 
        JOIN PARQUEADERO p ON v.ID_PARQUEADERO = p.ID_PARQUEADERO 
@@ -47,7 +51,11 @@ export class VistasService {
     return result[0] || null;
   }
 
-  async getHistorialByEmpresa(idEmpresa: number): Promise<any[]> {
+  async getHistorialByEmpresa(idEmpresa: number | null): Promise<any[]> {
+    if (idEmpresa === null) {
+      return await this.dataSource.query(`SELECT * FROM VW_HISTORIAL_RESERVAS`);
+    }
+    
     return await this.dataSource.query(
       `SELECT v.* FROM VW_HISTORIAL_RESERVAS v 
        JOIN CELDA c ON v.ID_CELDA = c.ID_CELDA 
@@ -66,7 +74,11 @@ export class VistasService {
     );
   }
 
-  async getFacturacionByEmpresa(idEmpresa: number): Promise<any[]> {
+  async getFacturacionByEmpresa(idEmpresa: number | null): Promise<any[]> {
+    if (idEmpresa === null) {
+      return await this.dataSource.query(`SELECT * FROM VW_FACTURACION_COMPLETA`);
+    }
+    
     return await this.dataSource.query(
       `SELECT v.* FROM VW_FACTURACION_COMPLETA v 
        JOIN PAGO pg ON v.ID_PAGO = pg.ID_PAGO 
@@ -97,7 +109,11 @@ export class VistasService {
     );
   }
 
-  async getIngresosByEmpresa(idEmpresa: number): Promise<any[]> {
+  async getIngresosByEmpresa(idEmpresa: number | null): Promise<any[]> {
+    if (idEmpresa === null) {
+      return await this.dataSource.query(`SELECT * FROM VW_INGRESOS_POR_PARQUEADERO_MENSUAL`);
+    }
+    
     return await this.dataSource.query(
       `SELECT v.* FROM VW_INGRESOS_POR_PARQUEADERO_MENSUAL v 
        JOIN PARQUEADERO p ON v.PARQUEADERO = p.NOMBRE 
@@ -115,7 +131,14 @@ export class VistasService {
     );
   }
 
-  async getIngresosByPeriodo(periodo: string, idEmpresa: number): Promise<any[]> {
+  async getIngresosByPeriodo(periodo: string, idEmpresa: number | null): Promise<any[]> {
+    if (idEmpresa === null) {
+      return await this.dataSource.query(
+        `SELECT * FROM VW_INGRESOS_POR_PARQUEADERO_MENSUAL WHERE PERIODO = :1`,
+        [periodo]
+      );
+    }
+    
     return await this.dataSource.query(
       `SELECT v.* FROM VW_INGRESOS_POR_PARQUEADERO_MENSUAL v 
        JOIN PARQUEADERO p ON v.PARQUEADERO = p.NOMBRE 

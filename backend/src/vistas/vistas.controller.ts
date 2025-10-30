@@ -7,8 +7,9 @@ export class VistasController {
   constructor(private readonly vistasService: VistasService) {}
 
   @Get('ocupacion')
-  async getOcupacionParqueaderos(@Query('idEmpresa', ParseIntPipe) idEmpresa: number) {
-    return await this.vistasService.getOcupacionByEmpresa(idEmpresa);
+  async getOcupacionParqueaderos(@Query('idEmpresa') idEmpresa?: string) {
+    const idEmpresaNum = idEmpresa ? parseInt(idEmpresa, 10) : null;
+    return await this.vistasService.getOcupacionByEmpresa(idEmpresaNum);
   }
 
   @Get('ocupacion/:idParqueadero')
@@ -27,8 +28,9 @@ export class VistasController {
   }
 
   @Get('historial-reservas')
-  async getHistorialReservas(@Query('idEmpresa', ParseIntPipe) idEmpresa: number) {
-    return await this.vistasService.getHistorialByEmpresa(idEmpresa);
+  async getHistorialReservas(@Query('idEmpresa') idEmpresa?: string) {
+    const idEmpresaNum = idEmpresa ? parseInt(idEmpresa, 10) : null;
+    return await this.vistasService.getHistorialByEmpresa(idEmpresaNum);
   }
 
   @Get('historial-reservas/parqueadero/:idParqueadero/placa/:placa')
@@ -50,8 +52,9 @@ export class VistasController {
   }
 
   @Get('facturacion')
-  async getFacturacionCompleta(@Query('idEmpresa', ParseIntPipe) idEmpresa: number) {
-    return await this.vistasService.getFacturacionByEmpresa(idEmpresa);
+  async getFacturacionCompleta(@Query('idEmpresa') idEmpresa?: string) {
+    const idEmpresaNum = idEmpresa ? parseInt(idEmpresa, 10) : null;
+    return await this.vistasService.getFacturacionByEmpresa(idEmpresaNum);
   }
 
   @Get('facturacion/documento/:numeroDocumento')
@@ -64,8 +67,9 @@ export class VistasController {
   }
 
   @Get('ingresos')
-  async getIngresosMensuales(@Query('idEmpresa', ParseIntPipe) idEmpresa: number) {
-    return await this.vistasService.getIngresosByEmpresa(idEmpresa);
+  async getIngresosMensuales(@Query('idEmpresa') idEmpresa?: string) {
+    const idEmpresaNum = idEmpresa ? parseInt(idEmpresa, 10) : null;
+    return await this.vistasService.getIngresosByEmpresa(idEmpresaNum);
   }
 
   @Get('ingresos/parqueadero/:idParqueadero')
@@ -86,9 +90,10 @@ export class VistasController {
   @Get('ingresos/periodo/:periodo')
   async getIngresosByPeriodo(
     @Param('periodo') periodo: string,
-    @Query('idEmpresa', ParseIntPipe) idEmpresa: number
+    @Query('idEmpresa') idEmpresa?: string
   ) {
-    return await this.vistasService.getIngresosByPeriodo(periodo, idEmpresa);
+    const idEmpresaNum = idEmpresa ? parseInt(idEmpresa, 10) : null;
+    return await this.vistasService.getIngresosByPeriodo(periodo, idEmpresaNum);
   }
 
   @Post('procesar-pago')
