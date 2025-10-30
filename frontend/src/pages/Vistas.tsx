@@ -253,7 +253,7 @@ const Vistas = () => {
           <Table
             columns={columnasOcupacion}
             dataSource={ocupacion}
-            rowKey="idParqueadero"
+            rowKey={(record) => record.idParqueadero || `ocupacion-${Math.random()}`}
             loading={loading}
             pagination={{ pageSize: 10 }}
           />
@@ -263,7 +263,7 @@ const Vistas = () => {
           <Table
             columns={columnasHistorial}
             dataSource={historial}
-            rowKey="idReserva"
+            rowKey={(record) => record.idReserva || `reserva-${Math.random()}`}
             loading={loading}
             pagination={{ pageSize: 10 }}
           />
@@ -273,7 +273,7 @@ const Vistas = () => {
           <Table
             columns={columnasIngresos}
             dataSource={ingresos}
-            rowKey={(record) => `${record.idParqueadero}-${record.periodo}`}
+            rowKey={(record, index) => `${record.parqueadero}-${record.periodo}-${index}`}
             loading={loading}
             pagination={{ pageSize: 10 }}
           />

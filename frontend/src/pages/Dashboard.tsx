@@ -67,8 +67,8 @@ const Dashboard = () => {
     },
     {
       title: 'Capacidad',
-      dataIndex: 'capacidadTotal',
-      key: 'capacidadTotal',
+      dataIndex: 'totalCeldas',
+      key: 'totalCeldas',
     },
     {
       title: 'Ocupadas',
@@ -77,14 +77,18 @@ const Dashboard = () => {
     },
     {
       title: 'Disponibles',
-      dataIndex: 'celdasDisponibles',
-      key: 'celdasDisponibles',
+      dataIndex: 'celdasLibres',
+      key: 'celdasLibres',
     },
     {
       title: 'Ocupación',
-      dataIndex: 'porcentajeOcupacion',
       key: 'porcentajeOcupacion',
-      render: (value: number) => `${value.toFixed(1)}%`,
+      render: (_: any, record: OcupacionParqueadero) => {
+        const porcentaje = record.totalCeldas > 0 
+          ? (record.celdasOcupadas / record.totalCeldas) * 100 
+          : 0;
+        return `${porcentaje.toFixed(1)}%`;
+      },
     },
   ];
 
@@ -167,7 +171,7 @@ const Dashboard = () => {
         <Table
           columns={columns}
           dataSource={ocupacion}
-          rowKey={(record) => `parqueadero-${record.idParqueadero}`}
+          rowKey={(record) => record.idParqueadero ? `parqueadero-${record.idParqueadero}` : `parqueadero-${Math.random()}`}
           pagination={false}
         />
       </Card>

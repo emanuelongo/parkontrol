@@ -3,11 +3,10 @@ import api from './axios';
 export interface OcupacionParqueadero {
   idParqueadero: number;
   nombreParqueadero: string;
-  capacidadTotal: number;
+  nombreEmpresa: string;
+  totalCeldas: number;
   celdasOcupadas: number;
-  celdasDisponibles: number;
-  celdasMantenimiento: number;
-  porcentajeOcupacion: number;
+  celdasLibres: number;
 }
 
 export interface HistorialReserva {
