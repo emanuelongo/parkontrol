@@ -131,21 +131,6 @@ export class VistasService {
     );
   }
 
-  async getIngresosByPeriodo(periodo: string, idEmpresa: number | null): Promise<any[]> {
-    if (idEmpresa === null) {
-      return await this.dataSource.query(
-        `SELECT * FROM VW_INGRESOS_POR_PARQUEADERO_MENSUAL WHERE PERIODO = :1`,
-        [periodo]
-      );
-    }
-    
-    return await this.dataSource.query(
-      `SELECT v.* FROM VW_INGRESOS_POR_PARQUEADERO_MENSUAL v 
-       JOIN PARQUEADERO p ON v.PARQUEADERO = p.NOMBRE 
-       WHERE v.PERIODO = :1 AND p.ID_EMPRESA = :2`,
-      [periodo, idEmpresa]
-    );
-  }
   async procesarPago(
     idReserva: number,
     idMetodoPago: number,

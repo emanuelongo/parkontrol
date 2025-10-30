@@ -87,15 +87,6 @@ export class VistasController {
     return await this.vistasService.getIngresosByParqueadero(idParqueadero);
   }
 
-  @Get('ingresos/periodo/:periodo')
-  async getIngresosByPeriodo(
-    @Param('periodo') periodo: string,
-    @Query('idEmpresa') idEmpresa?: string
-  ) {
-    const idEmpresaNum = idEmpresa ? parseInt(idEmpresa, 10) : null;
-    return await this.vistasService.getIngresosByPeriodo(periodo, idEmpresaNum);
-  }
-
   @Post('procesar-pago')
   async procesarPago(@Body() procesarPagoDto: ProcesarPagoDto) {
     return await this.vistasService.procesarPago(procesarPagoDto.idReserva, procesarPagoDto.idMetodoPago);
