@@ -53,19 +53,30 @@ export class TarifasService {
   }
 
   async actualizar(id: number, updateData: Partial<CreateTarifaDto>): Promise<Tarifa> {
-    const tarifa = await this.tarifaRepository.findOne({ where: { id } });
+    const tarifa = await this.tarifaRepository.findOne({ 
+      where: { id },
+      relations: ['parqueadero', 'tipoVehiculo'],
+    });
+    
     if (!tarifa) {
       throw new NotFoundException(`No existe tarifa con id: ${id}`);
     }
 
-    if (updateData.precioFraccionHora !== undefined) {
-      tarifa.precioFraccionHora = updateData.precioFraccionHora;
-    }
-    if (updateData.precioHoraAdicional !== undefined) {
-      tarifa.precioHoraAdicional = updateData.precioHoraAdicional;
+    await this.tarifaRepository.update(id, {
+      precioFraccionHora: updateData.precioFraccionHora ?? tarifa.precioFraccionHora,
+      precioHoraAdicional: updateData.precioHoraAdicional ?? tarifa.precioHoraAdicional,
+    });
+
+    const tarifaActualizada = await this.tarifaRepository.findOne({
+      where: { id },
+      relations: ['parqueadero', 'tipoVehiculo'],
+    });
+
+    if (!tarifaActualizada) {
+      throw new NotFoundException(`No se pudo recuperar la tarifa actualizada con id: ${id}`);
     }
 
-    return await this.tarifaRepository.save(tarifa);
+    return tarifaActualizada;
   }
 
   async findTarifaById(id: number): Promise<Tarifa> {
