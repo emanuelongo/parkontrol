@@ -73,10 +73,16 @@ const Vistas = () => {
       key: 'nombreParqueadero',
     },
     {
-      title: 'Capacidad Total',
-      dataIndex: 'capacidadTotal',
-      key: 'capacidadTotal',
-      width: 130,
+      title: 'Empresa',
+      dataIndex: 'nombreEmpresa',
+      key: 'nombreEmpresa',
+      width: 150,
+    },
+    {
+      title: 'Total Celdas',
+      dataIndex: 'totalCeldas',
+      key: 'totalCeldas',
+      width: 110,
     },
     {
       title: 'Celdas Ocupadas',
@@ -85,17 +91,21 @@ const Vistas = () => {
       width: 140,
     },
     {
-      title: 'Celdas Disponibles',
-      dataIndex: 'celdasDisponibles',
-      key: 'celdasDisponibles',
-      width: 160,
+      title: 'Celdas Libres',
+      dataIndex: 'celdasLibres',
+      key: 'celdasLibres',
+      width: 120,
     },
     {
       title: 'Porcentaje Ocupacion',
-      dataIndex: 'porcentajeOcupacion',
       key: 'porcentajeOcupacion',
       width: 170,
-      render: (value: number) => `${value?.toFixed(2) || 0}%`,
+      render: (_: any, record: any) => {
+        const porcentaje = record.totalCeldas > 0 
+          ? (record.celdasOcupadas / record.totalCeldas * 100) 
+          : 0;
+        return `${porcentaje.toFixed(1)}%`;
+      },
     },
   ];
 
@@ -108,14 +118,14 @@ const Vistas = () => {
     },
     {
       title: 'Parqueadero',
-      dataIndex: 'nombreParqueadero',
-      key: 'nombreParqueadero',
+      dataIndex: 'parqueadero',
+      key: 'parqueadero',
     },
     {
-      title: 'Celda',
-      dataIndex: 'numeroCelda',
-      key: 'numeroCelda',
-      width: 100,
+      title: 'Tipo Vehiculo',
+      dataIndex: 'tipoVehiculo',
+      key: 'tipoVehiculo',
+      width: 130,
     },
     {
       title: 'Entrada',
@@ -146,9 +156,15 @@ const Vistas = () => {
 
   const columnasIngresos = [
     {
+      title: 'Empresa',
+      dataIndex: 'empresa',
+      key: 'empresa',
+      width: 150,
+    },
+    {
       title: 'Parqueadero',
-      dataIndex: 'nombreParqueadero',
-      key: 'nombreParqueadero',
+      dataIndex: 'parqueadero',
+      key: 'parqueadero',
     },
     {
       title: 'Periodo',
@@ -157,23 +173,10 @@ const Vistas = () => {
       width: 120,
     },
     {
-      title: 'Total Reservas',
-      dataIndex: 'totalReservas',
-      key: 'totalReservas',
-      width: 130,
-    },
-    {
       title: 'Total Ingresos',
       dataIndex: 'totalIngresos',
       key: 'totalIngresos',
       width: 150,
-      render: (value: number) => `$${value?.toLocaleString() || 0}`,
-    },
-    {
-      title: 'Promedio por Reserva',
-      dataIndex: 'promedioIngreso',
-      key: 'promedioIngreso',
-      width: 180,
       render: (value: number) => `$${value?.toLocaleString() || 0}`,
     },
   ];
@@ -181,7 +184,12 @@ const Vistas = () => {
   const totalIngresos = ingresos.reduce((sum, item) => sum + (item.totalIngresos || 0), 0);
   const totalReservas = historial.length;
   const promedioOcupacion = ocupacion.length > 0
-    ? ocupacion.reduce((sum, item) => sum + (item.porcentajeOcupacion || 0), 0) / ocupacion.length
+    ? ocupacion.reduce((sum, item) => {
+        const porcentaje = item.totalCeldas > 0 
+          ? (item.celdasOcupadas / item.totalCeldas * 100) 
+          : 0;
+        return sum + porcentaje;
+      }, 0) / ocupacion.length
     : 0;
 
   return (
