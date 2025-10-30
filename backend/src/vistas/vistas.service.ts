@@ -6,6 +6,7 @@ import { OcupacionParqueaderoView } from './entities/ocupacion-parqueadero.view'
 import { HistorialReservasView } from './entities/historial-reservas.view';
 import { FacturacionCompletaView } from './entities/facturacion-completa.view';
 import { IngresosPorParqueaderoMensualView } from './entities/ingresos-parqueadero-mensual.view';
+import { ParqueaderosService } from 'src/parqueaderos/parqueaderos.service';
 
 export interface ProcControlPagoResult {
   monto: number;
@@ -28,9 +29,9 @@ export class VistasService {
     private readonly ingresosRepo: Repository<IngresosPorParqueaderoMensualView>,
     @InjectDataSource()
     private readonly dataSource: DataSource,
+    private readonly parqueaderosService: ParqueaderosService,
   ) {}
 
-  // Vista: Ocupación de parqueaderos
   async getOcupacionParqueaderos(): Promise<OcupacionParqueaderoView[]> {
     return await this.ocupacionRepo.find();
   }
@@ -41,18 +42,19 @@ export class VistasService {
     });
   }
 
-  // Vista: Historial de reservas
   async getHistorialReservas(): Promise<HistorialReservasView[]> {
     return await this.historialRepo.find();
   }
 
-  async getHistorialByPlaca(placa: string): Promise<HistorialReservasView[]> {
-    return await this.historialRepo.find({
-      where: { placa },
-    });
+  async getHistorialByPlacaAndParqueadero(placa: string, idParqueadero: number): Promise<HistorialReservasView[]> {
+    return await this.historialRepo
+      .createQueryBuilder('h')
+      .innerJoin('CELDA', 'c', 'h.ID_CELDA = c.ID_CELDA')
+      .where('h.PLACA = :placa', { placa })
+      .andWhere('c.ID_PARQUEADERO = :idParqueadero', { idParqueadero })
+      .getRawMany();
   }
 
-  // Vista: Facturación completa
   async getFacturacionCompleta(): Promise<FacturacionCompletaView[]> {
     return await this.facturacionRepo.find();
   }
@@ -63,7 +65,6 @@ export class VistasService {
     });
   }
 
-  // Vista: Ingresos mensuales
   async getIngresosMensuales(): Promise<IngresosPorParqueaderoMensualView[]> {
     return await this.ingresosRepo.find();
   }
@@ -79,8 +80,6 @@ export class VistasService {
       where: { periodo },
     });
   }
-
-  // Procedimiento: PROC_CONTROL_PAGO
   async procesarPago(
     idReserva: number,
     idMetodoPago: number,
@@ -106,7 +105,6 @@ export class VistasService {
     return { monto: result };
   }
 
-  // Procedimiento: PROC_BUSCAR_PLACA
   async buscarVehiculoPorPlaca(placa: string): Promise<ProcBuscarPlacaResult> {
     const query = `
       DECLARE

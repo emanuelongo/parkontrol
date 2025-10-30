@@ -7,6 +7,7 @@ import { HistorialReservasView } from './entities/historial-reservas.view';
 import { FacturacionCompletaView } from './entities/facturacion-completa.view';
 import { IngresosPorParqueaderoMensualView } from './entities/ingresos-parqueadero-mensual.view';
 import { SharedModule } from 'src/shared/shared.module';
+import { ParqueaderosModule } from 'src/parqueaderos/parqueaderos.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { SharedModule } from 'src/shared/shared.module';
       IngresosPorParqueaderoMensualView,
     ]),
     SharedModule,
+    ParqueaderosModule,
   ],
   controllers: [VistasController],
   providers: [VistasService],

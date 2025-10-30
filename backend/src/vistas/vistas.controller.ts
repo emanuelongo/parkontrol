@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Post, Body, UseGuards, ForbiddenException, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Param, Post, Body, UseGuards, ForbiddenException, ParseIntPipe, NotFoundException } from '@nestjs/common';
 import { VistasService } from './vistas.service';
 import { JwtAuthGuard } from 'src/auth/guards';
 import { RolesGuard } from 'src/shared/guards';
@@ -6,18 +6,20 @@ import { GetUser, Roles } from 'src/shared/decorators';
 import { RoleEnum } from 'src/shared/entities/rol.entity';
 import type { JwtUsuario } from 'src/auth/interfaces';
 import { ProcesarPagoDto } from './dto/procesar-pago.dto';
+import { ParqueaderosService } from 'src/parqueaderos/parqueaderos.service';
 
 @Controller('views')
 export class VistasController {
-  constructor(private readonly vistasService: VistasService) {}
+  constructor(
+    private readonly vistasService: VistasService,
+    private readonly parqueaderosService: ParqueaderosService,
+  ) {}
 
-  // Ocupación de parqueaderos
   @Get('ocupacion')
   @Roles(RoleEnum.ADMIN)
   @UseGuards(JwtAuthGuard, RolesGuard)
   async getOcupacionParqueaderos(@GetUser() user: JwtUsuario) {
     const ocupaciones = await this.vistasService.getOcupacionParqueaderos();
-    // Filter by user's company
     return ocupaciones.filter(o => o.nombreEmpresa === user.idEmpresa?.toString());
   }
 
@@ -28,18 +30,27 @@ export class VistasController {
     @Param('idParqueadero', ParseIntPipe) idParqueadero: number,
     @GetUser() user: JwtUsuario,
   ) {
-    const ocupacion = await this.vistasService.getOcupacionByParqueadero(idParqueadero);
-    if (!ocupacion) {
+    const parqueadero = await this.parqueaderosService.findParqueaderoById(idParqueadero);
+    
+    if (parqueadero.empresa.id !== user.idEmpresa) {
       throw new ForbiddenException({
-        message: `No parking lot found with id ${idParqueadero}`,
+        message: `User from empresa ${user.idEmpresa} cannot access parking lot from empresa ${parqueadero.empresa.id}`,
         error: 'Forbidden',
         statusCode: 403,
+      });
+    }
+
+    const ocupacion = await this.vistasService.getOcupacionByParqueadero(idParqueadero);
+    if (!ocupacion) {
+      throw new NotFoundException({
+        message: `No occupation data found for parking lot ${idParqueadero}`,
+        error: 'Not Found',
+        statusCode: 404,
       });
     }
     return ocupacion;
   }
 
-  // Historial de reservas
   @Get('historial-reservas')
   @Roles(RoleEnum.ADMIN)
   @UseGuards(JwtAuthGuard, RolesGuard)
@@ -47,14 +58,27 @@ export class VistasController {
     return await this.vistasService.getHistorialReservas();
   }
 
-  @Get('historial-reservas/placa/:placa')
+  @Get('historial-reservas/parqueadero/:idParqueadero/placa/:placa')
   @Roles(RoleEnum.ADMIN, RoleEnum.OPERADOR)
   @UseGuards(JwtAuthGuard, RolesGuard)
-  async getHistorialByPlaca(@Param('placa') placa: string) {
-    return await this.vistasService.getHistorialByPlaca(placa);
+  async getHistorialByPlacaAndParqueadero(
+    @Param('idParqueadero', ParseIntPipe) idParqueadero: number,
+    @Param('placa') placa: string,
+    @GetUser() user: JwtUsuario,
+  ) {
+    const parqueadero = await this.parqueaderosService.findParqueaderoById(idParqueadero);
+    
+    if (parqueadero.empresa.id !== user.idEmpresa) {
+      throw new ForbiddenException({
+        message: `User from empresa ${user.idEmpresa} cannot access reservations from empresa ${parqueadero.empresa.id}`,
+        error: 'Forbidden',
+        statusCode: 403,
+      });
+    }
+
+    return await this.vistasService.getHistorialByPlacaAndParqueadero(placa, idParqueadero);
   }
 
-  // Facturación completa
   @Get('facturacion')
   @Roles(RoleEnum.ADMIN)
   @UseGuards(JwtAuthGuard, RolesGuard)
@@ -69,11 +93,10 @@ export class VistasController {
     return await this.vistasService.getFacturacionByDocumento(numeroDocumento);
   }
 
-  // Ingresos mensuales
   @Get('ingresos')
   @Roles(RoleEnum.ADMIN)
   @UseGuards(JwtAuthGuard, RolesGuard)
-  async getIngresosMensuales(@GetUser() user: JwtUsuario) {
+  async getIngresosMensuales() {
     return await this.vistasService.getIngresosMensuales();
   }
 
@@ -91,7 +114,6 @@ export class VistasController {
     return await this.vistasService.getIngresosByPeriodo(periodo);
   }
 
-  // Procedimientos almacenados
   @Post('procesar-pago')
   @Roles(RoleEnum.ADMIN, RoleEnum.OPERADOR)
   @UseGuards(JwtAuthGuard, RolesGuard)
