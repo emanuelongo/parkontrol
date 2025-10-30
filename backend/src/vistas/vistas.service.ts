@@ -78,7 +78,14 @@ export class VistasService {
     );
   }
 
-  async getFacturacionByDocumento(numeroDocumento: string, idEmpresa: number): Promise<any[]> {
+  async getFacturacionByDocumento(numeroDocumento: string, idEmpresa: number | null): Promise<any[]> {
+    if (idEmpresa === null) {
+      return await this.dataSource.query(
+        `SELECT * FROM VW_FACTURACION_COMPLETA WHERE NUMERO_DOCUMENTO = :1`,
+        [numeroDocumento]
+      );
+    }
+    
     return await this.dataSource.query(
       `SELECT v.* FROM VW_FACTURACION_COMPLETA v 
        JOIN PAGO pg ON v.ID_PAGO = pg.ID_PAGO 

@@ -57,9 +57,10 @@ export class VistasController {
   @Get('facturacion/documento/:numeroDocumento')
   async getFacturacionByDocumento(
     @Param('numeroDocumento') numeroDocumento: string,
-    @Query('idEmpresa', ParseIntPipe) idEmpresa: number
+    @Query('idEmpresa') idEmpresa?: string
   ) {
-    return await this.vistasService.getFacturacionByDocumento(numeroDocumento, idEmpresa);
+    const idEmpresaNum = idEmpresa ? parseInt(idEmpresa, 10) : null;
+    return await this.vistasService.getFacturacionByDocumento(numeroDocumento, idEmpresaNum);
   }
 
   @Get('ingresos')
