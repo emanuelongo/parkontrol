@@ -5,7 +5,8 @@ import { ViewEntity, ViewColumn } from 'typeorm';
   expression: `
     SELECT 
       p.id_parqueadero, 
-      p.nombre AS nombre_parqueadero, 
+      p.nombre AS nombre_parqueadero,
+      e.id_empresa,
       e.nombre AS nombre_empresa, 
       COUNT(c.id_celda) AS total_celdas, 
       SUM(CASE WHEN c.estado = 'OCUPADA' THEN 1 ELSE 0 END) AS celdas_ocupadas, 
@@ -13,7 +14,7 @@ import { ViewEntity, ViewColumn } from 'typeorm';
     FROM PARQUEADERO p 
     JOIN EMPRESA e ON p.id_empresa = e.id_empresa 
     JOIN CELDA c ON p.id_parqueadero = c.id_parqueadero 
-    GROUP BY p.id_parqueadero, p.nombre, e.nombre
+    GROUP BY p.id_parqueadero, p.nombre, e.id_empresa, e.nombre
   `
 })
 export class OcupacionParqueaderoView {
@@ -22,6 +23,9 @@ export class OcupacionParqueaderoView {
 
   @ViewColumn({ name: 'NOMBRE_PARQUEADERO' })
   nombreParqueadero: string;
+
+  @ViewColumn({ name: 'ID_EMPRESA' })
+  idEmpresa: number;
 
   @ViewColumn({ name: 'NOMBRE_EMPRESA' })
   nombreEmpresa: string;

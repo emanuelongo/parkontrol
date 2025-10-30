@@ -6,7 +6,6 @@ import { OcupacionParqueaderoView } from './entities/ocupacion-parqueadero.view'
 import { HistorialReservasView } from './entities/historial-reservas.view';
 import { FacturacionCompletaView } from './entities/facturacion-completa.view';
 import { IngresosPorParqueaderoMensualView } from './entities/ingresos-parqueadero-mensual.view';
-import { ParqueaderosService } from 'src/parqueaderos/parqueaderos.service';
 
 export interface ProcControlPagoResult {
   monto: number;
@@ -29,11 +28,12 @@ export class VistasService {
     private readonly ingresosRepo: Repository<IngresosPorParqueaderoMensualView>,
     @InjectDataSource()
     private readonly dataSource: DataSource,
-    private readonly parqueaderosService: ParqueaderosService,
   ) {}
 
-  async getOcupacionParqueaderos(): Promise<OcupacionParqueaderoView[]> {
-    return await this.ocupacionRepo.find();
+  async getOcupacionByEmpresa(idEmpresa: number): Promise<OcupacionParqueaderoView[]> {
+    return await this.ocupacionRepo.find({
+      where: { idEmpresa },
+    });
   }
 
   async getOcupacionByParqueadero(idParqueadero: number): Promise<OcupacionParqueaderoView | null> {
@@ -42,42 +42,45 @@ export class VistasService {
     });
   }
 
-  async getHistorialReservas(): Promise<HistorialReservasView[]> {
-    return await this.historialRepo.find();
+  async getHistorialByEmpresa(idEmpresa: number): Promise<HistorialReservasView[]> {
+    return await this.historialRepo.find({
+      where: { idEmpresa },
+    });
   }
 
   async getHistorialByPlacaAndParqueadero(placa: string, idParqueadero: number): Promise<HistorialReservasView[]> {
-    return await this.historialRepo
-      .createQueryBuilder('h')
-      .innerJoin('CELDA', 'c', 'h.ID_CELDA = c.ID_CELDA')
-      .where('h.PLACA = :placa', { placa })
-      .andWhere('c.ID_PARQUEADERO = :idParqueadero', { idParqueadero })
-      .getRawMany();
+    return await this.historialRepo.find({
+      where: { placa, idParqueadero },
+    });
   }
 
-  async getFacturacionCompleta(): Promise<FacturacionCompletaView[]> {
-    return await this.facturacionRepo.find();
-  }
-
-  async getFacturacionByDocumento(numeroDocumento: string): Promise<FacturacionCompletaView[]> {
+  async getFacturacionByEmpresa(idEmpresa: number): Promise<FacturacionCompletaView[]> {
     return await this.facturacionRepo.find({
-      where: { numeroDocumento },
+      where: { idEmpresa },
     });
   }
 
-  async getIngresosMensuales(): Promise<IngresosPorParqueaderoMensualView[]> {
-    return await this.ingresosRepo.find();
-  }
-
-  async getIngresosByParqueadero(parqueadero: string): Promise<IngresosPorParqueaderoMensualView[]> {
-    return await this.ingresosRepo.find({
-      where: { parqueadero },
+  async getFacturacionByDocumento(numeroDocumento: string, idEmpresa: number): Promise<FacturacionCompletaView[]> {
+    return await this.facturacionRepo.find({
+      where: { numeroDocumento, idEmpresa },
     });
   }
 
-  async getIngresosByPeriodo(periodo: string): Promise<IngresosPorParqueaderoMensualView[]> {
+  async getIngresosByEmpresa(idEmpresa: number): Promise<IngresosPorParqueaderoMensualView[]> {
     return await this.ingresosRepo.find({
-      where: { periodo },
+      where: { idEmpresa },
+    });
+  }
+
+  async getIngresosByParqueadero(idParqueadero: number): Promise<IngresosPorParqueaderoMensualView[]> {
+    return await this.ingresosRepo.find({
+      where: { idParqueadero },
+    });
+  }
+
+  async getIngresosByPeriodo(periodo: string, idEmpresa: number): Promise<IngresosPorParqueaderoMensualView[]> {
+    return await this.ingresosRepo.find({
+      where: { periodo, idEmpresa },
     });
   }
   async procesarPago(
