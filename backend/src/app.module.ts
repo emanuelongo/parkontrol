@@ -7,7 +7,7 @@ import { EmpresasModule } from './empresas/empresas.module';
 import { UsuariosModule } from './usuarios/usuarios.module';
 import { ParqueaderosModule } from './parqueaderos/parqueaderos.module';
 import { SharedModule } from './shared/shared.module';
-import { AuthModule } from './auth/auth.module';
+// import { AuthModule } from './auth/auth.module'; // REMOVED FOR BackendSinAuth
 import { CeldasModule } from './celdas/celdas.module';
 import { VehiculosModule } from './vehiculos/vehiculos.module';
 import { ReservasModule } from './reservas/reservas.module';
@@ -43,7 +43,7 @@ import { VistasModule } from './vistas/vistas.module';
       }),
     }),
     SharedModule,
-    AuthModule,
+    // AuthModule, // REMOVED FOR BackendSinAuth
     EmpresasModule,
     UsuariosModule,
     ParqueaderosModule,

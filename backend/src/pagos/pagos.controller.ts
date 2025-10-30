@@ -1,13 +1,13 @@
-import { Body, Controller, Get, Param, ParseIntPipe, Post, UseGuards, NotFoundException, ForbiddenException } from '@nestjs/common';
+import { Body, Controller, Get, Param, ParseIntPipe, Post, NotFoundException } from '@nestjs/common';
 import { PagosService } from './pagos.service';
 import { CreatePagoDto } from './entities/dto/crear-pago.dto';
 import { Pago } from './entities/pago.entity';
-import { Roles } from 'src/shared/decorators';
-import { RoleEnum } from 'src/shared/entities/rol.entity';
-import { JwtAuthGuard } from 'src/auth/guards';
-import { RolesGuard } from 'src/shared/guards';
-import { GetUser } from 'src/shared/decorators';
-import type { JwtUsuario } from 'src/auth/interfaces';
+// import { Roles } from 'src/shared/decorators'; // REMOVED FOR BackendSinAuth
+// import { RoleEnum } from 'src/shared/entities/rol.entity'; // REMOVED FOR BackendSinAuth
+// import { JwtAuthGuard } from 'src/auth/guards'; // REMOVED FOR BackendSinAuth
+// import { RolesGuard } from 'src/shared/guards'; // REMOVED FOR BackendSinAuth
+// import { GetUser } from 'src/shared/decorators'; // REMOVED FOR BackendSinAuth
+// import type { JwtUsuario } from 'src/auth/interfaces'; // REMOVED FOR BackendSinAuth
 import { ReservasService } from 'src/reservas/reservas.service';
 
 @Controller('payments')
@@ -15,31 +15,23 @@ export class PagosController {
   constructor(private readonly pagosService: PagosService, private readonly reservasService: ReservasService) {}
 
   @Post()
-  @Roles(RoleEnum.ADMIN, RoleEnum.OPERADOR)
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  async crear(@Body() createPagoDto: CreatePagoDto, @GetUser() user: JwtUsuario): Promise<Pago> {
-    // verify reservation belongs to user's company
-    const reserva = await this.reservasService.findReservaById(createPagoDto.idReserva);
-    if (reserva.celda.parqueadero.empresa.id !== user.idEmpresa) {
-      throw new ForbiddenException({
-        message: `User from empresa ${user.idEmpresa} cannot create payment for reservation in empresa ${reserva.celda.parqueadero.empresa.id}`,
-        error: 'Forbidden',
-        statusCode: 403,
-      });
-    }
+  // @Roles(RoleEnum.ADMIN, RoleEnum.OPERADOR) // REMOVED FOR BackendSinAuth
+  // @UseGuards(JwtAuthGuard, RolesGuard) // REMOVED FOR BackendSinAuth
+  async crear(@Body() createPagoDto: CreatePagoDto): Promise<Pago> {
+    // No security validation
     return await this.pagosService.crear(createPagoDto);
   }
 
   @Get('parqueadero/:idParqueadero')
-  @Roles(RoleEnum.ADMIN)
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  // @Roles(RoleEnum.ADMIN) // REMOVED FOR BackendSinAuth
+  // @UseGuards(JwtAuthGuard, RolesGuard) // REMOVED FOR BackendSinAuth
   async obtenerPorParqueadero(@Param('idParqueadero', ParseIntPipe) idParqueadero: number): Promise<Pago[]> {
     return await this.pagosService.findByParqueadero(idParqueadero);
   }
 
   @Get('reserva/:idReserva')
-  @Roles(RoleEnum.ADMIN, RoleEnum.OPERADOR)
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  // @Roles(RoleEnum.ADMIN, RoleEnum.OPERADOR) // REMOVED FOR BackendSinAuth
+  // @UseGuards(JwtAuthGuard, RolesGuard) // REMOVED FOR BackendSinAuth
   async obtenerPorReserva(@Param('idReserva', ParseIntPipe) idReserva: number): Promise<Pago> {
     const pago = await this.pagosService.findByReserva(idReserva);
     if (!pago) {
@@ -49,8 +41,8 @@ export class PagosController {
   }
 
   @Get(':id')
-  @Roles(RoleEnum.ADMIN, RoleEnum.OPERADOR)
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  // @Roles(RoleEnum.ADMIN, RoleEnum.OPERADOR) // REMOVED FOR BackendSinAuth
+  // @UseGuards(JwtAuthGuard, RolesGuard) // REMOVED FOR BackendSinAuth
   async obtenerPorId(@Param('id', ParseIntPipe) id: number): Promise<Pago> {
     return await this.pagosService.findPagoById(id);
   }
