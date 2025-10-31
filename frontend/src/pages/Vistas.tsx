@@ -157,7 +157,7 @@ const Vistas = () => {
       dataIndex: 'fechaSalida',
       key: 'fechaSalida',
       width: 150,
-      render: (fecha: string) => fecha ? new Date(fecha).toLocaleString('es-ES') : 'Activa',
+      render: (fecha: string) => fecha ? new Date(fecha).toLocaleString('es-ES') : 'En curso',
     },
     {
       title: 'Estado',

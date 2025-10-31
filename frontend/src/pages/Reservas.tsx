@@ -60,7 +60,7 @@ const Reservas = () => {
       
       // Si no hay celdas, mostrar mensaje
       if (data.length === 0) {
-        console.warn('⚠️ No hay celdas en este parqueadero');
+        console.warn(' No hay celdas en este parqueadero');
         setCeldas([]);
         return;
       }
@@ -76,17 +76,17 @@ const Reservas = () => {
         return esDisponible;
       });
       
-      console.log(`✅ ${disponibles.length} celdas disponibles de ${data.length} totales`);
+      console.log(` ${disponibles.length} celdas disponibles de ${data.length} totales`);
       
       // Si no hay disponibles, mostrar todas pero con advertencia
       if (disponibles.length === 0) {
-        console.warn('⚠️ No hay celdas disponibles, mostrando todas');
+        console.warn(' No hay celdas disponibles, mostrando todas');
         setCeldas(data); // Mostrar todas para que el usuario vea qué hay
       } else {
         setCeldas(disponibles);
       }
     } catch (error) {
-      console.error('❌ Error al cargar celdas:', error);
+      console.error(' Error al cargar celdas:', error);
       setCeldas([]);
     } finally {
       setLoadingCeldas(false);
@@ -167,7 +167,7 @@ const Reservas = () => {
       title: 'Fecha Salida',
       dataIndex: 'fechaSalida',
       key: 'fechaSalida',
-      render: (fecha: string) => fecha ? new Date(fecha).toLocaleString() : 'Activa',
+      render: (fecha: string) => fecha ? new Date(fecha).toLocaleString() : 'En curso',
     },
     {
       title: 'Monto',
@@ -180,7 +180,7 @@ const Reservas = () => {
       dataIndex: 'estado',
       key: 'estado',
       render: (estado: string) => (
-        <Tag color={estado === 'ACTIVA' ? 'blue' : estado === 'FINALIZADA' ? 'green' : 'red'}>
+        <Tag color={estado === 'ABIERTA' ? 'blue' : estado === 'FINALIZADA' ? 'green' : 'red'}>
           {estado}
         </Tag>
       ),
@@ -190,7 +190,7 @@ const Reservas = () => {
       key: 'actions',
       render: (_: any, record: Reserva) => (
         <Space>
-          {record.estado === 'ACTIVA' && (
+          {record.estado === 'ABIERTA' && (
             <Button
               type="primary"
               icon={<CheckOutlined />}
@@ -297,8 +297,8 @@ const Reservas = () => {
                 
                 return {
                   label: esDisponible 
-                    ? `✅ Celda #${c.id} - Tipo: ${c.idTipoCelda} [${c.estado}]`
-                    : `⛔ Celda #${c.id} - Tipo: ${c.idTipoCelda} [${c.estado}]`,
+                    ? ` Celda #${c.id} - Tipo: ${c.idTipoCelda} [${c.estado}]`
+                    : ` Celda #${c.id} - Tipo: ${c.idTipoCelda} [${c.estado}]`,
                   value: c.id,
                   disabled: !esDisponible, // Deshabilitar las no disponibles
                 };

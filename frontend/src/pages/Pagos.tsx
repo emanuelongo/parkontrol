@@ -98,12 +98,12 @@ const Pagos = () => {
               {new Date(reserva.fechaEntrada).toLocaleString()}
             </Descriptions.Item>
             <Descriptions.Item label="Fecha Salida">
-              {reserva.fechaSalida ? new Date(reserva.fechaSalida).toLocaleString() : 'Activa'}
+              {reserva.fechaSalida ? new Date(reserva.fechaSalida).toLocaleString() : 'En curso'}
             </Descriptions.Item>
             <Descriptions.Item label="Duración">{calcularDuracion()}</Descriptions.Item>
             <Descriptions.Item label="Estado">
               <span style={{ 
-                color: reserva.estado === 'ABIERTA' ? 'green' : reserva.estado === 'ACTIVA' ? 'orange' : 'gray',
+                color: reserva.estado === 'ABIERTA' ? 'green' : 'gray',
                 fontWeight: 'bold'
               }}>
                 {reserva.estado}
