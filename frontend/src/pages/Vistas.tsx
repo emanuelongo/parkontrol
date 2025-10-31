@@ -10,6 +10,7 @@ const Vistas = () => {
   const [ocupacion, setOcupacion] = useState<any[]>([]);
   const [historial, setHistorial] = useState<any[]>([]);
   const [ingresos, setIngresos] = useState<any[]>([]);
+  const [facturacion, setFacturacion] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [idEmpresa, setIdEmpresa] = useState<number | undefined>();
   
@@ -29,30 +30,46 @@ const Vistas = () => {
       setOcupacion(data);
     } catch (error) {
       console.error('[VISTAS] Error al cargar ocupacion:', error);
+      setOcupacion([]);
     } finally {
       setLoading(false);
     }
   };
 
-  const fetchHistorial = async () => {
+  const fetchHistorial = async (empresaId?: number) => {
     setLoading(true);
     try {
-      const data = await vistasApi.getHistorialReservas();
+      const data = await vistasApi.getHistorialReservas(empresaId);
       setHistorial(data);
     } catch (error) {
       console.error('[VISTAS] Error al cargar historial:', error);
+      setHistorial([]);
     } finally {
       setLoading(false);
     }
   };
 
-  const fetchIngresos = async () => {
+  const fetchIngresos = async (empresaId?: number) => {
     setLoading(true);
     try {
-      const data = await vistasApi.getIngresos();
+      const data = await vistasApi.getIngresos(empresaId);
       setIngresos(data);
     } catch (error) {
       console.error('[VISTAS] Error al cargar ingresos:', error);
+      setIngresos([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchFacturacion = async (empresaId?: number) => {
+    setLoading(true);
+    try {
+      const data = await vistasApi.getFacturacion(empresaId);
+      setFacturacion(data);
+    } catch (error) {
+      console.error('[VISTAS] Error al cargar facturación:', error);
+      setFacturacion([]);
     } finally {
       setLoading(false);
     }
@@ -61,9 +78,10 @@ const Vistas = () => {
   useEffect(() => {
     if (idEmpresa !== undefined) {
       fetchOcupacion(idEmpresa);
+      fetchHistorial(idEmpresa);
+      fetchIngresos(idEmpresa);
+      fetchFacturacion(idEmpresa);
     }
-    fetchHistorial();
-    fetchIngresos();
   }, [idEmpresa]);
 
   const columnasOcupacion = [
@@ -181,8 +199,65 @@ const Vistas = () => {
     },
   ];
 
+  const columnasFacturacion = [
+    {
+      title: 'CUFE',
+      dataIndex: 'cufe',
+      key: 'cufe',
+      width: 150,
+    },
+    {
+      title: 'Cliente',
+      dataIndex: 'nombreCliente',
+      key: 'nombreCliente',
+    },
+    {
+      title: 'Documento',
+      dataIndex: 'numeroDocumento',
+      key: 'numeroDocumento',
+      width: 130,
+    },
+    {
+      title: 'Placa',
+      dataIndex: 'placa',
+      key: 'placa',
+      width: 100,
+    },
+    {
+      title: 'Parqueadero',
+      dataIndex: 'nombreParqueadero',
+      key: 'nombreParqueadero',
+    },
+    {
+      title: 'Monto',
+      dataIndex: 'monto',
+      key: 'monto',
+      width: 120,
+      render: (value: number) => `$${value?.toLocaleString() || 0}`,
+    },
+    {
+      title: 'Fecha Pago',
+      dataIndex: 'fechaPago',
+      key: 'fechaPago',
+      width: 150,
+      render: (fecha: string) => new Date(fecha).toLocaleString('es-ES'),
+    },
+    {
+      title: 'Enviada',
+      dataIndex: 'enviada',
+      key: 'enviada',
+      width: 100,
+      render: (enviada: number) => (
+        <span style={{ color: enviada === 1 ? 'green' : 'red' }}>
+          {enviada === 1 ? 'Sí' : 'No'}
+        </span>
+      ),
+    },
+  ];
+
   const totalIngresos = ingresos.reduce((sum, item) => sum + (item.totalIngresos || 0), 0);
   const totalReservas = historial.length;
+  const totalFacturacion = facturacion.reduce((sum, item) => sum + (item.monto || 0), 0);
   const promedioOcupacion = ocupacion.length > 0
     ? ocupacion.reduce((sum, item) => {
         const porcentaje = item.totalCeldas > 0 
@@ -215,7 +290,7 @@ const Vistas = () => {
       </div>
 
       <Row gutter={16} style={{ marginBottom: '24px' }}>
-        <Col span={8}>
+        <Col span={6}>
           <Card>
             <Statistic
               title="Total Ingresos"
@@ -226,7 +301,18 @@ const Vistas = () => {
             />
           </Card>
         </Col>
-        <Col span={8}>
+        <Col span={6}>
+          <Card>
+            <Statistic
+              title="Total Facturación"
+              value={totalFacturacion}
+              prefix={<DollarOutlined />}
+              suffix="COP"
+              precision={0}
+            />
+          </Card>
+        </Col>
+        <Col span={6}>
           <Card>
             <Statistic
               title="Total Reservas"
@@ -235,7 +321,7 @@ const Vistas = () => {
             />
           </Card>
         </Col>
-        <Col span={8}>
+        <Col span={6}>
           <Card>
             <Statistic
               title="Promedio Ocupacion"
@@ -274,6 +360,16 @@ const Vistas = () => {
             columns={columnasIngresos}
             dataSource={ingresos}
             rowKey={(record, index) => `${record.parqueadero}-${record.periodo}-${index}`}
+            loading={loading}
+            pagination={{ pageSize: 10 }}
+          />
+        </TabPane>
+
+        <TabPane tab="Facturación Completa" key="4">
+          <Table
+            columns={columnasFacturacion}
+            dataSource={facturacion}
+            rowKey={(record) => record.cufe || `factura-${Math.random()}`}
             loading={loading}
             pagination={{ pageSize: 10 }}
           />
