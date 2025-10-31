@@ -1,43 +1,30 @@
-import { useState, useEffect } from 'react';
-import { Table, Button, Modal, Form, Input, Select, DatePicker, Space, Tabs } from 'antd';
+import { useState } from 'react';
+import { Table, Button, Modal, Form, Input, Tabs } from 'antd';
 import { PlusOutlined, FileTextOutlined } from '@ant-design/icons';
 import { facturacionApi } from '../api/facturacion';
 
 const { TabPane } = Tabs;
 
 const Facturacion = () => {
-  const [clientes, setClientes] = useState<any[]>([]);
-  const [facturas, setFacturas] = useState<any[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [clientes] = useState<any[]>([]);
+  const [facturas] = useState<any[]>([]);
+  const [loading] = useState(false);
   const [modalClienteVisible, setModalClienteVisible] = useState(false);
   const [modalFacturaVisible, setModalFacturaVisible] = useState(false);
   const [formCliente] = Form.useForm();
   const [formFactura] = Form.useForm();
 
-  const fetchClientes = async () => {
-    setLoading(true);
-    try {
-      // Implementar cuando exista endpoint
-      console.log('[FACTURACION] Cargando clientes...');
-    } catch (error) {
-      console.error('[FACTURACION] Error:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
-  useEffect(() => {
-    fetchClientes();
-  }, []);
 
   const handleCreateCliente = async () => {
     try {
       const values = await formCliente.validateFields();
       await facturacionApi.createCliente(values);
+      // El mensaje de éxito lo muestra el interceptor de axios
       setModalClienteVisible(false);
-      fetchClientes();
       formCliente.resetFields();
     } catch (error) {
+      // El error ya se muestra por el interceptor de axios
       console.error('[FACTURACION] Error al crear cliente:', error);
     }
   };
@@ -45,14 +32,12 @@ const Facturacion = () => {
   const handleCreateFactura = async () => {
     try {
       const values = await formFactura.validateFields();
-      const formattedValues = {
-        ...values,
-        fechaEmision: values.fechaEmision?.toISOString(),
-      };
-      await facturacionApi.createFactura(formattedValues);
+      await facturacionApi.createFactura(values);
+      // El mensaje de éxito lo muestra el interceptor de axios
       setModalFacturaVisible(false);
       formFactura.resetFields();
     } catch (error) {
+      // El error ya se muestra por el interceptor de axios
       console.error('[FACTURACION] Error al crear factura:', error);
     }
   };
@@ -190,45 +175,43 @@ const Facturacion = () => {
       >
         <Form form={formCliente} layout="vertical">
           <Form.Item
-            name="nombre"
-            label="Nombre"
-            rules={[{ required: true, message: 'El nombre es requerido' }]}
+            name="tipoDocumento"
+            label="Tipo de Documento"
+            rules={[
+              { required: true, message: 'El tipo de documento es requerido' },
+              { min: 2, max: 10, message: 'Debe tener entre 2 y 10 caracteres' }
+            ]}
           >
-            <Input />
+            <Input placeholder="CC, NIT, CE, etc." />
           </Form.Item>
 
           <Form.Item
-            name="documento"
-            label="Documento"
-            rules={[{ required: true, message: 'El documento es requerido' }]}
+            name="numeroDocumento"
+            label="Número de Documento"
+            rules={[
+              { required: true, message: 'El número de documento es requerido' },
+              { min: 5, max: 20, message: 'Debe tener entre 5 y 20 caracteres' }
+            ]}
           >
-            <Input />
+            <Input placeholder="1234567890" />
           </Form.Item>
 
           <Form.Item
             name="correo"
-            label="Correo"
+            label="Correo Electrónico"
             rules={[
               { required: true, message: 'El correo es requerido' },
-              { type: 'email', message: 'Correo invalido' }
+              { type: 'email', message: 'Correo inválido' }
             ]}
           >
-            <Input />
-          </Form.Item>
-
-          <Form.Item name="telefono" label="Telefono">
-            <Input />
-          </Form.Item>
-
-          <Form.Item name="direccion" label="Direccion">
-            <Input />
+            <Input placeholder="cliente@ejemplo.com" />
           </Form.Item>
         </Form>
       </Modal>
 
       {/* Modal Factura */}
       <Modal
-        title="Crear Factura"
+        title="Crear Factura Electrónica"
         open={modalFacturaVisible}
         onOk={handleCreateFactura}
         onCancel={() => setModalFacturaVisible(false)}
@@ -240,58 +223,31 @@ const Facturacion = () => {
             label="ID Pago"
             rules={[{ required: true, message: 'El ID de pago es requerido' }]}
           >
-            <Input type="number" />
+            <Input type="number" placeholder="1" />
           </Form.Item>
 
           <Form.Item
-            name="idCliente"
-            label="ID Cliente"
+            name="idClienteFactura"
+            label="ID Cliente Facturación"
             rules={[{ required: true, message: 'El ID de cliente es requerido' }]}
           >
-            <Input type="number" />
+            <Input type="number" placeholder="1" />
           </Form.Item>
 
           <Form.Item
-            name="numeroFactura"
-            label="Numero de Factura"
-            rules={[{ required: true, message: 'El numero de factura es requerido' }]}
+            name="cufe"
+            label="CUFE (Código Único de Facturación Electrónica)"
+            rules={[{ required: true, message: 'El CUFE es requerido' }]}
           >
-            <Input placeholder="FACT-2024-001" />
+            <Input placeholder="ABC123XYZ456..." />
           </Form.Item>
 
           <Form.Item
-            name="fechaEmision"
-            label="Fecha de Emision"
-            rules={[{ required: true, message: 'La fecha es requerida' }]}
+            name="urlPdf"
+            label="URL del PDF (Opcional)"
           >
-            <DatePicker style={{ width: '100%' }} showTime />
+            <Input placeholder="https://ejemplo.com/factura.pdf" />
           </Form.Item>
-
-          <Space style={{ width: '100%' }} direction="vertical">
-            <Form.Item
-              name="subtotal"
-              label="Subtotal"
-              rules={[{ required: true, message: 'El subtotal es requerido' }]}
-            >
-              <Input type="number" prefix="$" />
-            </Form.Item>
-
-            <Form.Item
-              name="iva"
-              label="IVA"
-              rules={[{ required: true, message: 'El IVA es requerido' }]}
-            >
-              <Input type="number" prefix="$" />
-            </Form.Item>
-
-            <Form.Item
-              name="total"
-              label="Total"
-              rules={[{ required: true, message: 'El total es requerido' }]}
-            >
-              <Input type="number" prefix="$" />
-            </Form.Item>
-          </Space>
         </Form>
       </Modal>
     </div>
