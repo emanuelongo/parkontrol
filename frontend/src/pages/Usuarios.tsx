@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Table, Button, Modal, Form, Input, InputNumber, message, Space, Popconfirm, Select } from 'antd';
+import { Table, Button, Modal, Form, Input, InputNumber, Space, Popconfirm, Select } from 'antd';
 import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
 import type { Usuario } from '../types';
 import { usuariosApi } from '../api/usuarios';
@@ -181,10 +181,22 @@ const Usuarios = () => {
           </Form.Item>
 
           <Form.Item
+            name="rol"
+            label="Rol"
+            rules={[{ required: true, message: 'El rol es requerido' }]}
+          >
+            <Select placeholder="Seleccionar rol">
+              <Select.Option value="ADMINISTRADOR">Administrador</Select.Option>
+              <Select.Option value="OPERADOR">Operador</Select.Option>
+              <Select.Option value="SUPERVISOR">Supervisor</Select.Option>
+            </Select>
+          </Form.Item>
+
+          <Form.Item
             name="idEmpresa"
             label="ID Empresa"
             rules={[{ required: true, message: 'El ID de empresa es requerido' }]}
-            initialValue={1}
+            initialValue={idEmpresa}
           >
             <InputNumber style={{ width: '100%' }} min={1} />
           </Form.Item>

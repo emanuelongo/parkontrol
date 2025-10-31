@@ -18,6 +18,10 @@ export class CreateUsuarioDto {
   contrasena: string;
 
   @IsNotEmpty()
+  @IsString()
+  rol: string;
+
+  @IsNotEmpty()
   @IsNumber()
   idEmpresa: number;
 }

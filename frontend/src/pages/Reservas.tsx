@@ -1,30 +1,56 @@
 import { useState, useEffect } from 'react';
-import { Table, Button, Modal, Form, Input, message, Space, Tag } from 'antd';
+import { Table, Button, Modal, Form, Input, Space, Tag, Select } from 'antd';
 import { PlusOutlined, CheckOutlined } from '@ant-design/icons';
 import type { Reserva } from '../types';
 import { reservasApi } from '../api/reservas';
+import { useEmpresas } from '../hooks/useEmpresas';
+import { useParqueaderos } from '../hooks/useParqueaderos';
 
 const Reservas = () => {
   const [reservas, setReservas] = useState<Reserva[]>([]);
   const [loading, setLoading] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
+  const [idEmpresa, setIdEmpresa] = useState<number | undefined>();
+  const [idParqueadero, setIdParqueadero] = useState<number | undefined>();
   const [form] = Form.useForm();
+  
+  const { empresas } = useEmpresas();
+  const { parqueaderos } = useParqueaderos(idEmpresa || 0);
 
-  const fetchReservas = async () => {
+  // Set first empresa as default when loaded
+  useEffect(() => {
+    if (empresas.length > 0 && idEmpresa === undefined) {
+      setIdEmpresa(empresas[0].id);
+    }
+  }, [empresas, idEmpresa]);
+
+  // Set first parqueadero as default when loaded
+  useEffect(() => {
+    if (parqueaderos.length > 0 && idParqueadero === undefined) {
+      setIdParqueadero(parqueaderos[0].id);
+    }
+  }, [parqueaderos, idParqueadero]);
+
+  const fetchReservas = async (parqueaderoId?: number) => {
+    if (!parqueaderoId) return;
+    
     setLoading(true);
     try {
-      const data = await reservasApi.getActivas();
+      const data = await reservasApi.getByParqueadero(parqueaderoId);
       setReservas(data);
     } catch (error) {
-      message.error('Error al cargar reservas');
+      console.error('Error al cargar reservas:', error);
+      setReservas([]);
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchReservas();
-  }, []);
+    if (idParqueadero) {
+      fetchReservas(idParqueadero);
+    }
+  }, [idParqueadero]);
 
   const handleCreate = () => {
     form.resetFields();
@@ -37,7 +63,9 @@ const Reservas = () => {
       await reservasApi.create(values);
       // El mensaje de éxito lo muestra el interceptor de axios
       setModalVisible(false);
-      fetchReservas();
+      if (idParqueadero) {
+        fetchReservas(idParqueadero);
+      }
     } catch (error) {
       // El error ya se muestra por el interceptor de axios
       console.error('Error al crear reserva:', error);
@@ -48,7 +76,9 @@ const Reservas = () => {
     try {
       await reservasApi.finalizar(idReserva);
       // El mensaje de éxito lo muestra el interceptor de axios
-      fetchReservas();
+      if (idParqueadero) {
+        fetchReservas(idParqueadero);
+      }
     } catch (error) {
       // El error ya se muestra por el interceptor de axios
       console.error('Error al finalizar reserva:', error);
@@ -123,8 +153,39 @@ const Reservas = () => {
 
   return (
     <div>
-      <div style={{ marginBottom: 16, display: 'flex', justifyContent: 'space-between' }}>
-        <h1>Reservas</h1>
+      <div style={{ marginBottom: 16, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+          <h1>Reservas</h1>
+          <div style={{ display: 'flex', gap: 8 }}>
+            <Select
+              value={idEmpresa}
+              onChange={(value) => {
+                setIdEmpresa(value);
+                setIdParqueadero(undefined);
+              }}
+              style={{ width: 200 }}
+              placeholder="Seleccionar empresa"
+            >
+              {empresas.map((emp) => (
+                <Select.Option key={emp.id} value={emp.id}>
+                  {emp.nombre}
+                </Select.Option>
+              ))}
+            </Select>
+            <Select
+              value={idParqueadero}
+              onChange={setIdParqueadero}
+              style={{ width: 250 }}
+              placeholder="Seleccionar parqueadero"
+            >
+              {parqueaderos.map((p) => (
+                <Select.Option key={p.id} value={p.id}>
+                  {p.nombre}
+                </Select.Option>
+              ))}
+            </Select>
+          </div>
+        </div>
         <Button type="primary" icon={<PlusOutlined />} onClick={handleCreate}>
           Nueva Reserva
         </Button>

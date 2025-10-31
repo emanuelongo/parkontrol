@@ -11,7 +11,9 @@ export class UsuariosController {
 
     @Post()
     async crear(@Body() createUsuarioDto: CreateUsuarioDto): Promise<UsuarioResponseDto> {
-        return await this.usuariosService.crear(createUsuarioDto, RoleEnum.OPERADOR);
+        // Convertir el rol del DTO a RoleEnum
+        const nombreRol = createUsuarioDto.rol as RoleEnum;
+        return await this.usuariosService.crear(createUsuarioDto, nombreRol);
     }
 
     @Get('empresa/:idEmpresa')
