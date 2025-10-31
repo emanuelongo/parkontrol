@@ -101,7 +101,19 @@ const Pagos = () => {
               {reserva.fechaSalida ? new Date(reserva.fechaSalida).toLocaleString() : 'Activa'}
             </Descriptions.Item>
             <Descriptions.Item label="Duración">{calcularDuracion()}</Descriptions.Item>
-            <Descriptions.Item label="Estado">{reserva.estado}</Descriptions.Item>
+            <Descriptions.Item label="Estado">
+              <span style={{ 
+                color: reserva.estado === 'ABIERTA' ? 'green' : reserva.estado === 'ACTIVA' ? 'orange' : 'gray',
+                fontWeight: 'bold'
+              }}>
+                {reserva.estado}
+              </span>
+              {reserva.estado !== 'ABIERTA' && (
+                <div style={{ color: 'red', fontSize: '12px', marginTop: 4 }}>
+                  ⚠️ Solo se pueden procesar pagos de reservas en estado ABIERTA
+                </div>
+              )}
+            </Descriptions.Item>
             {reserva.monto && (
               <Descriptions.Item label="Monto">${reserva.monto.toFixed(2)}</Descriptions.Item>
             )}
@@ -139,11 +151,23 @@ const Pagos = () => {
               icon={<DollarOutlined />}
               loading={loading}
               block
-              disabled={!reserva}
+              disabled={!reserva || reserva.estado !== 'ABIERTA'}
             >
               Procesar Pago
             </Button>
           </Form.Item>
+          {reserva && reserva.estado !== 'ABIERTA' && (
+            <div style={{ 
+              color: 'red', 
+              textAlign: 'center', 
+              marginTop: 8,
+              padding: '8px',
+              backgroundColor: '#fff2e8',
+              borderRadius: '4px'
+            }}>
+              No se puede procesar el pago. La reserva debe estar en estado ABIERTA.
+            </div>
+          )}
         </Form>
       </Card>
     </div>

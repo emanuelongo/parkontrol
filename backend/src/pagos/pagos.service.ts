@@ -21,6 +21,11 @@ export class PagosService {
   async crear(createPagoDto: CreatePagoDto): Promise<Pago> {
     const reserva = await this.reservasService.findReservaById(createPagoDto.idReserva);
     
+    // Validar que el estado sea ABIERTA (no ACTIVA ni CERRADA)
+    if (reserva.estado !== 'ABIERTA') {
+      throw new BadRequestException(`La reserva debe estar en estado ABIERTA para procesar el pago. Estado actual: ${reserva.estado}`);
+    }
+
     if (!reserva.fechaSalida) {
       throw new BadRequestException('La reserva debe estar finalizada para procesar el pago');
     }
