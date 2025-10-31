@@ -55,6 +55,25 @@ const Vehiculos = () => {
   return (
     <div>
       <h1>Vehículos</h1>
+      
+      <Card style={{ marginBottom: 24 }}>
+        <Form.Item label="Empresa">
+          <Select
+            value={idEmpresa}
+            onChange={(value) => setIdEmpresa(value)}
+            loading={loadingEmpresas}
+            showSearch
+            filterOption={(input, option) =>
+              String(option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+            }
+            options={empresas.map((e) => ({
+              label: e.nombre,
+              value: e.id,
+            }))}
+            style={{ width: 300 }}
+          />
+        </Form.Item>
+      </Card>
 
       <Card title="Buscar Vehículo" style={{ marginBottom: 24 }}>
         <Form form={searchForm} onFinish={handleSearch} layout="inline">
@@ -62,12 +81,20 @@ const Vehiculos = () => {
             name="idParqueadero"
             rules={[{ required: true, message: 'Seleccione el parqueadero' }]}
           >
-            <Select placeholder="Seleccionar parqueadero" style={{ width: 250 }}>
-              {parqueaderos.map((p) => (
-                <Select.Option key={p.id} value={p.id}>
-                  {p.nombre}
-                </Select.Option>
-              ))}
+            <Select 
+              placeholder="Seleccionar parqueadero" 
+              style={{ width: 250 }}
+              showSearch
+              filterOption={(input, option) =>
+                String(option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+              }
+              options={parqueaderos.map((p) => ({
+                label: p.nombre,
+                value: p.id,
+              }))}
+              virtual
+              dropdownMatchSelectWidth={false}
+            >
             </Select>
           </Form.Item>
           <Form.Item

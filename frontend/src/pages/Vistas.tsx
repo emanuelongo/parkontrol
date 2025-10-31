@@ -279,13 +279,15 @@ const Vistas = () => {
             style={{ width: 250 }}
             placeholder="Seleccionar empresa"
             loading={loadingEmpresas}
-          >
-            {empresas.map((emp) => (
-              <Select.Option key={emp.id} value={emp.id}>
-                {emp.nombre}
-              </Select.Option>
-            ))}
-          </Select>
+            showSearch
+            filterOption={(input, option) =>
+              String(option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+            }
+            options={empresas.map((e) => ({
+              label: e.nombre,
+              value: e.id,
+            }))}
+          />
         </div>
       </div>
 

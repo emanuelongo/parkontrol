@@ -165,25 +165,31 @@ const Reservas = () => {
               }}
               style={{ width: 200 }}
               placeholder="Seleccionar empresa"
-            >
-              {empresas.map((emp) => (
-                <Select.Option key={emp.id} value={emp.id}>
-                  {emp.nombre}
-                </Select.Option>
-              ))}
-            </Select>
+              showSearch
+              filterOption={(input, option) =>
+                String(option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+              }
+              options={empresas.map((e) => ({
+                label: e.nombre,
+                value: e.id,
+              }))}
+            />
             <Select
               value={idParqueadero}
               onChange={setIdParqueadero}
               style={{ width: 250 }}
               placeholder="Seleccionar parqueadero"
-            >
-              {parqueaderos.map((p) => (
-                <Select.Option key={p.id} value={p.id}>
-                  {p.nombre}
-                </Select.Option>
-              ))}
-            </Select>
+              showSearch
+              filterOption={(input, option) =>
+                String(option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+              }
+              options={parqueaderos.map((p) => ({
+                label: p.nombre,
+                value: p.id,
+              }))}
+              virtual
+              dropdownMatchSelectWidth={false}
+            />
           </div>
         </div>
         <Button type="primary" icon={<PlusOutlined />} onClick={handleCreate}>

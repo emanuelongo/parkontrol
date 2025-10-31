@@ -1,22 +1,43 @@
 import { useState, useEffect } from 'react';
-import { Table, Button, Modal, Form, Select, DatePicker, Space } from 'antd';
-import { PlusOutlined, FileTextOutlined } from '@ant-design/icons';
+import { Table, Button, Modal, Form, Select } from 'antd';
+import { PlusOutlined } from '@ant-design/icons';
 import type { Reporte } from '../types';
 import { reportesApi } from '../api/reportes';
+import { useEmpresas } from '../hooks/useEmpresas';
+import { useParqueaderos } from '../hooks/useParqueaderos';
 import dayjs from 'dayjs';
-
-const { RangePicker } = DatePicker;
 
 const Reportes = () => {
   const [reportes, setReportes] = useState<Reporte[]>([]);
   const [loading, setLoading] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
+  const [idEmpresa, setIdEmpresa] = useState<number | undefined>();
+  const [idParqueadero, setIdParqueadero] = useState<number | undefined>();
   const [form] = Form.useForm();
+  
+  const { empresas } = useEmpresas();
+  const { parqueaderos } = useParqueaderos(idEmpresa || 0);
 
-  const fetchReportes = async (idParqueadero: number) => {
+  // Set first empresa as default when loaded
+  useEffect(() => {
+    if (empresas.length > 0 && idEmpresa === undefined) {
+      setIdEmpresa(empresas[0].id);
+    }
+  }, [empresas, idEmpresa]);
+
+  // Set first parqueadero as default when loaded
+  useEffect(() => {
+    if (parqueaderos.length > 0 && idParqueadero === undefined) {
+      setIdParqueadero(parqueaderos[0].id);
+    }
+  }, [parqueaderos, idParqueadero]);
+
+  const fetchReportes = async (parqueaderoId?: number) => {
+    if (!parqueaderoId) return;
+    
     setLoading(true);
     try {
-      const data = await reportesApi.getByParqueadero(idParqueadero);
+      const data = await reportesApi.getByParqueadero(parqueaderoId);
       setReportes(data);
     } catch (error) {
       console.error('[REPORTES] Error al cargar:', error);
@@ -26,8 +47,10 @@ const Reportes = () => {
   };
 
   useEffect(() => {
-    fetchReportes(1);
-  }, []);
+    if (idParqueadero) {
+      fetchReportes(idParqueadero);
+    }
+  }, [idParqueadero]);
 
   const handleCreate = () => {
     form.resetFields();
@@ -43,7 +66,9 @@ const Reportes = () => {
       };
       await reportesApi.create(formattedValues);
       setModalVisible(false);
-      fetchReportes(1);
+      if (idParqueadero) {
+        fetchReportes(idParqueadero);
+      }
       form.resetFields();
     } catch (error) {
       console.error('[REPORTES] Error:', error);
@@ -93,7 +118,44 @@ const Reportes = () => {
   return (
     <div style={{ padding: '24px' }}>
       <div style={{ marginBottom: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <h2>Gestion de Reportes</h2>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+          <h2>Gestion de Reportes</h2>
+          <div style={{ display: 'flex', gap: 8 }}>
+            <Select
+              value={idEmpresa}
+              onChange={(value) => {
+                setIdEmpresa(value);
+                setIdParqueadero(undefined);
+              }}
+              style={{ width: 200 }}
+              placeholder="Seleccionar empresa"
+              showSearch
+              filterOption={(input, option) =>
+                String(option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+              }
+              options={empresas.map((e) => ({
+                label: e.nombre,
+                value: e.id,
+              }))}
+            />
+            <Select
+              value={idParqueadero}
+              onChange={setIdParqueadero}
+              style={{ width: 250 }}
+              placeholder="Seleccionar parqueadero"
+              showSearch
+              filterOption={(input, option) =>
+                String(option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+              }
+              options={parqueaderos.map((p) => ({
+                label: p.nombre,
+                value: p.id,
+              }))}
+              virtual
+              dropdownMatchSelectWidth={false}
+            />
+          </div>
+        </div>
         <Button type="primary" icon={<PlusOutlined />} onClick={handleCreate}>
           Generar Reporte
         </Button>
@@ -117,14 +179,21 @@ const Reportes = () => {
         <Form form={form} layout="vertical">
           <Form.Item
             name="idParqueadero"
-            label="ID Parqueadero"
+            label="Parqueadero"
             rules={[{ required: true, message: 'El parqueadero es requerido' }]}
-            initialValue={1}
           >
-            <Select>
-              <Select.Option value={1}>Parqueadero 1</Select.Option>
-              <Select.Option value={2}>Parqueadero 2</Select.Option>
-            </Select>
+            <Select
+              showSearch
+              placeholder="Seleccionar parqueadero"
+              filterOption={(input, option) =>
+                String(option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+              }
+              options={parqueaderos.map((p) => ({
+                label: p.nombre,
+                value: p.id,
+              }))}
+              virtual
+            />
           </Form.Item>
 
           <Form.Item
