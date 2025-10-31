@@ -1,14 +1,17 @@
 import { useState, useEffect } from 'react';
 import { Table, Button, Modal, Form, Input, Space, Tag, Select } from 'antd';
 import { PlusOutlined, CheckOutlined } from '@ant-design/icons';
-import type { Reserva } from '../types';
+import type { Reserva, Celda } from '../types';
 import { reservasApi } from '../api/reservas';
+import { celdasApi } from '../api/celdas';
 import { useEmpresas } from '../hooks/useEmpresas';
 import { useParqueaderos } from '../hooks/useParqueaderos';
 
 const Reservas = () => {
   const [reservas, setReservas] = useState<Reserva[]>([]);
+  const [celdas, setCeldas] = useState<Celda[]>([]);
   const [loading, setLoading] = useState(false);
+  const [loadingCeldas, setLoadingCeldas] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [idEmpresa, setIdEmpresa] = useState<number | undefined>();
   const [idParqueadero, setIdParqueadero] = useState<number | undefined>();
@@ -46,6 +49,23 @@ const Reservas = () => {
     }
   };
 
+  const fetchCeldasDisponibles = async (parqueaderoId?: number) => {
+    if (!parqueaderoId) return;
+    
+    setLoadingCeldas(true);
+    try {
+      const data = await celdasApi.getByParqueadero(parqueaderoId);
+      // Filtrar solo las celdas disponibles
+      const disponibles = data.filter((celda) => celda.estado === 'DISPONIBLE');
+      setCeldas(disponibles);
+    } catch (error) {
+      console.error('Error al cargar celdas:', error);
+      setCeldas([]);
+    } finally {
+      setLoadingCeldas(false);
+    }
+  };
+
   useEffect(() => {
     if (idParqueadero) {
       fetchReservas(idParqueadero);
@@ -55,6 +75,10 @@ const Reservas = () => {
   const handleCreate = () => {
     form.resetFields();
     setModalVisible(true);
+    // Cargar celdas disponibles del parqueadero seleccionado
+    if (idParqueadero) {
+      fetchCeldasDisponibles(idParqueadero);
+    }
   };
 
   const handleSubmit = async () => {
@@ -96,6 +120,8 @@ const Reservas = () => {
       title: 'Celda',
       dataIndex: 'idCelda',
       key: 'idCelda',
+      render: (idCelda: number, record: Reserva) => 
+        record.celda ? `Celda #${idCelda} (${record.celda.estado})` : `Celda #${idCelda}`,
     },
     {
       title: 'Vehículo',
@@ -210,6 +236,7 @@ const Reservas = () => {
         open={modalVisible}
         onOk={handleSubmit}
         onCancel={() => setModalVisible(false)}
+        width={600}
       >
         <Form form={form} layout="vertical">
           <Form.Item
@@ -217,15 +244,29 @@ const Reservas = () => {
             label="ID Vehículo"
             rules={[{ required: true, message: 'Por favor ingrese el ID del vehículo' }]}
           >
-            <Input type="number" />
+            <Input type="number" placeholder="Ej: 123" />
           </Form.Item>
 
           <Form.Item
             name="idCelda"
-            label="ID Celda"
-            rules={[{ required: true, message: 'Por favor ingrese el ID de la celda' }]}
+            label="Celda Disponible"
+            rules={[{ required: true, message: 'Por favor seleccione una celda' }]}
           >
-            <Input type="number" />
+            <Select
+              placeholder="Seleccionar celda disponible"
+              loading={loadingCeldas}
+              showSearch
+              filterOption={(input, option) =>
+                String(option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+              }
+              options={celdas.map((c) => ({
+                label: `Celda #${c.id} - Tipo Celda: ${c.idTipoCelda} - Sensor: ${c.idSensor}`,
+                value: c.id,
+              }))}
+              notFoundContent={
+                loadingCeldas ? 'Cargando...' : celdas.length === 0 ? 'No hay celdas disponibles' : null
+              }
+            />
           </Form.Item>
 
           <Form.Item
@@ -234,7 +275,7 @@ const Reservas = () => {
             initialValue="ACTIVA"
             rules={[{ required: true, message: 'Por favor ingrese el estado' }]}
           >
-            <Input />
+            <Input disabled />
           </Form.Item>
         </Form>
       </Modal>
