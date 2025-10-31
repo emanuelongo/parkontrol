@@ -314,7 +314,7 @@ const Reservas = () => {
           <Form.Item
             name="estado"
             label="Estado"
-            initialValue="ACTIVA"
+            initialValue="ABIERTA"
             rules={[{ required: true, message: 'Por favor ingrese el estado' }]}
           >
             <Input disabled />
