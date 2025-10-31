@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Card, Col, Row, Statistic, Table, Select, Spin } from 'antd';
 import {
   CarOutlined,
@@ -40,6 +40,7 @@ const Dashboard = () => {
       // Cargar ocupación
       try {
         const ocupacionData = await vistasApi.getOcupacion(idEmpresa);
+        console.log('📊 Datos de ocupación recibidos:', ocupacionData);
         setOcupacion(ocupacionData);
       } catch (ocupacionError) {
         console.warn('No se pudo cargar datos de ocupacion:', ocupacionError);
@@ -80,15 +81,29 @@ const Dashboard = () => {
     }
   };
 
-  const totalParqueaderos = ocupacion.length;
-  const totalCeldasOcupadas = ocupacion.reduce((acc, p) => acc + (p.celdasOcupadas || 0), 0);
-  const totalReservasActivas = reservasActivas.length;
+  // Calcular estadísticas con useMemo para que se recalculen cuando cambien los datos
+  const totalParqueaderos = useMemo(() => ocupacion.length, [ocupacion]);
+  
+  const totalCeldasOcupadas = useMemo(
+    () => ocupacion.reduce((acc, p) => acc + (p.celdasOcupadas || 0), 0),
+    [ocupacion]
+  );
+  
+  const totalCeldasDisponibles = useMemo(
+    () => ocupacion.reduce((acc, p) => acc + (p.celdasLibres || 0), 0),
+    [ocupacion]
+  );
+  
+  const totalReservasActivas = useMemo(() => reservasActivas.length, [reservasActivas]);
   
   // Calcular ingresos totales de la vista
-  const ingresosTotal = ingresos.reduce((acc, ing) => acc + (ing.totalIngresos || 0), 0);
+  const ingresosTotal = useMemo(
+    () => ingresos.reduce((acc, ing) => acc + (ing.ingresoTotal || 0), 0),
+    [ingresos]
+  );
   
   // Calcular total de reservas desde historial
-  const totalReservas = facturacion.length;
+  const totalReservas = useMemo(() => facturacion.length, [facturacion]);
 
   const columns = [
     {
@@ -156,7 +171,7 @@ const Dashboard = () => {
       </div>
 
       <Row gutter={16} style={{ marginBottom: 24 }}>
-        <Col span={6}>
+        <Col span={4}>
           <Card>
             <Statistic
               title="Parqueaderos Activos"
@@ -166,7 +181,7 @@ const Dashboard = () => {
             />
           </Card>
         </Col>
-        <Col span={6}>
+        <Col span={5}>
           <Card>
             <Statistic
               title="Celdas Ocupadas"
@@ -176,7 +191,17 @@ const Dashboard = () => {
             />
           </Card>
         </Col>
-        <Col span={6}>
+        <Col span={5}>
+          <Card>
+            <Statistic
+              title="Celdas Disponibles"
+              value={totalCeldasDisponibles}
+              prefix={<CarOutlined />}
+              valueStyle={{ color: '#52c41a' }}
+            />
+          </Card>
+        </Col>
+        <Col span={5}>
           <Card>
             <Statistic
               title="Reservas Activas"
@@ -186,7 +211,7 @@ const Dashboard = () => {
             />
           </Card>
         </Col>
-        <Col span={6}>
+        <Col span={5}>
           <Card>
             <Statistic
               title="Ingresos Totales"

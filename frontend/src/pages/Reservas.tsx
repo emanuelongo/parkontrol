@@ -55,11 +55,38 @@ const Reservas = () => {
     setLoadingCeldas(true);
     try {
       const data = await celdasApi.getByParqueadero(parqueaderoId);
-      // Filtrar solo las celdas disponibles
-      const disponibles = data.filter((celda) => celda.estado === 'DISPONIBLE');
-      setCeldas(disponibles);
+      console.log('🔍 Todas las celdas del parqueadero:', data);
+      console.log('🔍 Estados únicos encontrados:', [...new Set(data.map(c => c.estado))]);
+      
+      // Si no hay celdas, mostrar mensaje
+      if (data.length === 0) {
+        console.warn('⚠️ No hay celdas en este parqueadero');
+        setCeldas([]);
+        return;
+      }
+      
+      // Filtrar solo las celdas disponibles (intentar varios posibles estados)
+      const disponibles = data.filter((celda) => {
+        const estadoUpper = celda.estado?.toUpperCase().trim();
+        const esDisponible = 
+          estadoUpper === 'DISPONIBLE' || 
+          estadoUpper === 'LIBRE' || 
+          estadoUpper === 'DESOCUPADA' ||
+          estadoUpper === 'VACIA';
+        return esDisponible;
+      });
+      
+      console.log(`✅ ${disponibles.length} celdas disponibles de ${data.length} totales`);
+      
+      // Si no hay disponibles, mostrar todas pero con advertencia
+      if (disponibles.length === 0) {
+        console.warn('⚠️ No hay celdas disponibles, mostrando todas');
+        setCeldas(data); // Mostrar todas para que el usuario vea qué hay
+      } else {
+        setCeldas(disponibles);
+      }
     } catch (error) {
-      console.error('Error al cargar celdas:', error);
+      console.error('❌ Error al cargar celdas:', error);
       setCeldas([]);
     } finally {
       setLoadingCeldas(false);
@@ -249,22 +276,37 @@ const Reservas = () => {
 
           <Form.Item
             name="idCelda"
-            label="Celda Disponible"
+            label="Seleccionar Celda"
             rules={[{ required: true, message: 'Por favor seleccione una celda' }]}
+            tooltip="Solo se muestran las celdas disponibles del parqueadero seleccionado"
           >
             <Select
-              placeholder="Seleccionar celda disponible"
+              placeholder={loadingCeldas ? 'Cargando celdas...' : 'Seleccionar celda'}
               loading={loadingCeldas}
               showSearch
               filterOption={(input, option) =>
                 String(option?.label ?? '').toLowerCase().includes(input.toLowerCase())
               }
-              options={celdas.map((c) => ({
-                label: `Celda #${c.id} - Tipo Celda: ${c.idTipoCelda} - Sensor: ${c.idSensor}`,
-                value: c.id,
-              }))}
+              options={celdas.map((c) => {
+                const estadoUpper = c.estado?.toUpperCase().trim();
+                const esDisponible = 
+                  estadoUpper === 'DISPONIBLE' || 
+                  estadoUpper === 'LIBRE' || 
+                  estadoUpper === 'DESOCUPADA' ||
+                  estadoUpper === 'VACIA';
+                
+                return {
+                  label: esDisponible 
+                    ? `✅ Celda #${c.id} - Tipo: ${c.idTipoCelda} [${c.estado}]`
+                    : `⛔ Celda #${c.id} - Tipo: ${c.idTipoCelda} [${c.estado}]`,
+                  value: c.id,
+                  disabled: !esDisponible, // Deshabilitar las no disponibles
+                };
+              })}
               notFoundContent={
-                loadingCeldas ? 'Cargando...' : celdas.length === 0 ? 'No hay celdas disponibles' : null
+                loadingCeldas ? 'Cargando celdas...' : 
+                celdas.length === 0 ? 'No hay celdas en este parqueadero. Verifica que has seleccionado un parqueadero válido.' : 
+                null
               }
             />
           </Form.Item>
