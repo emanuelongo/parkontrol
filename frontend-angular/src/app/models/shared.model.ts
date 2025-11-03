@@ -1,0 +1,47 @@
+export enum RolUsuario {
+  ADMINISTRADOR = 'ADMINISTRADOR',
+  OPERADOR = 'OPERADOR'
+}
+
+
+export interface Empresa {
+  id: number;
+  nombre: string;
+}
+
+
+export interface TipoVehiculo {
+  id: number;
+  nombre: string;
+}
+
+export interface TipoCelda {
+  id: number;
+  nombre: string;
+}
+
+export enum EstadoCelda {
+  LIBRE = 'LIBRE',
+  OCUPADO = 'OCUPADA'
+}
+
+export enum EstadoReserva {
+  ACTIVA = 'ACTIVA',
+  FINALIZADA = 'FINALIZADA',
+}
+
+export interface Sensor {
+  id: number;
+  codigo: string;
+  tipo: string;
+}
+
+export interface MetodoPago {
+  id: number;
+  nombre: string;
+}
+
+export interface Periodo {
+  id: number;
+  nombre: string;
+}

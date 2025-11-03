@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 import { jwtDecode } from 'jwt-decode';
 import { environment } from '../../environments/environment';
+import { RolUsuario } from '../models/shared.model';
 import { 
   Usuario, 
   LoginUsuarioDto, 

@@ -36,6 +36,7 @@ export class RegistroComponent {
   loading = false;
   errorMessage = '';
 
+
   constructor(
     private formBuilder: FormBuilder,
     private authService: AuthService,
@@ -49,13 +50,15 @@ export class RegistroComponent {
     });
   }
 
+
+
   onSubmit(): void {
     if (this.registerForm.valid) {
       this.loading = true;
       this.errorMessage = '';
       const registerData: RegistrarUsuarioDto = {
         ...this.registerForm.value,
-        rol: 'ADMIN'
+        rol: 'ADMINISTRADOR'
       };
 
       this.authService.register(registerData).subscribe({
@@ -63,9 +66,11 @@ export class RegistroComponent {
           console.log('Registro exitoso:', user);
           this.router.navigate(['/login']);
         },
+        
         error: (error: any) => {
-          this.loading = false;
-          console.error('Error en el registro:', error);
+            this.loading = false;
+            console.error('Error en el registro:', error);
+
 
           if (error.status === 404) {
             this.errorMessage = 'El ID de empresa no existe. Verifica el numero.';
@@ -81,8 +86,6 @@ export class RegistroComponent {
           this.loading = false;
         }
       });
-    } else {
-      this.registerForm.markAllAsTouched();
     }
   }
 }

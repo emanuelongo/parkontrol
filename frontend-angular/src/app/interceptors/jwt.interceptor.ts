@@ -19,7 +19,7 @@ export const jwtInterceptor: HttpInterceptorFn = (req, next) => {
         if (error.status === 401) {
           authService.logout();
           router.navigate(['/login']);
-          alert('Tu sesión ha expirado. Por favor, inicia sesión de nuevo.');
+          alert('La sesion expiro, Inicia sesion nuevamente');
         }
         return throwError(() => error);
       })

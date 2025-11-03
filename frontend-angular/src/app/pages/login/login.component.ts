@@ -10,6 +10,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { AuthService } from '../../services/autenticacion.service';
 import { LoginUsuarioDto } from '../../models/usuario.model';
+import { RolUsuario } from '../../models/shared.model';
 
 @Component({
   selector: 'app-login',
@@ -64,10 +65,12 @@ export class LoginComponent implements OnInit {
           
           const currentUser = this.authService.getUsuarioActual();
           
-          if (currentUser && currentUser.rol === 'ADMIN') {
+          if (currentUser && currentUser.rol === RolUsuario.ADMINISTRADOR) {
             this.router.navigate(['/dashboard']);
-          } else {
+          } else if (currentUser && currentUser.rol === RolUsuario.OPERADOR) {
             this.router.navigate(['/operador-dashboard']);
+          } else {
+            this.router.navigate(['/dashboard']);
           }
         },
 
@@ -87,9 +90,7 @@ export class LoginComponent implements OnInit {
           this.loading = false;
         }
       });
-    } else {
-      this.loginForm.markAllAsTouched();
     }
-  }
+    }
 
 }

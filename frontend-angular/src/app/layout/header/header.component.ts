@@ -1,0 +1,26 @@
+import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Usuario } from '../../models/usuario.model';
+
+@Component({
+  selector: 'app-header',
+  standalone: true,
+  imports: [CommonModule],
+  templateUrl: './header.component.html',
+  styleUrl: './header.component.css'
+})
+export class HeaderComponent {
+  @Input() usuarioActual: Usuario | null = null;
+  @Input() tituloPagina: string = 'Dashboard';
+  
+  @Output() onCerrarSesion = new EventEmitter<void>();
+
+  /**
+   * Método para cerrar sesión
+   * Emite evento al componente padre
+   */
+  cerrarSesion(): void {
+    console.log('🔍 Header: Solicitando cerrar sesión');
+    this.onCerrarSesion.emit();
+  }
+}

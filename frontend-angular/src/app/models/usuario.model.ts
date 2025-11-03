@@ -1,8 +1,10 @@
+import { RolUsuario } from './shared.model';
+
 export interface Usuario {
   id: number;
   nombre: string;
   correo: string;
-  rol: string;
+  rol: RolUsuario;
   idEmpresa: number;
 }
 
