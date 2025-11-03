@@ -15,6 +15,7 @@ export interface TipoVehiculo {
   nombre: string;
 }
 
+
 export interface TipoCelda {
   id: number;
   nombre: string;
