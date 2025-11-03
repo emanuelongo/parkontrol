@@ -1,125 +1,121 @@
 .dashboard-container {
-  padding: 0;
+  padding: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
-.welcome-card {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  padding: 30px;
-  border-radius: 12px;
-  margin-bottom: 30px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+.dashboard-header {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 24px;
 }
 
-.welcome-card h2 {
-  margin: 0 0 10px 0;
-  font-size: 2em;
+.empresa-info {
+  font-size: 1.25rem;
+  color: #6b7280;
+}
+
+.empresa-label {
+  font-weight: 500;
+}
+
+.empresa-nombre {
+  color: #1f2937;
   font-weight: 600;
 }
 
-.welcome-card p {
-  margin: 0;
-  opacity: 0.9;
-  font-size: 1.1em;
-}
-
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 20px;
-  margin-bottom: 30px;
-}
-
-.stat-card {
-  background: white;
-  padding: 25px;
-  border-radius: 12px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+.loading-contentainer {
   display: flex;
-  align-items: center;
-  gap: 20px;
-  transition: transform 0.3s, box-shadow 0.3s;
-}
-
-.stat-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 20px rgba(0,0,0,0.12);
-}
-
-.stat-icon {
-  width: 60px;
-  height: 60px;
-  border-radius: 12px;
-  display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: 1.5em;
-  color: white;
-  background: linear-gradient(45deg, #3498db, #2980b9);
-}
-
-.stat-content h3 {
-  margin: 0 0 5px 0;
-  color: #2c3e50;
-  font-size: 1.1em;
-  font-weight: 600;
-}
-
-.stat-number {
-  margin: 0 0 5px 0;
-  font-size: 2.2em;
-  font-weight: 700;
-  color: #3498db;
-}
-
-.stat-label {
-  margin: 0;
-  color: #7f8c8d;
-  font-size: 0.9em;
-}
-
-.charts-section {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-  gap: 20px;
-}
-
-.chart-card {
-  background: white;
-  padding: 25px;
-  border-radius: 12px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-}
-
-.chart-card h3 {
-  margin: 0 0 20px 0;
-  color: #2c3e50;
-  font-size: 1.2em;
-  font-weight: 600;
-}
-
-.chart-card p {
-  margin: 0;
-  color: #7f8c8d;
+  padding: 50px;
   text-align: center;
-  padding: 40px 0;
-  font-style: italic;
 }
 
-@media (max-width: 768px) {
-  .stats-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .charts-section {
-    grid-template-columns: 1fr;
-  }
-
-  .welcome-card {
-    padding: 20px;
-  }
-
-  .welcome-card h2 {
-    font-size: 1.5em;
-  }
+.loading-contentainer p {
+  margin-top: 16px;
+  color: #6b7280;
 }
+
+/* Grilla de estadísticas - 4 columnas */
+.estadisticas-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.estadistica-card {
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.estadistica-icono {
+  font-size: 24px;
+  width: 24px;
+  height: 24px;
+}
+
+.estadistica-icono.parqueaderos {
+  color: #3f8600;
+}
+
+.estadistica-icono.ocupadas {
+  color: #cf1322;
+}
+
+.estadistica-icono.disponibles {
+  color: #52c41a;
+}
+
+.estadistica-icono.reservas {
+  color: #1890ff;
+}
+
+.estadistica-valor {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 8px 0 4px 0;
+}
+
+.estadistica-label {
+  font-size: 0.875rem;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+/* Estadísticas adicionales - 3 columnas */
+.estadisticas-adicionales {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.estadistica-adicional-card {
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Tabla de ocupación - Simple */
+.ocupacion-table-card {
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.ocupacion-table {
+  width: 100%;
+}
+
+.table-container {
+  overflow-x: auto;
+}
+
+.sin-datos {
+  text-align: center;
+  padding: 48px;
+  color: #6b7280;
+}
+

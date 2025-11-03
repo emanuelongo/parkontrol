@@ -65,11 +65,11 @@ export class AuthService {
   }
 
   isAdministrador(): boolean {
-    return this.tieneRole('ADMINISTRADOR');
+    return this.tieneRole(RolUsuario.ADMINISTRADOR);
   }
 
   isOperador(): boolean {
-    return this.tieneRole('OPERADOR');
+    return this.tieneRole(RolUsuario.OPERADOR);
   }
 
   private obtenerUsuarioFromToken(token: string): Usuario | null {

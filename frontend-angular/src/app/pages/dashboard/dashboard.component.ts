@@ -1,13 +1,196 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTableModule } from '@angular/material/table';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { finalize } from 'rxjs';
+
+import { AuthService } from '../../services/autenticacion.service';
+import { VistasService } from '../../services/vistas.service';
+import { ReservasService } from '../../services/reservas.service';
+import { EmpresasService } from '../../services/empresas.service';
+import { OcupacionParqueadero, IngresosMensuales, FacturacionCompleta } from '../../models/vistas.model';
+import { Reserva } from '../../models/reserva.model';
+import { Empresa } from '../../models/shared.model';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule],
+  imports: [
+    CommonModule,
+    MatCardModule,
+    MatIconModule,
+    MatTableModule,
+    MatProgressSpinnerModule
+  ],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })
-export class DashboardComponent {
+export class DashboardComponent implements OnInit {
+
+  ocupacion: OcupacionParqueadero[] = [];
+  reservasActivas: Reserva[] = [];
+  ingresos: IngresosMensuales[] = [];
+  facturacion: FacturacionCompleta[] = [];
+  empresaUsuario: Empresa | null = null;
+
+  loading = true;
+  totalParqueaderos = 0;
+  totalCeldasOcupadas = 0;
+  totalCeldasDisponibles = 0;
+  totalReservasActivas = 0;
+  ingresosTotal = 0;
+  totalReservas = 0;
+  promedioOcupacion = 0;
+   private peticionesCompletadas = 0;
+  private totalPeticiones = 4;
+
+  displayedColumns: string[] = ['nombreParqueadero', 'totalCeldas', 'celdasOcupadas', 'celdasLibres', 'porcentajeOcupacion'];
+
+  constructor(
+    private authService: AuthService,
+    private vistasService: VistasService,
+    private reservasService: ReservasService,
+    private empresasService: EmpresasService
+  ) {}
+
+  ngOnInit(): void {
+    this.cargarDashboard();
+  }
+
+
+  private cargarDashboard(): void {
+    const usuario = this.authService.getUsuarioActual();
+    if (!usuario) {
+      console.error('No hay usuario autenticado');
+      this.loading = false;
+      return;
+    }
+
+    // Primero verificar que la empresa existe y es válida
+    this.empresasService.getById(usuario.idEmpresa).subscribe({
+      next: (empresa) => {
+        this.empresaUsuario = empresa;
+        console.log('✅ Empresa verificada:', empresa.nombre);
+        
+        // Solo si la empresa es válida, cargar los datos
+        this.cargarDatosDashboard(empresa.id);
+      },
+      error: (error) => {
+        console.error('❌ Error: No se pudo verificar la empresa', error);
+        this.empresaUsuario = null;
+        this.loading = false;
+        
+        // Opcional: mostrar mensaje de error al usuario
+        alert('Error: No tiene acceso a los datos de empresa. Contacte al administrador.');
+      }
+    });
+  }
+
+
+
+  private cargarDatosDashboard(idEmpresa: number): void {
+    this.loading = true;
+    this.peticionesCompletadas = 0; 
+
+    this.vistasService.getOcupacion(idEmpresa)
+      .subscribe({
+        next: (data) => {
+          this.ocupacion = data;
+        },
+        error: (error) => {
+          console.log('no recibe ocupacion', error);
+          this.ocupacion = [];
+        },
+        complete: () => {
+          this.validarPeticiones(); 
+        }
+      });
+
+    this.reservasService.getActivas()
+      .subscribe({
+        next: (data) => {
+          this.reservasActivas = data;
+        },
+        error: (error) => {
+          console.log('No se cargo reservas', error);
+          this.reservasActivas = [];
+        },
+        complete: () => {
+          this.validarPeticiones();
+        }
+      });
+
+
+    this.vistasService.getIngresos(idEmpresa)
+      .subscribe({
+        next: (data) => {
+          this.ingresos = data;
+        },
+        error: (error) => {
+          console.log('No se cargaron ingresos', error);
+          this.ingresos = [];
+        },
+
+        complete: () => {
+          this.validarPeticiones();
+        }
+      });
+
+
+
+    this.vistasService.getFacturacion(idEmpresa)
+      .subscribe({
+        next: (data) => {
+          this.facturacion = data;
+        },
+        error: (error) => {
+          console.log('No se pudo cargar facturación:', error);
+          this.facturacion = [];
+        },
+
+        complete: () => {
+          this.validarPeticiones();
+        }
+      });
+  }
+
+  private validarPeticiones(): void {
+    this.peticionesCompletadas++;
+    if (this.peticionesCompletadas === this.totalPeticiones) {
+      this.calcularEstadisticas();
+      this.loading = false;
+    }
+  }
+
+
+  private calcularEstadisticas(): void {
+
+    this.totalParqueaderos = this.ocupacion.length;
+    this.totalReservasActivas = this.reservasActivas.length;
+    this.totalReservas = this.facturacion.length;
+    this.totalCeldasOcupadas = this.ocupacion.reduce((total, parqueadero) => total + (parqueadero.celdasOcupadas || 0), 0);
+    this.totalCeldasDisponibles = this.ocupacion.reduce((total, parqueadero) => total + (parqueadero.celdasLibres || 0), 0);
+    this.ingresosTotal = this.ingresos.reduce((total, ingreso) => total + (ingreso.totalIngresos || 0), 0);
+
+
+    if (this.ocupacion.length > 0) {
+      let sumaPromedios = 0;
+      for (const parqueadero of this.ocupacion) {
+        const porcentaje = parqueadero.totalCeldas > 0 
+          ? (parqueadero.celdasOcupadas / parqueadero.totalCeldas * 100) 
+          : 0;
+        sumaPromedios += porcentaje;
+      }
+      this.promedioOcupacion = sumaPromedios / this.ocupacion.length;
+    }
+  }
+
+  calcularPorcentajeOcupacion(ocupacion: OcupacionParqueadero): number {
+    return ocupacion.totalCeldas > 0
+      ? (ocupacion.celdasOcupadas / ocupacion.totalCeldas) * 100
+      : 0;
+  }
 
 }
