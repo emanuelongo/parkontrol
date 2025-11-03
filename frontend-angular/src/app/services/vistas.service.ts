@@ -4,8 +4,9 @@ import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { 
   OcupacionParqueadero, 
-  IngresosMensuales, 
-  FacturacionCompleta 
+  HistorialReserva, 
+  FacturacionCompleta, 
+  IngresosMensuales 
 } from '../models/vistas.model';
 
 @Injectable({
@@ -16,17 +17,23 @@ export class VistasService {
 
   constructor(private http: HttpClient) {}
 
-  getOcupacion(idEmpresa: number): Observable<OcupacionParqueadero[]> {
-    return this.http.get<OcupacionParqueadero[]>(`${this.apiUrl}/views/ocupacion?idEmpresa=${idEmpresa}`);
+  getOcupacion(idEmpresa?: number): Observable<OcupacionParqueadero[]> {
+    const params = idEmpresa ? `?idEmpresa=${idEmpresa}` : '';
+    return this.http.get<OcupacionParqueadero[]>(`${this.apiUrl}/views/ocupacion${params}`);
   }
 
-  getFacturacion(idEmpresa: number): Observable<FacturacionCompleta[]> {
-    
-    return this.http.get<FacturacionCompleta[]>(`${this.apiUrl}/views/facturacion?idEmpresa=${idEmpresa}`);
+  getHistorialReservas(idEmpresa?: number): Observable<HistorialReserva[]> {
+    const params = idEmpresa ? `?idEmpresa=${idEmpresa}` : '';
+    return this.http.get<HistorialReserva[]>(`${this.apiUrl}/views/historial-reservas${params}`);
   }
 
+  getFacturacion(idEmpresa?: number): Observable<FacturacionCompleta[]> {
+    const params = idEmpresa ? `?idEmpresa=${idEmpresa}` : '';
+    return this.http.get<FacturacionCompleta[]>(`${this.apiUrl}/views/facturacion${params}`);
+  }
 
-  getIngresos(idEmpresa: number): Observable<IngresosMensuales[]> {
-    return this.http.get<IngresosMensuales[]>(`${this.apiUrl}/views/ingresos?idEmpresa=${idEmpresa}`);
+  getIngresos(idEmpresa?: number): Observable<IngresosMensuales[]> {
+    const params = idEmpresa ? `?idEmpresa=${idEmpresa}` : '';
+    return this.http.get<IngresosMensuales[]>(`${this.apiUrl}/views/ingresos${params}`);
   }
 }

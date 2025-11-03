@@ -38,7 +38,9 @@
   color: #6b7280;
 }
 
-/* Grilla de estadísticas - 4 columnas */
+
+
+
 .estadisticas-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -86,7 +88,8 @@
   font-weight: 500;
 }
 
-/* Estadísticas adicionales - 3 columnas */
+
+
 .estadisticas-adicionales {
   display: grid;
   grid-template-columns: repeat(3, 1fr);

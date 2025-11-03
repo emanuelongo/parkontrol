@@ -12,7 +12,7 @@ export class ReservasService {
 
   constructor(private http: HttpClient) {}
 
-  // Método utilizado en el Dashboard
+
   getActivas(): Observable<Reserva[]> {
     return this.http.get<Reserva[]>(`${this.apiUrl}/reservations/activas`);
   }

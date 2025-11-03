@@ -2,10 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
-import { MatTableModule } from '@angular/material/table';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { finalize } from 'rxjs';
-
 import { AuthService } from '../../services/autenticacion.service';
 import { VistasService } from '../../services/vistas.service';
 import { ReservasService } from '../../services/reservas.service';
@@ -13,6 +10,7 @@ import { EmpresasService } from '../../services/empresas.service';
 import { OcupacionParqueadero, IngresosMensuales, FacturacionCompleta } from '../../models/vistas.model';
 import { Reserva } from '../../models/reserva.model';
 import { Empresa } from '../../models/shared.model';
+import { OcupacionParqueaderosComponent } from '../../components/ocupacion-parqueaderos/ocupacion-parqueaderos.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -21,8 +19,8 @@ import { Empresa } from '../../models/shared.model';
     CommonModule,
     MatCardModule,
     MatIconModule,
-    MatTableModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    OcupacionParqueaderosComponent
   ],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
@@ -46,8 +44,6 @@ export class DashboardComponent implements OnInit {
    private peticionesCompletadas = 0;
   private totalPeticiones = 4;
 
-  displayedColumns: string[] = ['nombreParqueadero', 'totalCeldas', 'celdasOcupadas', 'celdasLibres', 'porcentajeOcupacion'];
-
   constructor(
     private authService: AuthService,
     private vistasService: VistasService,
@@ -68,24 +64,18 @@ export class DashboardComponent implements OnInit {
       return;
     }
 
-    // Primero verificar que la empresa existe y es válida
     this.empresasService.getById(usuario.idEmpresa).subscribe({
       next: (empresa) => {
         this.empresaUsuario = empresa;
-        console.log('✅ Empresa verificada:', empresa.nombre);
-        
-        // Solo si la empresa es válida, cargar los datos
-        this.cargarDatosDashboard(empresa.id);
       },
       error: (error) => {
-        console.error('❌ Error: No se pudo verificar la empresa', error);
-        this.empresaUsuario = null;
+        console.error('Error cargando empresa', error);
         this.loading = false;
-        
-        // Opcional: mostrar mensaje de error al usuario
-        alert('Error: No tiene acceso a los datos de empresa. Contacte al administrador.');
+        return;
       }
     });
+
+    this.cargarDatosDashboard(usuario.idEmpresa);
   }
 
 
@@ -146,7 +136,7 @@ export class DashboardComponent implements OnInit {
           this.facturacion = data;
         },
         error: (error) => {
-          console.log('No se pudo cargar facturación:', error);
+          console.log('No cargo facturacion', error);
           this.facturacion = [];
         },
 
@@ -185,12 +175,6 @@ export class DashboardComponent implements OnInit {
       }
       this.promedioOcupacion = sumaPromedios / this.ocupacion.length;
     }
-  }
-
-  calcularPorcentajeOcupacion(ocupacion: OcupacionParqueadero): number {
-    return ocupacion.totalCeldas > 0
-      ? (ocupacion.celdasOcupadas / ocupacion.totalCeldas) * 100
-      : 0;
   }
 
 }

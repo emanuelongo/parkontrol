@@ -1,7 +1,8 @@
 <div class="dashboard-container">
-  <!-- Header con información de empresa -->
+
   <div class="dashboard-header">
     <div class="empresa-info">
+
       <span class="empresa-label">Empresa: </span>
       <span class="empresa-nombre">{{ empresaUsuario?.nombre || 'Cargando' }}</span>
     </div>
@@ -12,9 +13,11 @@
       <mat-spinner></mat-spinner>
       <p>Cargando datos del dashboard...</p>
     </div>
-  } @else {
-    <!-- Estadísticas principales -->
+  } @else 
+  {
+
     <div class="estadisticas-grid">
+
       <mat-card class="estadistica-card">
         <mat-card-header>
           <mat-icon class="estadistica-icono parqueaderos">business</mat-icon>
@@ -30,8 +33,8 @@
           <mat-icon class="estadistica-icono ocupadas">directions_car</mat-icon>
         </mat-card-header>
         <mat-card-content>
-          <div class="estadistica-valor">{{ totalCeldasOcupadas }}</div>
-          <div class="estadistica-label">Celdas Ocupadas</div>
+            <div class="estadistica-valor">{{ totalCeldasOcupadas }}</div>
+            <div class="estadistica-label">Celdas Ocupadas</div>
         </mat-card-content>
       </mat-card>
 
@@ -54,9 +57,9 @@
           <div class="estadistica-label">Reservas Activas</div>
         </mat-card-content>
       </mat-card>
+
     </div>
 
-    <!-- Estadísticas adicionales -->
     <div class="estadisticas-adicionales">
       <mat-card class="estadistica-adicional-card">
         <mat-card-content>
@@ -66,9 +69,10 @@
       </mat-card>
 
       <mat-card class="estadistica-adicional-card">
+
         <mat-card-content>
-          <div class="estadistica-valor">{{ totalReservas }}</div>
-          <div class="estadistica-label">Total Reservas</div>
+            <div class="estadistica-valor">{{ totalReservas }}</div>
+            <div class="estadistica-label">Total Reservas</div>
         </mat-card-content>
       </mat-card>
 
@@ -81,56 +85,16 @@
     </div>
 
 
+
     <mat-card class="ocupacion-table-card">
       <mat-card-header>
         <mat-card-title>Ocupación de Parqueaderos</mat-card-title>
       </mat-card-header>
       <mat-card-content>
-        <div class="table-container">
-          <table mat-table [dataSource]="ocupacion" class="ocupacion-table">
-            <!-- Columna Parqueadero -->
-            <ng-container matColumnDef="nombreParqueadero">
-              <th mat-header-cell *matHeaderCellDef>Parqueadero</th>
-              <td mat-cell *matCellDef="let element">{{ element.nombreParqueadero }}</td>
-            </ng-container>
-
-            <!-- Columna Capacidad -->
-            <ng-container matColumnDef="totalCeldas">
-              <th mat-header-cell *matHeaderCellDef>Capacidad</th>
-              <td mat-cell *matCellDef="let element">{{ element.totalCeldas }}</td>
-            </ng-container>
-
-            <!-- Columna Ocupadas -->
-            <ng-container matColumnDef="celdasOcupadas">
-              <th mat-header-cell *matHeaderCellDef>Ocupadas</th>
-              <td mat-cell *matCellDef="let element">{{ element.celdasOcupadas }}</td>
-            </ng-container>
-
-            <!-- Columna Disponibles -->
-            <ng-container matColumnDef="celdasLibres">
-              <th mat-header-cell *matHeaderCellDef>Disponibles</th>
-              <td mat-cell *matCellDef="let element">{{ element.celdasLibres }}</td>
-            </ng-container>
-
-            <!-- Columna Ocupación -->
-            <ng-container matColumnDef="porcentajeOcupacion">
-              <th mat-header-cell *matHeaderCellDef>Ocupacion</th>
-              <td mat-cell *matCellDef="let element">
-                {{ calcularPorcentajeOcupacion(element) }}%
-              </td>
-            </ng-container>
-
-            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-          </table>
-
-          @if (ocupacion.length === 0) {
-            <div class="sin-datos">
-              <mat-icon>info</mat-icon>
-              <p>No hay datos de ocupacion disponibles</p>
-            </div>
-          }
-        </div>
+        <app-ocupacion-parqueaderos 
+          [ocupacionData]="ocupacion" 
+          [loading]="loading">
+        </app-ocupacion-parqueaderos>
       </mat-card-content>
     </mat-card>
   }
