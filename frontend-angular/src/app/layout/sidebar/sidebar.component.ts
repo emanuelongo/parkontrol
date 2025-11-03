@@ -16,7 +16,7 @@ interface ElementoMenu {
   standalone: true,
   imports: [CommonModule, RouterModule, MatIconModule],
   templateUrl: './sidebar.component.html',
-  styleUrl: './sidebar.component.css'
+  styleUrl: './sidebar.component.scss'
 })
 export class SidebarComponent {
   @Input() elementosMenu: ElementoMenu[] = [];

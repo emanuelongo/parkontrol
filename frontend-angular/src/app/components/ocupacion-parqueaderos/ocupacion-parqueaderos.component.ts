@@ -15,7 +15,7 @@ import { OcupacionParqueadero } from '../../models/vistas.model';
     MatIconModule
   ],
   templateUrl: './ocupacion-parqueaderos.component.html',
-  styleUrls: ['./ocupacion-parqueaderos.component.css']
+  styleUrls: ['./ocupacion-parqueaderos.component.scss']
 })
 export class OcupacionParqueaderosComponent {
   @Input() ocupacionData: OcupacionParqueadero[] = [];

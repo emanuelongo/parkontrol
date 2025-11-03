@@ -9,7 +9,7 @@ import { HistorialReserva } from '../../models/vistas.model';
   standalone: true,
   imports: [CommonModule, MatTableModule, MatProgressSpinnerModule],
   templateUrl: './historial-reservas.component.html',
-  styleUrl: './historial-reservas.component.css'
+  styleUrl: './historial-reservas.component.scss'
 })
 export class HistorialReservasComponent {
   @Input() historialData: HistorialReserva[] = [];

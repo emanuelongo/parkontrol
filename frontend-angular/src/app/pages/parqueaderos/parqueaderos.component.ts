@@ -24,7 +24,7 @@ import { ParqueaderoModalComponent, ParqueaderoDialogData } from '../../componen
     MatProgressSpinnerModule
   ],
   templateUrl: './parqueaderos.component.html',
-  styleUrls: ['./parqueaderos.component.css']
+  styleUrls: ['./parqueaderos.component.scss']
 })
 export class ParqueaderosComponent implements OnInit {
   parqueaderos: Parqueadero[] = [];

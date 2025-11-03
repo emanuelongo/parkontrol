@@ -6,7 +6,7 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './operador-dashboard.component.html',
-  styleUrls: ['./operador-dashboard.component.css']
+  styleUrls: ['./operador-dashboard.component.scss']
 })
 export class OperadorDashboardComponent {
 

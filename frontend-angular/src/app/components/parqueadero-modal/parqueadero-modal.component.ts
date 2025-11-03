@@ -23,7 +23,7 @@ export interface ParqueaderoDialogData {
     MatButtonModule
   ],
   templateUrl: './parqueadero-modal.component.html',
-  styleUrls: ['./parqueadero-modal.component.css']
+  styleUrls: ['./parqueadero-modal.component.scss']
 })
 export class ParqueaderoModalComponent {
   parqueaderoForm: FormGroup;

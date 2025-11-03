@@ -27,7 +27,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     FacturacionCompletaComponent
   ],
   templateUrl: './vistas.component.html',
-  styleUrls: ['./vistas.component.css']
+  styleUrls: ['./vistas.component.scss']
 })
 export class VistasComponent implements OnInit {
   ocupacion: OcupacionParqueadero[] = [];

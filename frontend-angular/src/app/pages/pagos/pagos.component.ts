@@ -6,7 +6,7 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './pagos.component.html',
-  styleUrls: ['./pagos.component.css']
+  styleUrls: ['./pagos.component.scss']
 })
 export class PagosComponent {
 

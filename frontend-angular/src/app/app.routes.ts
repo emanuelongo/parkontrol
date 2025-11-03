@@ -40,7 +40,7 @@ export const routes: Routes = [
         path: 'parqueaderos',
         loadComponent: () => import('./pages/parqueaderos/parqueaderos.component').then(m => m.ParqueaderosComponent),
         canActivate: [roleGuard],
-        data: { roles: [RolUsuario.ADMINISTRADOR] }
+        data: { roles: [RolUsuario.ADMINISTRADOR, RolUsuario.OPERADOR] }
       },
 
       {

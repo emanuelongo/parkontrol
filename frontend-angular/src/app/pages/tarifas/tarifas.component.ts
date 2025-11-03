@@ -6,7 +6,7 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './tarifas.component.html',
-  styleUrls: ['./tarifas.component.css']
+  styleUrls: ['./tarifas.component.scss']
 })
 export class TarifasComponent {
 

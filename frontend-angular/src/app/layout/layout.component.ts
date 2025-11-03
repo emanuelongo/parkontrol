@@ -12,7 +12,7 @@ import { SidebarComponent } from './sidebar/sidebar.component';
   standalone: true,
   imports: [CommonModule, RouterOutlet, HeaderComponent, SidebarComponent],
   templateUrl: './layout.component.html',
-  styleUrl: './layout.component.css'
+  styleUrl: './layout.component.scss'
 })
 export class LayoutComponent implements OnInit {
   usuarioActual: Usuario | null = null;

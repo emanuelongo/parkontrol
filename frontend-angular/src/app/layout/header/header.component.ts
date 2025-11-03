@@ -7,7 +7,7 @@ import { Usuario } from '../../models/usuario.model';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './header.component.html',
-  styleUrl: './header.component.css'
+  styleUrl: './header.component.scss'
 })
 export class HeaderComponent {
   @Input() usuarioActual: Usuario | null = null;

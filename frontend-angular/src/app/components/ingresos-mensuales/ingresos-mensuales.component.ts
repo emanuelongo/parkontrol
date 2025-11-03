@@ -9,7 +9,7 @@ import { IngresosMensuales } from '../../models/vistas.model';
   standalone: true,
   imports: [CommonModule, MatTableModule, MatProgressSpinnerModule],
   templateUrl: './ingresos-mensuales.component.html',
-  styleUrl: './ingresos-mensuales.component.css'
+  styleUrl: './ingresos-mensuales.component.scss'
 })
 export class IngresosMensualesComponent {
   @Input() ingresosData: IngresosMensuales[] = [];

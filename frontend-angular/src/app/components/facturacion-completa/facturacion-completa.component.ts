@@ -10,7 +10,7 @@ import { FacturacionCompleta } from '../../models/vistas.model';
   standalone: true,
   imports: [CommonModule, MatTableModule, MatProgressSpinnerModule, MatIconModule],
   templateUrl: './facturacion-completa.component.html',
-  styleUrl: './facturacion-completa.component.css'
+  styleUrl: './facturacion-completa.component.scss'
 })
 export class FacturacionCompletaComponent {
   @Input() facturacionData: FacturacionCompleta[] = [];

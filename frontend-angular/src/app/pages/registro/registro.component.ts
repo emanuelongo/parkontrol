@@ -81,6 +81,9 @@ export class RegistroComponent {
           } else {
             this.errorMessage = 'Error inesperado. Intenta de nuevo.';
           }
+          setTimeout(() => {
+          this.errorMessage = '';
+          }, 5000);
         },
         complete: () => {
           this.loading = false;

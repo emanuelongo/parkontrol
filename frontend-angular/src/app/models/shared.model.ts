@@ -22,7 +22,7 @@ export interface TipoCelda {
 
 export enum EstadoCelda {
   LIBRE = 'LIBRE',
-  OCUPADO = 'OCUPADA'
+  OCUPADA = 'OCUPADA'
 }
 
 export enum EstadoReserva {
