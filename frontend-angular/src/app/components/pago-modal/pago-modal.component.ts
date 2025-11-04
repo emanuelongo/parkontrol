@@ -1,5 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CrearPagoDto } from '../../models/pago.model';
+import { EstadoReserva, MetodoPago } from '../../models/shared.model';
+import { ReservasService } from '../../services/reservas.service';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -8,20 +10,20 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIconModule } from '@angular/material/icon';
-import { CrearPagoDto } from '../../models/pago.model';
-import { MetodoPago } from '../../models/shared.model';
-import { ReservasService } from '../../services/reservas.service';
+
+
 
 export interface PagoDialogData {
   idReserva?: number;
   idParqueadero?: number;
 }
 
+
 @Component({
   selector: 'app-pago-modal',
   standalone: true,
   imports: [
-    CommonModule,
+
     ReactiveFormsModule,
     MatDialogModule,
     MatFormFieldModule,
@@ -35,10 +37,13 @@ export interface PagoDialogData {
   styleUrls: ['./pago-modal.component.scss']
 })
 export class PagoModalComponent implements OnInit {
+
+
   pagoForm!: FormGroup;
-  loading = false;
   reservasActivas: any[] = [];
   mostrarSelectorReserva = false;
+
+  loading = false;
 
   metodosPago = [
     { id: MetodoPago.EFECTIVO, nombre: 'Efectivo' },
@@ -52,29 +57,40 @@ export class PagoModalComponent implements OnInit {
     private dialogRef: MatDialogRef<PagoModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: PagoDialogData,
     private reservasService: ReservasService
-  ) {
-    // Inicialización en ngOnInit
-  }
+  ) {}
 
   ngOnInit(): void {
     if (this.data.idReserva) {
-      // Modo 1: Pago para reserva específica
+
+
       this.pagoForm = this.formBuilder.group({
         idReserva: [{ value: this.data.idReserva, disabled: true }, [Validators.required]],
         idMetodoPago: [null, [Validators.required]]
       });
       this.mostrarSelectorReserva = false;
+
+
     } else if (this.data.idParqueadero) {
-      // Modo 2: Selección de reserva abierta por parqueadero
-      this.reservasService.getByParqueadero(this.data.idParqueadero).subscribe(reservas => {
-        this.reservasActivas = reservas.filter(r => r.estado === 'ABIERTA');
+
+
+      this.reservasService.getByParqueadero(this.data.idParqueadero).subscribe({
+        next: (reservas) => {
+          this.reservasActivas = reservas.filter(r => r.estado === EstadoReserva.ABIERTA);
+        },
+        error: (error) => {
+          console.error('No cargaron reservas', error);
+          this.reservasActivas = [];
+        }
       });
+
       this.pagoForm = this.formBuilder.group({
         idReserva: [null, [Validators.required]],
         idMetodoPago: [null, [Validators.required]]
       });
+
       this.mostrarSelectorReserva = true;
     }
+    
   }
 
   onSubmit(): void {

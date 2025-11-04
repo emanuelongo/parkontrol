@@ -46,8 +46,8 @@ export class ReservasComponent implements OnInit {
   parqueaderoSeleccionado: number | null = null;
   errorMessage = '';
   mensajeExito: string = '';
-
   displayedColumns: string[] = ['id', 'vehiculo', 'fechaEntrada', 'fechaSalida', 'estado', 'acciones'];
+
 
   constructor(
     private reservasService: ReservasService,
@@ -196,7 +196,7 @@ export class ReservasComponent implements OnInit {
           this.mensajeExito = '';
           this.router.navigate(['/pagos']);
 
-        }, 4000);
+        }, 3000);
         if (this.parqueaderoSeleccionado) {
           this.cargarReservas(this.parqueaderoSeleccionado);
         }
@@ -220,7 +220,7 @@ export class ReservasComponent implements OnInit {
 
         setTimeout(() => {
           this.errorMessage = '';
-        }, 5000);
+        }, 4000);
       }
     });
   }

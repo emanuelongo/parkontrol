@@ -5,10 +5,10 @@
       <p>Cargando historial de reservas<p>
     </div>
   } @else {
-    @if (historialData.length > 0) {
+    @if (historialReserva.length > 0) {
       <div class="table-container">
-        <table mat-table [dataSource]="historialData" class="historial-table mat-elevation-z1">
-     
+        <table mat-table [dataSource]="historialReserva" class="historial-table mat-elevation-z1">
+
 
         <ng-container matColumnDef="placa">
           <th mat-header-cell *matHeaderCellDef>Placa</th>
@@ -19,7 +19,7 @@
 
         <ng-container matColumnDef="parqueadero">
           <th mat-header-cell *matHeaderCellDef>Parqueadero</th>
-          <td mat-cell *matCellDef="let element">{{ element.nombreParqueadero }}</td>
+          <td mat-cell *matCellDef="let element">{{ element.parqueadero }}</td>
         </ng-container>
 
        

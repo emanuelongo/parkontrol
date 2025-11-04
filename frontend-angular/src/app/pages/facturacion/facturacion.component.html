@@ -1,3 +1,11 @@
-<div>
-  <h1>facturacion works!</h1>
+<div class="facturacion-container">
+  <h1>Gestion de Facturacion</h1>
+  <mat-tab-group>
+    <mat-tab label="Clientes">
+      <app-clientes-factura [clientes]="clientesFactura"></app-clientes-factura>
+    </mat-tab>
+    <mat-tab label="Facturas">
+      <app-facturas-lista [facturas]="facturas"></app-facturas-lista>
+    </mat-tab>
+  </mat-tab-group>
 </div>

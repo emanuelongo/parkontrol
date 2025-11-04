@@ -12,7 +12,7 @@ import { HistorialReserva } from '../../models/vistas.model';
   styleUrl: './historial-reservas.component.scss'
 })
 export class HistorialReservasComponent {
-  @Input() historialData: HistorialReserva[] = [];
+  @Input() historialReserva: HistorialReserva[] = [];
   @Input() loading: boolean = false;
 
   displayedColumns: string[] = [

@@ -93,6 +93,7 @@ export class VistasComponent implements OnInit {
       .subscribe({
         next: (data) => {
           this.historial = data;
+          console.log('Historial de reservas obtenido', { ...this.historial });
         },
         error: (error) => {
           console.log('Error no cargo historial de reservas', error);
