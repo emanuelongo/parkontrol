@@ -2,18 +2,41 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { Reserva } from '../models/reserva.model';
+import { Reserva, CrearReservaDto } from '../models/reserva.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ReservasService {
-  private apiUrl = environment.urlApi;
+  private readonly apiUrl = `${environment.urlApi}/reservations`;
 
   constructor(private http: HttpClient) {}
 
+  /**
+   * Obtener reservas por parqueadero
+   */
+  getByParqueadero(idParqueadero: number): Observable<Reserva[]> {
+    return this.http.get<Reserva[]>(`${this.apiUrl}/parqueadero/${idParqueadero}`);
+  }
 
+  /**
+   * Crear nueva reserva
+   */
+  create(reservaData: CrearReservaDto): Observable<Reserva> {
+    return this.http.post<Reserva>(this.apiUrl, reservaData);
+  }
+
+  /**
+   * Finalizar reserva
+   */
+  finalizar(idReserva: number): Observable<Reserva> {
+    return this.http.patch<Reserva>(`${this.apiUrl}/${idReserva}/finalizar`, {});
+  }
+
+  /**
+   * Obtener reservas activas
+   */
   getActivas(): Observable<Reserva[]> {
-    return this.http.get<Reserva[]>(`${this.apiUrl}/reservations/activas`);
+    return this.http.get<Reserva[]>(`${this.apiUrl}/activas`);
   }
 }

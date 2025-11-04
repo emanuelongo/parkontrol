@@ -16,6 +16,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDialog } from '@angular/material/dialog';
 import { MatChipsModule } from '@angular/material/chips';
 import { EstadoCelda } from '../../models/shared.model';
+import { FiltroParqueaderosComponent } from '../../components/filtro-parqueaderos/filtro-parqueaderos.component';
+
 
 
 
@@ -32,7 +34,8 @@ import { EstadoCelda } from '../../models/shared.model';
     MatProgressSpinnerModule,
     MatSelectModule,
     MatFormFieldModule,
-    MatChipsModule
+    MatChipsModule,
+    FiltroParqueaderosComponent
   ],
   templateUrl: './celdas.component.html',
   styleUrls: ['./celdas.component.scss']
@@ -43,7 +46,6 @@ export class CeldasComponent implements OnInit {
   parqueaderos: Parqueadero[] = [];
   celdasFiltradas: Celda[] = [];
   loading = false;
-  idEmpresa: number | null = null;
   parqueaderoSeleccionado: number | null = null;
   errorMessage = '';
 
@@ -62,31 +64,24 @@ export class CeldasComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.cargarDatos();
+    this.cargarParqueaderos();
   }
 
-  private cargarDatos(): void {
+  private cargarParqueaderos(): void {
     const usuario = this.authService.getUsuarioActual();
     if (!usuario || !usuario.idEmpresa) {
       console.error('No hay usuario autenticado');
       return;
     }
 
-    this.idEmpresa = usuario.idEmpresa;
-    this.cargarParqueaderos();
-  }
-
-  private cargarParqueaderos(): void {
-    if (!this.idEmpresa) return;
-
     this.loading = true;
 
-    this.parqueaderosService.getByEmpresa(this.idEmpresa).subscribe({
-
+    this.parqueaderosService.getByEmpresa(usuario.idEmpresa).subscribe({
       next: (parqueaderos) => {
         this.parqueaderos = parqueaderos;
+        
+        // Auto-seleccionar el primer parqueadero si hay parqueaderos
         if (parqueaderos.length > 0) {
-
           this.parqueaderoSeleccionado = parqueaderos[0].id;
           this.cargarCeldas(this.parqueaderoSeleccionado);
         } else {
@@ -122,7 +117,7 @@ export class CeldasComponent implements OnInit {
   onParqueaderoCambia(idParqueadero: number): void {
     this.parqueaderoSeleccionado = idParqueadero;
     this.cargarCeldas(idParqueadero);
-    console.log('celdas', {...this.celdas});
+    console.log('celdas obtenidas', {...this.celdas});
   }
 
   abrirModalCrear(): void {

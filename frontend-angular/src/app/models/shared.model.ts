@@ -27,7 +27,7 @@ export enum EstadoCelda {
 }
 
 export enum EstadoReserva {
-  ACTIVA = 'ACTIVA',
+  ABIERTA = 'ABIERTA',
   FINALIZADA = 'FINALIZADA',
 }
 

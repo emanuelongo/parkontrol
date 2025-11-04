@@ -26,24 +26,11 @@
             <p>No hay parqueaderos registrados para su empresa</p>
           </div>
       } @else {
-          <div class="filtro-container">
-            <mat-form-field appearance="outline" class="filtro-parqueadero">
-
-              <mat-label>Seleccionar parqueadero</mat-label>
-              <mat-select 
-                [value]="parqueaderoSeleccionado" 
-                (selectionChange)="onParqueaderoCambia($event.value)"
-                >
-
-                @for (parqueadero of parqueaderos; track parqueadero.id) {
-                  <mat-option [value]="parqueadero.id">
-                    {{ parqueadero.nombre }}
-                  </mat-option>
-                }
-
-              </mat-select>
-            </mat-form-field>
-          </div>
+          <app-filtro-parqueaderos
+            [parqueaderos]="parqueaderos"
+            [parqueaderoSeleccionado]="parqueaderoSeleccionado"
+            (parqueaderoChange)="onParqueaderoCambia($event)">
+          </app-filtro-parqueaderos>
 
           @if (errorMessage) {
             <div class="mensaje-error">
