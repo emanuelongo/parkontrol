@@ -37,7 +37,14 @@ export interface Sensor {
   tipo: string;
 }
 
-export interface MetodoPago {
+export enum MetodoPago {
+  EFECTIVO = 1,
+  TARJETA_CREDITO = 2,
+  TARJETA_DEBITO = 3,
+  TRANSFERENCIA = 4
+}
+
+export interface MetodoPagoInfo {
   id: number;
   nombre: string;
 }

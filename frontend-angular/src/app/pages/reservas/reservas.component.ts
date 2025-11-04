@@ -13,8 +13,12 @@ import { MatTableModule } from '@angular/material/table';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { FiltroParqueaderosComponent } from '../../components/filtro-parqueaderos/filtro-parqueaderos.component';
 import { ReservaModalComponent, ReservaDialogData } from '../../components/reserva-modal/reserva-modal.component';
+import { PagoModalComponent, PagoDialogData } from '../../components/pago-modal/pago-modal.component';
+import { PagosService } from '../../services/pagos.service';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -28,6 +32,7 @@ import { ReservaModalComponent, ReservaDialogData } from '../../components/reser
     MatProgressSpinnerModule,
     MatChipsModule,
     MatIconModule,
+    MatSnackBarModule,
     FiltroParqueaderosComponent
   ],
   templateUrl: './reservas.component.html',
@@ -40,14 +45,18 @@ export class ReservasComponent implements OnInit {
   loading = false;
   parqueaderoSeleccionado: number | null = null;
   errorMessage = '';
+  mensajeExito: string = '';
 
-  displayedColumns: string[] = ['id', 'vehiculo', 'fechaEntrada', 'fechaSalida', 'monto', 'estado', 'acciones'];
+  displayedColumns: string[] = ['id', 'vehiculo', 'fechaEntrada', 'fechaSalida', 'estado', 'acciones'];
 
   constructor(
     private reservasService: ReservasService,
     private parqueaderosService: ParqueaderosService,
     private authService: AuthService,
-    private dialog: MatDialog
+    private pagosService: PagosService,
+    private dialog: MatDialog,
+    private router: Router
+
   ) {}
 
   ngOnInit(): void {
@@ -160,24 +169,62 @@ export class ReservasComponent implements OnInit {
 
   }
 
-  finalizarReserva(reserva: Reserva): void { 
-    this.reservasService.finalizar(reserva.id).subscribe({
-      next: () => {
-        console.log('Reserva finalizada exitosamente');
+  finalizarReserva(reserva: Reserva): void {
+    const dialogData: PagoDialogData = {
+      idReserva: reserva.id
+    };
+
+    const dialogRef = this.dialog.open(PagoModalComponent, {
+      width: '500px',
+      data: dialogData,
+      disableClose: true
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.procesarPago(result);
+      }
+    });
+  }
+
+  private procesarPago(pagoData: any): void {
+    this.pagosService.create(pagoData).subscribe({
+
+      next: (pago: any) => {
+        this.mensajeExito = "Pago procesado exitosamente, monto: $" + pago.monto;
+        setTimeout(() => {
+          this.mensajeExito = '';
+          this.router.navigate(['/pagos']);
+
+        }, 4000);
         if (this.parqueaderoSeleccionado) {
           this.cargarReservas(this.parqueaderoSeleccionado);
         }
       },
-      error: (error) => {
-        console.error('Error al finalizar reserva:', error);
-        this.errorMessage = 'Error al finalizar la reserva';
-        
+      error: (error: any) => {
+        console.error('Error al procesar pago:', error);
+
+        if (error.status === 400) {
+          if (error.error?.message?.includes('ABIERTA')) {
+            this.errorMessage = 'La reserva debe estar ABIERTA para iniciar pago.';
+          } else if (error.error?.message?.includes('existe un pago')) {
+            this.errorMessage = 'Ya existe un pago registrado para esta reserva.';
+          } else if (error.error?.message?.includes('No existe método de pago')) {
+            this.errorMessage = `No existe un metodo pago con el Id`;
+          } else if (error.error?.message?.includes('tarifa')) {
+            this.errorMessage = 'No existe una tarifa para el parqueadero segun tipo vehiculo.';
+          } 
+        } else {
+          this.errorMessage = 'Error no pudo procesar el pago.';
+        }
+
         setTimeout(() => {
           this.errorMessage = '';
         }, 5000);
       }
     });
   }
+
 
   getEstadoColor(estado: string): string {
     if (estado === EstadoReserva.ABIERTA) {

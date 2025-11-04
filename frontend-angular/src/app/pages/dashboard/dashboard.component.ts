@@ -39,7 +39,7 @@ export class DashboardComponent implements OnInit {
   totalCeldasDisponibles = 0;
   totalReservasActivas = 0;
   ingresosTotal = 0;
-  totalReservas = 0;
+  totalFacturas = 0;
   promedioOcupacion = 0;
    private peticionesCompletadas = 0;
   private totalPeticiones = 4;
@@ -159,7 +159,7 @@ export class DashboardComponent implements OnInit {
 
     this.totalParqueaderos = this.ocupacion.length;
     this.totalReservasActivas = this.reservasActivas.length;
-    this.totalReservas = this.facturacion.length;
+    this.totalFacturas = this.facturacion.length;
     this.totalCeldasOcupadas = this.ocupacion.reduce((total, parqueadero) => total + (parqueadero.celdasOcupadas || 0), 0);
     this.totalCeldasDisponibles = this.ocupacion.reduce((total, parqueadero) => total + (parqueadero.celdasLibres || 0), 0);
     this.ingresosTotal = this.ingresos.reduce((total, ingreso) => total + (ingreso.totalIngresos || 0), 0);

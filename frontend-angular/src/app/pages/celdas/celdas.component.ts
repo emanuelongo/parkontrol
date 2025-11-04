@@ -80,7 +80,6 @@ export class CeldasComponent implements OnInit {
       next: (parqueaderos) => {
         this.parqueaderos = parqueaderos;
         
-        // Auto-seleccionar el primer parqueadero si hay parqueaderos
         if (parqueaderos.length > 0) {
           this.parqueaderoSeleccionado = parqueaderos[0].id;
           this.cargarCeldas(this.parqueaderoSeleccionado);

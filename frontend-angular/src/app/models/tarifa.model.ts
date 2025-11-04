@@ -1,13 +1,14 @@
+import { Parqueadero } from './parqueadero.model';
 import { TipoVehiculo } from './shared.model';
 
 export interface Tarifa {
   id: number;
-  idParqueadero: number;
-  idTipoVehiculo: number;
+  idParqueadero?: number;
+  idTipoVehiculo?: number;
   precioFraccionHora: number;
   precioHoraAdicional?: number;
-  parqueadero?: any;
-  tipoVehiculo?: TipoVehiculo;
+  parqueadero: Parqueadero;
+  tipoVehiculo: TipoVehiculo;
 }
 
 export interface CrearTarifaDto {
