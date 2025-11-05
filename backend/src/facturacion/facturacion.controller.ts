@@ -45,7 +45,10 @@ export class FacturacionController {
     return factura;
   }
 
+  
   @Get('clientes')
+  // @Roles(RoleEnum.ADMIN, RoleEnum.OPERADOR) // REMOVED FOR BackendSinAuth
+  // @UseGuards(JwtAuthGuard, RolesGuard) // REMOVED FOR BackendSinAuth
   async obtenerClientes(): Promise<ClienteFactura[]> {
     return await this.facturacionService.obtenerClientes();
   }
