@@ -12,7 +12,7 @@ export const authGuard: CanActivateFn = (route, state) => {
     
     if (!usuario?.rol || (usuario.rol !== RolUsuario.ADMINISTRADOR && usuario.rol !== RolUsuario.OPERADOR)) {
       authService.logout();
-      alert('Aceso denegado Rol diferente de ADMINISTRADOR u OPERADOR.');
+      alert('Acceso denegado Rol diferente de ADMINISTRADOR u OPERADOR.');
       return router.createUrlTree(['/login']);
     }
     
