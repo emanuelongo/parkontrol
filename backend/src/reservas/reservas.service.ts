@@ -41,11 +41,11 @@ export class ReservasService {
     const reserva = await this.findReservaById(id);
     
     if (reserva.fechaSalida) {
-      throw new BadRequestException('La reserva ya ha sido finalizada');
+      throw new BadRequestException('La reserva ya ha sido cerrada');
     }
 
     reserva.fechaSalida = new Date();
-    reserva.estado = 'FINALIZADA';
+    reserva.estado = 'CERRADA';
 
     const reservaActualizada = await this.reservaRepository.save(reserva);
 

@@ -28,7 +28,7 @@ export enum EstadoCelda {
 
 export enum EstadoReserva {
   ABIERTA = 'ABIERTA',
-  FINALIZADA = 'FINALIZADA',
+  CERRADA = 'CERRADA',
 }
 
 export interface Sensor {

@@ -197,9 +197,9 @@ async function run() {
   const now = new Date();
   const later = new Date(now.getTime() + 60 * 60 * 1000); // +1h
   const reservas = [
-    reservaRepo.create({ fechaEntrada: now, estado: 'ACTIVA', vehiculo: vehs[0], celda: celdas[0] } as any),
-    reservaRepo.create({ fechaEntrada: now, fechaSalida: later, estado: 'FINALIZADA', vehiculo: vehs[1], celda: celdas[1] } as any),
-    reservaRepo.create({ fechaEntrada: now, estado: 'ACTIVA', vehiculo: vehs[2], celda: celdas[2] } as any),
+    reservaRepo.create({ fechaEntrada: now, estado: 'ABIERTA', vehiculo: vehs[0], celda: celdas[0] } as any),
+  reservaRepo.create({ fechaEntrada: now, fechaSalida: later, estado: 'CERRADA', vehiculo: vehs[1], celda: celdas[1] } as any),
+    reservaRepo.create({ fechaEntrada: now, estado: 'ABIERTA', vehiculo: vehs[2], celda: celdas[2] } as any),
   ];
   await saveMany(reservaRepo, reservas);
 
