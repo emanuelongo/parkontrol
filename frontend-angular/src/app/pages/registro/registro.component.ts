@@ -75,9 +75,9 @@ export class RegistroComponent {
           if (error.status === 404) {
             this.errorMessage = 'El ID de empresa no existe. Verifica el numero.';
           } else if (error.status === 409) {
-            this.errorMessage = 'Ya existe un usuario con este correo electrónico. Usa otro correo.';
+            this.errorMessage = 'Ya existe un usuario con este correo electronico. Usa otro correo.';
           } else if (error.status === 500) {
-            this.errorMessage = 'Error del servidor. Intenta más tarde.';
+            this.errorMessage = 'Error del servidor';
           } else {
             this.errorMessage = 'Error inesperado. Intenta de nuevo.';
           }

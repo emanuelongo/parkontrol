@@ -18,10 +18,8 @@ export class FacturacionCompletaComponent {
 
   displayedColumns: string[] = [
     'cufe',
-    'nombreCliente',
     'numeroDocumento',
-    'placa',
-    'nombreParqueadero',
+    'correoCliente',
     'monto',
     'fechaPago',
     'enviada'

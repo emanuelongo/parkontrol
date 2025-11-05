@@ -15,7 +15,7 @@ export class FacturacionService {
 
 	constructor(private http: HttpClient) {}
 
-	getClientesFactura(idEmpresa: number): Observable<ClienteFactura[]> {
+	obtenerClientesFactura(idEmpresa: number): Observable<ClienteFactura[]> {
 		return this.http.get<ClienteFactura[]>(`${this.apiUrl}/invoicing/clientes?idEmpresa=${idEmpresa}`);
 	}
 

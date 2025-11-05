@@ -38,13 +38,11 @@ export class VistasComponent implements OnInit {
   loading = false;
   idEmpresa: number | null = null;
 
-  // Estadísticas calculadas (siempre visibles)
   ingresosTotal = 0;
   facturacionTotal = 0;
   totalReservas = 0;
   promedioOcupacion = 0;
 
-  // Control de peticiones
   private peticionesCompletadas = 0;
   private totalPeticiones = 4;
 

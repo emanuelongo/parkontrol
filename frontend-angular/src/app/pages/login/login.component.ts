@@ -81,7 +81,7 @@ export class LoginComponent implements OnInit {
           if (error.status === 401) {
             this.errorMessage = 'Credenciales incorrectas. Verifica tu correo y contraseña.';
           } else if (error.status === 0) {
-            this.errorMessage = 'Error de conexion Verifica tu conexión a internet.';
+            this.errorMessage = 'Error de conexion verificar el servidor';
           } else if (error.status === 500) {
             this.errorMessage = 'Error del servidor.';
           }
