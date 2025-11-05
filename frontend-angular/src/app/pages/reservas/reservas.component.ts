@@ -187,8 +187,9 @@ export class ReservasComponent implements OnInit {
   }
 
   private procesarPago(pagoData: any): void {
+    console.log('Pago:', JSON.stringify(pagoData, null, 2));
     this.pagosService.create(pagoData).subscribe({
-
+      
       next: (pago: any) => {
         this.mensajeExito = "Pago procesado exitosamente, monto: $" + pago.monto;
         setTimeout(() => {
@@ -212,6 +213,10 @@ export class ReservasComponent implements OnInit {
           } else if (error.error?.message?.includes('tarifa')) {
             this.errorMessage = 'No existe una tarifa para el parqueadero segun tipo vehiculo.';
           } 
+        } else if (error.status === 404) {
+            if (error.error?.message?.includes('método de pago')) {
+              this.errorMessage = `No existe un metodo pago con el Id ingresado`;
+            }
         } else {
           this.errorMessage = 'Error no pudo procesar el pago.';
         }

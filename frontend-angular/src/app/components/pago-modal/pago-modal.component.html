@@ -29,21 +29,14 @@
     }
 
     <mat-form-field appearance="outline" class="full-width">
-      <mat-label>Metodo de Pago</mat-label>
-      <mat-select formControlName="idMetodoPago">
-        @for (metodo of metodosPago; track metodo.id) {
-          <mat-option [value]="metodo.id">
-            <mat-icon>{{ getMetodoIcon(metodo.id) }}</mat-icon>
-            {{ metodo.nombre }}
-          </mat-option>
-        }
-      </mat-select>
+      <mat-label>ID Metodo de Pago</mat-label>
+      <input matInput type="number" formControlName="idMetodoPago" placeholder="Ingrese el ID del metodo de pago">
       @if (pagoForm.get('idMetodoPago')?.invalid && pagoForm.get('idMetodoPago')?.touched) {
         <mat-error>
-          Debe seleccionar un metodo de pago
+          Debe ingresar un ID de metodo de pago valido
         </mat-error>
       }
-      <mat-hint>Seleccione la forma de pago preferida</mat-hint>
+      <mat-hint>Ingrese el ID del metodo de pago</mat-hint>
     </mat-form-field>
 
     <div class="info-section">

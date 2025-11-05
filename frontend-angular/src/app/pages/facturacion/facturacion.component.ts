@@ -52,8 +52,7 @@ export class FacturacionComponent implements OnInit {
   }
 
   cargarClientesFactura(): void {
-    if (!this.idEmpresa) return;
-    this.facturacionService.obtenerClientesFactura(this.idEmpresa).subscribe({
+    this.facturacionService.obtenerClientesFactura().subscribe({
       next: (clientes: ClienteFactura[]) => {
         this.clientesFactura = clientes;
       },
@@ -106,7 +105,7 @@ export class FacturacionComponent implements OnInit {
       next: (nuevoCliente) => {
         nuevoCliente ? this.cargarClientesFactura() : null;
 
-        this.mensajeExito = 'Cliente creado exitosamente';
+        this.mensajeExito = `Cliente con numero documento ${nuevoCliente.numeroDocumento} creado exitosamente`;
         this.loading = false;
         setTimeout(() => {
           this.mensajeExito = '';

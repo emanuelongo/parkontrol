@@ -58,4 +58,8 @@ export class FacturacionService {
       relations: ['pago', 'clienteFactura'],
     });
   }
+
+  async obtenerClientes(): Promise<ClienteFactura[]> {
+    return await this.clienteFacturaRepository.find();
+  }
 }

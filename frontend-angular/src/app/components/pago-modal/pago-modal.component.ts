@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { CrearPagoDto } from '../../models/pago.model';
-import { EstadoReserva, MetodoPago } from '../../models/shared.model';
+import { EstadoReserva } from '../../models/shared.model';
 import { ReservasService } from '../../services/reservas.service';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
@@ -45,13 +45,6 @@ export class PagoModalComponent implements OnInit {
 
   loading = false;
 
-  metodosPago = [
-    { id: MetodoPago.EFECTIVO, nombre: 'Efectivo' },
-    { id: MetodoPago.TARJETA_CREDITO, nombre: 'Tarjeta de credito' },
-    { id: MetodoPago.TARJETA_DEBITO, nombre: 'Tarjeta de debito' },
-    { id: MetodoPago.TRANSFERENCIA, nombre: 'Transferencia' }
-  ];
-
   constructor(
     private formBuilder: FormBuilder,
     private dialogRef: MatDialogRef<PagoModalComponent>,
@@ -62,16 +55,13 @@ export class PagoModalComponent implements OnInit {
   ngOnInit(): void {
     if (this.data.idReserva) {
 
-
       this.pagoForm = this.formBuilder.group({
         idReserva: [{ value: this.data.idReserva, disabled: true }, [Validators.required]],
-        idMetodoPago: [null, [Validators.required]]
+        idMetodoPago: [null, [Validators.required, Validators.min(1)]]
       });
       this.mostrarSelectorReserva = false;
 
-
     } else if (this.data.idParqueadero) {
-
 
       this.reservasService.getByParqueadero(this.data.idParqueadero).subscribe({
         next: (reservas) => {
@@ -85,7 +75,7 @@ export class PagoModalComponent implements OnInit {
 
       this.pagoForm = this.formBuilder.group({
         idReserva: [null, [Validators.required]],
-        idMetodoPago: [null, [Validators.required]]
+        idMetodoPago: [null, [Validators.required, Validators.min(1)]]
       });
 
       this.mostrarSelectorReserva = true;
@@ -110,18 +100,4 @@ export class PagoModalComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  getMetodoIcon(metodoId: number): string {
-    switch (metodoId) {
-      case MetodoPago.EFECTIVO:
-        return 'money';
-      case MetodoPago.TARJETA_CREDITO:
-        return 'credit_card';
-      case MetodoPago.TARJETA_DEBITO:
-        return 'credit_card';
-      case MetodoPago.TRANSFERENCIA:
-        return 'account_balance';
-      default:
-        return 'payment';
-    }
-  }
 }

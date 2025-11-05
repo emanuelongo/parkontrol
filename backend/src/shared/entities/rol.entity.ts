@@ -1,7 +1,7 @@
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 export enum RoleEnum {
-    ADMIN = 'ADMIN',
+    ADMIN = 'ADMINISTRADOR',
     OPERADOR = 'OPERADOR',
 }
 

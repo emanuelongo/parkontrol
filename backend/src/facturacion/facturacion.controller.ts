@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, ParseIntPipe, Patch, Post, NotFoundException } from '@nestjs/common';
+import { Body, Controller, Get, Param, ParseIntPipe, Patch, Post, NotFoundException, Query } from '@nestjs/common';
 import { FacturacionService } from './facturacion.service';
 import { CreateFacturaElectronicaDto } from './entities/dto/crear-factura-electronica.dto';
 import { CreateClienteFacturaDto } from './entities/dto/crear-cliente-factura.dto';
@@ -43,5 +43,10 @@ export class FacturacionController {
       throw new NotFoundException(`No existe factura para el pago con id: ${idPago}`);
     }
     return factura;
+  }
+
+  @Get('clientes')
+  async obtenerClientes(): Promise<ClienteFactura[]> {
+    return await this.facturacionService.obtenerClientes();
   }
 }

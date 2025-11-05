@@ -26,7 +26,9 @@ export class PagosService {
       throw new BadRequestException(`La reserva debe estar en estado ABIERTA para procesar el pago. Estado actual: ${reserva.estado}`);
     }
 
-    if (!reserva.fechaSalida) {
+    const reservaFinalizada = await this.reservasService.finalizarReserva(createPagoDto.idReserva);
+
+    if (!reservaFinalizada.fechaSalida) {
       throw new BadRequestException('La reserva debe estar finalizada para procesar el pago');
     }
 
@@ -44,6 +46,7 @@ export class PagosService {
       throw new NotFoundException(`No existe método de pago con id: ${createPagoDto.idMetodoPago}`);
     }
 
+    
     const idParqueadero = reserva.celda.parqueadero.id;
     const idTipoVehiculo = reserva.vehiculo.tipoVehiculo.id;
 
