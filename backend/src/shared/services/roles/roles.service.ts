@@ -12,6 +12,20 @@ export class RolesService {
     ){}
 
     async findRoleByNombre(nombre: RoleEnum): Promise<Rol> {
+        // Buscar primero por ID esperado para roles conocidos
+        const expectedId = nombre === RoleEnum.ADMIN ? 1 : nombre === RoleEnum.OPERADOR ? 2 : undefined;
+        
+        if (expectedId) {
+            let rol = await this.rolRepository.findOneBy({ id: expectedId });
+            if (rol) {
+                return rol;
+            }
+            // Si no existe con el ID esperado, crearlo
+            rol = this.rolRepository.create({ id: expectedId, nombre });
+            return await this.rolRepository.save(rol);
+        }
+        
+        // Para roles no conocidos, buscar por nombre
         let rol = await this.rolRepository.findOneBy({ nombre });
         if (!rol) {
             rol = this.rolRepository.create({ nombre });

@@ -89,9 +89,9 @@ async function run() {
 
   // 2) Roles (3) - third role cast to any to bypass enum typing
   const roles: Rol[] = [
-    rolRepo.create({ nombre: RoleEnum.ADMIN }),
-    rolRepo.create({ nombre: RoleEnum.OPERADOR }),
-    rolRepo.create({ nombre: ("GUEST" as any) }),
+    rolRepo.create({ id: 1, nombre: RoleEnum.ADMIN }),
+    rolRepo.create({ id: 2, nombre: RoleEnum.OPERADOR }),
+    rolRepo.create({ id: 3, nombre: ("GUEST" as any) }),
   ];
   await saveMany(rolRepo, roles);
 
