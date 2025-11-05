@@ -1,7 +1,12 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
-import { Router } from '@angular/router';
+import { VehiculosService } from '../../services/vehiculos.service';
+import { CeldasService } from '../../services/celdas.service';
+import { Celda } from '../../models/celda.model';
+import { Vehiculo } from '../../models/vehiculo.model';
+import { CrearReservaDto } from '../../models/reserva.model';
+import { EstadoCelda, EstadoReserva } from '../../models/shared.model';
 import { CommonModule } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -10,12 +15,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
-import { VehiculosService } from '../../services/vehiculos.service';
-import { CeldasService } from '../../services/celdas.service';
-import { Celda } from '../../models/celda.model';
-import { Vehiculo } from '../../models/vehiculo.model';
-import { CrearReservaDto } from '../../models/reserva.model';
-import { EstadoCelda, EstadoReserva } from '../../models/shared.model';
+
 
 export interface ReservaDialogData {
   idParqueadero: number;
@@ -52,7 +52,6 @@ export class ReservaModalComponent implements OnInit {
     private dialogRef: MatDialogRef<ReservaModalComponent>,
     private vehiculosService: VehiculosService,
     private celdasService: CeldasService,
-    private router: Router,
     @Inject(MAT_DIALOG_DATA) public data: ReservaDialogData
   ) {
     this.reservaForm = this.formBuilder.group({
@@ -150,7 +149,6 @@ export class ReservaModalComponent implements OnInit {
 
   irAVehiculos(): void {
     this.dialogRef.close();
-    this.router.navigate(['/vehiculos']);
   }
 
   onCancel(): void {

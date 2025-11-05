@@ -89,8 +89,8 @@ export class VistasComponent implements OnInit {
 
     this.vistasService.getHistorialReservas(idEmpresa)
       .subscribe({
-        next: (data) => {
-          this.historial = data;
+        next: (historialReservas) => {
+          this.historial = historialReservas;
           console.log('Historial de reservas obtenido', { ...this.historial });
         },
         error: (error) => {
@@ -106,8 +106,8 @@ export class VistasComponent implements OnInit {
  
     this.vistasService.getIngresos(idEmpresa)
       .subscribe({
-        next: (data) => {
-          this.ingresos = data;
+        next: (ingresos) => {
+          this.ingresos = ingresos;
         },
         error: (error) => {
           console.log('No cargo ingresos', error);
@@ -126,7 +126,7 @@ export class VistasComponent implements OnInit {
           this.facturacion = data;
         },
         error: (error) => {
-          console.log('No cargo facturacion', error);
+          console.log('no cargo facturacion', error);
           this.facturacion = [];
         },
         complete: () => {

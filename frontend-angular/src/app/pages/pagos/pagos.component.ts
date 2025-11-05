@@ -15,6 +15,10 @@ import { FiltroParqueaderosComponent } from '../../components/filtro-parqueadero
 import { PagoModalComponent, PagoDialogData } from '../../components/pago-modal/pago-modal.component';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { FacturaPagoModalComponent } from '../../components/factura-pago-modal/factura-pago-modal.component';
+import { FacturacionService } from '../../services/facturacion.service';
+import { FacturaElectronica } from '../../models/facturacion.model';
+
 
 @Component({
   selector: 'app-pagos',
@@ -47,6 +51,7 @@ export class PagosComponent implements OnInit {
     private parqueaderosService: ParqueaderosService,
     private authService: AuthService,
     private dialog: MatDialog,
+    private facturasService: FacturacionService,
 
   ) {}
 
@@ -139,5 +144,24 @@ export class PagosComponent implements OnInit {
 
   verFactura(pago: Pago): void {
     console.log('Ver factura para el pago:', pago);
+    this.abrirFactura(pago.id);
+  }
+
+  abrirFactura(pagoId: number): void {
+    this.facturasService.getFacturaPorPago(pagoId).subscribe({
+      next: (factura: FacturaElectronica) => {
+        console.log('Factura obtenida:', factura);
+        this.dialog.open(FacturaPagoModalComponent, {
+          width: '400px',
+          data: { factura }
+        });
+      },
+      error: () => {
+        this.dialog.open(FacturaPagoModalComponent, {
+          width: '400px',
+          data: { factura: null }
+        });
+      }
+    });
   }
 }

@@ -39,3 +39,4 @@ export class FacturacionService {
 		return this.http.get<FacturaElectronica>(`${this.apiUrl}/invoicing/facturas/pago/${idPago}`);
 	}
 }
+

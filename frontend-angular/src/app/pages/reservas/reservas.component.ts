@@ -55,7 +55,6 @@ export class ReservasComponent implements OnInit {
     private authService: AuthService,
     private pagosService: PagosService,
     private dialog: MatDialog,
-    private router: Router
 
   ) {}
 

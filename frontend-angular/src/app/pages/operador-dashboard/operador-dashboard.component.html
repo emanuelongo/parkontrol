@@ -1,5 +1,13 @@
 <div class="dashboard-container">
 
+  <div class="dashboard-header">
+    <div class="empresa-info">
+      <span class="empresa-label">Empresa: </span>
+      <span class="empresa-nombre">{{ empresaUsuario?.nombre || 'Cargando' }}</span>
+    </div>
+  </div>
+
+
   <div class="quick-actions">
     <h3>Acciones Rapidas</h3>
     <div class="actions-grid">
@@ -7,6 +15,7 @@
         class="action-btn"
         (click)="cambioReservas()"
       >
+
         <i class="fas fa-plus-circle"></i>
         <span>{{ mostrarReservasActivas ? 'Mostrar Historial de Reservas' : 'Mostrar Reservas Activas' }}</span>
       </button>
@@ -28,6 +37,7 @@
     </div>
   </div>
 
+  
  @if (loading) {
     <div class="loading-contentainer">
       <mat-spinner></mat-spinner>
