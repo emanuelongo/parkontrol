@@ -10,33 +10,41 @@
         <table mat-table [dataSource]="historialReserva" class="historial-table mat-elevation-z1">
 
 
-        <ng-container matColumnDef="placa">
-          <th mat-header-cell *matHeaderCellDef>Placa</th>
-          <td mat-cell *matCellDef="let element">{{ element.placa }}</td>
-        </ng-container>
+
+          <ng-container matColumnDef="placa">
+            <th mat-header-cell *matHeaderCellDef>Placa</th>
+            <td mat-cell *matCellDef="let element">{{ element.placa }}</td>
+          </ng-container>
 
 
 
         <ng-container matColumnDef="parqueadero">
+
           <th mat-header-cell *matHeaderCellDef>Parqueadero</th>
           <td mat-cell *matCellDef="let element">{{ element.parqueadero }}</td>
         </ng-container>
 
+
        
         <ng-container matColumnDef="tipoVehiculo">
-          <th mat-header-cell *matHeaderCellDef>Tipo Vehículo</th>
+
+          <th mat-header-cell *matHeaderCellDef>Tipo Vehiculo</th>
           <td mat-cell *matCellDef="let element">{{ element.tipoVehiculo }}</td>
         </ng-container>
 
     
-        <ng-container matColumnDef="fechaEntrada">
-          <th mat-header-cell *matHeaderCellDef>Fecha Entrada</th>
-          <td mat-cell *matCellDef="let element">{{ element.fechaEntrada | date: 'dd/MM/yyyy HH:mm' }}</td>
-        </ng-container>
+
+            <ng-container matColumnDef="fechaEntrada">
+                  <th mat-header-cell *matHeaderCellDef>Fecha Entrada</th>
+                  <td mat-cell *matCellDef="let element">{{ element.fechaEntrada | date: 'dd/MM/yyyy HH:mm' }}</td>
+            </ng-container>
 
     
+
         <ng-container matColumnDef="fechaSalida">
+
           <th mat-header-cell *matHeaderCellDef>Fecha Salida</th>
+          
           <td mat-cell *matCellDef="let element">
             @if (element.fechaSalida) {
               {{ element.fechaSalida | date: 'dd/MM/yyyy HH:mm' }}

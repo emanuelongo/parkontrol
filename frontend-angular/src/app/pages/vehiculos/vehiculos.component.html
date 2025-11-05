@@ -59,7 +59,7 @@
 
       @if (vehiculo) {
         <div class="results-section">
-          <h3>Vehiculo encontrado</h3>
+          <h3>Vehiculo</h3>
           <table mat-table [dataSource]="[vehiculo]" class="vehiculo-table">
             
 
@@ -78,7 +78,7 @@
 
             <ng-container matColumnDef="tipoVehiculo">
 
-              <th mat-header-cell *matHeaderCellDef>Tipo de VehIculo</th>
+              <th mat-header-cell *matHeaderCellDef>Tipo de vehiculo</th>
               <td mat-cell *matCellDef="let vehiculo">
                 {{ vehiculo.tipoVehiculo?.nombre || vehiculo.idTipoVehiculo }}
               </td>
@@ -98,6 +98,13 @@
           {{ errorMessage }}
         </div>
       }
+  
+  @if (mensajeExito) {
+    <div class="mensaje-exito">
+      <mat-icon>check_circle</mat-icon>
+      {{ mensajeExito }}
+    </div>
+  }
 
 
   <mat-card class="create-card">
@@ -167,4 +174,6 @@
       <mat-spinner></mat-spinner>
     </div>
   }
+
+  
 </div>

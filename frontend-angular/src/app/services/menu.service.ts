@@ -30,7 +30,7 @@ export class MenuService {
       etiqueta: 'Parqueaderos',
       ruta: '/parqueaderos',
       icono: 'business',
-      roles: [RolUsuario.ADMINISTRADOR]
+      roles: [RolUsuario.ADMINISTRADOR, RolUsuario.OPERADOR]
     },
     {
       etiqueta: 'Celdas',
@@ -39,7 +39,7 @@ export class MenuService {
       roles: [RolUsuario.ADMINISTRADOR, RolUsuario.OPERADOR]
     },
     {
-      etiqueta: 'Vehículos',
+      etiqueta: 'Vehiculos',
       ruta: '/vehiculos',
       icono: 'directions_car',
       roles: [RolUsuario.ADMINISTRADOR, RolUsuario.OPERADOR]
@@ -69,15 +69,9 @@ export class MenuService {
       roles: [RolUsuario.ADMINISTRADOR]
     },
     {
-      etiqueta: 'Facturación',
+      etiqueta: 'Facturacion',
       ruta: '/facturacion',
       icono: 'receipt',
-      roles: [RolUsuario.ADMINISTRADOR]
-    },
-    {
-      etiqueta: 'Reportes',
-      ruta: '/reportes',
-      icono: 'bar_chart',
       roles: [RolUsuario.ADMINISTRADOR]
     },
     {
@@ -88,32 +82,25 @@ export class MenuService {
     }
   ];
 
-  /**
-   * Obtiene todos los elementos del menú
-   */
+
   obtenerTodosLosElementos(): ElementoMenu[] {
     return [...this.elementosMenu];
   }
 
-  /**
-   * Filtra elementos del menú por rol de usuario
-   */
+
+
   obtenerMenuPorRol(rol: RolUsuario): ElementoMenu[] {
     return this.elementosMenu.filter(elemento => 
       elemento.roles.includes(rol)
     );
   }
 
-  /**
-   * Obtiene elemento del menú por ruta
-   */
+
   obtenerElementoPorRuta(ruta: string): ElementoMenu | undefined {
     return this.elementosMenu.find(elemento => elemento.ruta === ruta);
   }
 
-  /**
-   * Obtiene la etiqueta de una ruta específica
-   */
+
   obtenerEtiquetaPorRuta(ruta: string): string {
     const elemento = this.obtenerElementoPorRuta(ruta);
     return elemento?.etiqueta || 'Dashboard';

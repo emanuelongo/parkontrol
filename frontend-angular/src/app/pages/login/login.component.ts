@@ -42,7 +42,7 @@ export class LoginComponent implements OnInit {
   ) {
     this.loginForm = this.formBuilder.group({
       correo: ['', [Validators.required, Validators.email]],
-      contrasena: ['', [Validators.required]]
+      contrasena: ['', [Validators.required, Validators.minLength(6)]]
     });
   }
 
@@ -70,7 +70,7 @@ export class LoginComponent implements OnInit {
           } else if (currentUser && currentUser.rol === RolUsuario.OPERADOR) {
             this.router.navigate(['/operador-dashboard']);
           } else {
-            this.router.navigate(['/dashboard']);
+            this.router.navigate(['/login']);
           }
         },
 
@@ -79,7 +79,7 @@ export class LoginComponent implements OnInit {
           console.error('Error en el login:', error);
           
           if (error.status === 401) {
-            this.errorMessage = 'Credenciales incorrectas. Verifica tu correo y contraseña.';
+            this.errorMessage = 'Credenciales incorrectas, verifica otra vez tu correo y contraseña';
           } else if (error.status === 0) {
             this.errorMessage = 'Error de conexion verificar el servidor';
           } else if (error.status === 500) {

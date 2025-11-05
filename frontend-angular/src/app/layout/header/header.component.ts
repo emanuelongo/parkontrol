@@ -15,12 +15,7 @@ export class HeaderComponent {
   
   @Output() onCerrarSesion = new EventEmitter<void>();
 
-  /**
-   * Método para cerrar sesión
-   * Emite evento al componente padre
-   */
   cerrarSesion(): void {
-    console.log('🔍 Header: Solicitando cerrar sesión');
     this.onCerrarSesion.emit();
   }
 }

@@ -31,6 +31,7 @@ export class ParqueaderosComponent implements OnInit {
   loading = false;
   idEmpresa: number | null = null;
   displayedColumns: string[] = ['id', 'nombre', 'ubicacion', 'capacidadTotal'];
+  usuarioIsAdmin: boolean = false;
 
   constructor(
     private parqueaderosService: ParqueaderosService,
@@ -40,6 +41,7 @@ export class ParqueaderosComponent implements OnInit {
 
   ngOnInit(): void {
     this.obtenerEmpresaUsuario();
+    this.usuarioIsAdmin = this.authService.isAdministrador();
     if (this.idEmpresa) {
       this.cargarParqueaderos();
     }

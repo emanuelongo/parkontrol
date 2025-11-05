@@ -194,7 +194,6 @@ export class ReservasComponent implements OnInit {
         this.mensajeExito = "Pago procesado exitosamente, monto: $" + pago.monto;
         setTimeout(() => {
           this.mensajeExito = '';
-          this.router.navigate(['/pagos']);
 
         }, 3000);
         if (this.parqueaderoSeleccionado) {

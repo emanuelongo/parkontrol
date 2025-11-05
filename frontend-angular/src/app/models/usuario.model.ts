@@ -21,8 +21,8 @@ export interface CreateUsuarioDto {
   nombre: string;
   correo: string;
   contrasena: string;
-  rol: string;
-  idEmpresa: number;
+  rol: string; // Rol del usuario
+  idEmpresa: number; // ID de la empresa
 }
 
 export interface RegistrarUsuarioDto extends CreateUsuarioDto {}

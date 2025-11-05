@@ -20,10 +20,10 @@ export class FiltroParqueaderosComponent {
   @Input() parqueaderos: Parqueadero[] = [];
   @Input() parqueaderoSeleccionado: number | null = null;
   
-  @Output() parqueaderoChange = new EventEmitter<number>();
+  @Output() parqueaderoCambia = new EventEmitter<number>();
 
   onParqueaderoCambia(idParqueadero: number): void {
     this.parqueaderoSeleccionado = idParqueadero;
-    this.parqueaderoChange.emit(idParqueadero);
+    this.parqueaderoCambia.emit(idParqueadero);
   }
 }

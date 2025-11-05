@@ -20,7 +20,7 @@ export const authGuard: CanActivateFn = (route, state) => {
       if (usuario.rol === RolUsuario.ADMINISTRADOR) {
         return router.createUrlTree(['/dashboard']);
       } else if (usuario.rol === RolUsuario.OPERADOR) {
-        return router.createUrlTree(['/operador-dashboard']);
+        return router.createUrlTree(['/parqueaderos']);
       }
     }
     

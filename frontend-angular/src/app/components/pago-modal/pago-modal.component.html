@@ -9,7 +9,7 @@
         <mat-select formControlName="idReserva">
           @for (reserva of reservasActivas; track reserva.id) {
             <mat-option [value]="reserva.id">
-              Reserva #{{ reserva.id }} - Vehículo: {{ reserva.vehiculo?.placa || reserva.vehiculo?.id }}
+              Reserva {{ reserva.id }} del Vehiculo: {{ reserva.vehiculo?.placa || reserva.vehiculo?.id }}
             </mat-option>
           }
         </mat-select>

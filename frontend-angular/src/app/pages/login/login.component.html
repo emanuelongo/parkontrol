@@ -1,9 +1,13 @@
+
 <div class="contenedor-login">
   <mat-card class="tarjeta-login">
+
+
     <mat-card-header>
       <div mat-card-avatar class="icono-usuario-login">
         <mat-icon>account_circle</mat-icon>
       </div>
+      
       <mat-card-title>ParkControl</mat-card-title>
       <mat-card-subtitle>Sistema de Gestion de Parqueaderos</mat-card-subtitle>
     </mat-card-header>
@@ -31,30 +35,30 @@
             <mat-error>El correo es requerido</mat-error>
           }
           @if (loginForm.get('correo')?.hasError('email')) {
-            <mat-error>Ingresa un correo válido</mat-error>
+            <mat-error>Debes ingresar un correo valido</mat-error>
           }
+          @if (loginForm.get('correo')?.hasError('minlength')) {
+            <mat-error>El correo debe tener al menos 6 caracteres</mat-error>
+          }
+          
         </mat-form-field>
 
 
+        
         <mat-form-field appearance="outline" class="campo-completo">
-
           <mat-label>Contraseña</mat-label>
           <input matInput 
-                 type="password"
+                 type="password" 
                  formControlName="contrasena"
+                 placeholder="Ingrese su contraseña"
                  autocomplete="current-password">
-          <button mat-icon-button 
-                  matSuffix 
-                  type="button"
-                  (click)="hidePassword = !hidePassword"
-                  [attr.aria-label]="'Ocultar contraseña'"
-                  [attr.aria-pressed]="hidePassword">
-            <mat-icon>visibility_off</mat-icon>
-          </button>
+          <mat-icon matSuffix>lock</mat-icon>
           @if (loginForm.get('contrasena')?.hasError('required')) {
             <mat-error>La contraseña es requerida</mat-error>
-          }  
-
+          }
+          @if (loginForm.get('contrasena')?.hasError('minlength')) {
+            <mat-error>La contraseña debe tener al menos 6 caracteres</mat-error>
+          }
         </mat-form-field>
 
         <div class="acciones">

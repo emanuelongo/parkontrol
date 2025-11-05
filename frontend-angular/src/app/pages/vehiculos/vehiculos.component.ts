@@ -31,19 +31,22 @@ export class VehiculosComponent  {
   searchForm: FormGroup;
   createForm: FormGroup;
   vehiculo: Vehiculo | null = null;
+
+
   loading = false;
   errorMessage = '';
+  mensajeExito = '';
   displayedColumns: string[] = ['id', 'placa', 'tipoVehiculo'];
 
   constructor(
-    private fb: FormBuilder,
+    private formBuilder: FormBuilder,
     private vehiculosService: VehiculosService
   ) {
-    this.searchForm = this.fb.group({
+    this.searchForm = this.formBuilder.group({
       placa: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(10)]]
     });
 
-    this.createForm = this.fb.group({
+    this.createForm = this.formBuilder.group({
       placa: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(10)]],
       idTipoVehiculo: [1, [Validators.required, Validators.min(1)]]
     });
@@ -78,7 +81,7 @@ export class VehiculosComponent  {
           
           setTimeout(() => {
             this.errorMessage = '';
-          }, 5000);
+          }, 3000);
         }
       });
     }
@@ -101,7 +104,11 @@ export class VehiculosComponent  {
             idTipoVehiculo: 1
           });
           this.loading = false;
-          alert('Vehiculo creado exitosamente');
+          this.vehiculo = vehiculo;
+          this.mensajeExito = 'Vehículo creado exitosamente';
+          setTimeout(() => {
+            this.mensajeExito = '';
+          }, 3000);
         },
 
         error: (error) => {

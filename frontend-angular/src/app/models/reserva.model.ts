@@ -13,6 +13,7 @@ export interface Reserva {
   vehiculo?: Vehiculo;
 }
 
+
 export interface CrearReservaDto {
   idVehiculo: number;
   idCelda: number;

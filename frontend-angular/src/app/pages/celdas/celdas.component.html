@@ -2,13 +2,15 @@
   <mat-card>
     <mat-card-header>
       <mat-card-title>
-
-        <div class="header-content">
-          <button mat-raised-button color="primary" (click)="abrirModalCrear()" [disabled]="parqueaderos.length === 0">
-            <mat-icon>add</mat-icon>
-            Nueva Celda
-          </button>
-        </div>
+        @if(usuarioIsAdmin) {
+          <div class="header-content">
+            <button mat-raised-button color="primary" (click)="abrirModalCrear()" [disabled]="parqueaderos.length === 0">
+              <mat-icon>add</mat-icon>
+              Nueva Celda
+            </button>
+          </div>
+        }
+        
 
       </mat-card-title>
     </mat-card-header>
@@ -29,7 +31,7 @@
           <app-filtro-parqueaderos
             [parqueaderos]="parqueaderos"
             [parqueaderoSeleccionado]="parqueaderoSeleccionado"
-            (parqueaderoChange)="onParqueaderoCambia($event)">
+            (parqueaderoCambia)="onParqueaderoCambia($event)">
           </app-filtro-parqueaderos>
 
           @if (errorMessage) {

@@ -17,6 +17,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatChipsModule } from '@angular/material/chips';
 import { EstadoCelda } from '../../models/shared.model';
 import { FiltroParqueaderosComponent } from '../../components/filtro-parqueaderos/filtro-parqueaderos.component';
+import { Usuario } from '../../models/usuario.model';
 
 
 
@@ -45,8 +46,9 @@ export class CeldasComponent implements OnInit {
   celdas: Celda[] = [];
   parqueaderos: Parqueadero[] = [];
   celdasFiltradas: Celda[] = [];
-  loading = false;
   parqueaderoSeleccionado: number | null = null;
+  usuarioIsAdmin: boolean = false;
+  loading = false;
   errorMessage = '';
 
   estadosCeldas = [
@@ -74,6 +76,7 @@ export class CeldasComponent implements OnInit {
       return;
     }
 
+    this.usuarioIsAdmin = this.authService.isAdministrador();
     this.loading = true;
 
     this.parqueaderosService.getByEmpresa(usuario.idEmpresa).subscribe({

@@ -1,29 +1,12 @@
 .dashboard-container {
-  padding: 0;
+  padding: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
-.welcome-card {
-  background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
-  color: white;
-  padding: 30px;
-  border-radius: 12px;
-  margin-bottom: 30px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-}
-
-.welcome-card h2 {
-  margin: 0 0 10px 0;
-  font-size: 2em;
-  font-weight: 600;
-}
-
-.welcome-card p {
-  margin: 0;
-  opacity: 0.9;
-  font-size: 1.1em;
-}
 
 .quick-actions {
+  
   margin-bottom: 30px;
 }
 
@@ -52,6 +35,7 @@
   cursor: pointer;
   transition: all 0.3s;
   font-family: inherit;
+  font-size: 1rem;
 }
 
 .action-btn:hover {
@@ -80,58 +64,12 @@
   gap: 15px;
 }
 
-.mini-stat {
-  background: white;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-  display: flex;
-  align-items: center;
-  gap: 15px;
-}
 
-.mini-stat-icon {
-  width: 45px;
-  height: 45px;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.2em;
-  color: white;
-}
-
-.mini-stat-icon.green { background-color: #27ae60; }
-.mini-stat-icon.red { background-color: #e74c3c; }
-.mini-stat-icon.blue { background-color: #3498db; }
-.mini-stat-icon.orange { background-color: #f39c12; }
-
-.mini-stat-content h4 {
-  margin: 0 0 5px 0;
-  color: #2c3e50;
-  font-size: 0.9em;
-  font-weight: 600;
-}
-
-.mini-stat-content p {
-  margin: 0;
-  font-size: 1.5em;
-  font-weight: 700;
-  color: #7f8c8d;
-}
-
-.recent-activity {
+.historial-reservas {
   background: white;
   padding: 25px;
   border-radius: 12px;
   box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-}
-
-.recent-activity h3 {
-  margin: 0 0 20px 0;
-  color: #2c3e50;
-  font-size: 1.2em;
-  font-weight: 600;
 }
 
 .no-activity {
@@ -142,20 +80,97 @@
   margin: 0;
 }
 
-@media (max-width: 768px) {
-  .actions-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .stat-row {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .welcome-card {
-    padding: 20px;
-  }
-
-  .welcome-card h2 {
-    font-size: 1.5em;
-  }
+.dashboard-header {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 24px;
 }
+
+.empresa-info {
+  font-size: 1.25rem;
+  color: #6b7280;
+}
+
+.empresa-label {
+  font-weight: 500;
+}
+
+.empresa-nombre {
+  color: #1f2937;
+  font-weight: 600;
+}
+
+.estadisticas-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.estadistica-card {
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.estadistica-icono {
+  font-size: 24px;
+  width: 24px;
+  height: 24px;
+}
+
+.estadistica-icono.parqueaderos {
+  color: #3f8600;
+}
+
+.estadistica-icono.ocupadas {
+  color: #cf1322;
+}
+
+.estadistica-icono.disponibles {
+  color: #52c41a;
+}
+
+.estadistica-icono.reservas {
+  color: #1890ff;
+}
+
+.estadistica-valor {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 8px 0 4px 0;
+}
+
+.estadistica-label {
+  font-size: 0.875rem;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.estadisticas-adicionales {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.estadistica-adicional-card {
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+
+.loading-contentainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 50px;
+  text-align: center;
+}
+
+.loading-contentainer p {
+  margin-top: 16px;
+  color: #6b7280;
+}
+

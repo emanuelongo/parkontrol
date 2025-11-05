@@ -1,13 +1,17 @@
 <div class="parqueaderos-container">
   <mat-card>
+
+    
     <mat-card-header>
       <mat-card-title>
-        <div class="header-content">
-          <button mat-raised-button color="primary" (click)="abrirModalCrear()">
-            <mat-icon>add</mat-icon>
-            Nuevo Parqueadero
-          </button>
-        </div>
+        @if(usuarioIsAdmin) {
+          <div class="header-content">
+            <button mat-raised-button color="primary" (click)="abrirModalCrear()">
+              <mat-icon>add</mat-icon>
+              Nuevo Parqueadero
+            </button>
+          </div>
+        }
       </mat-card-title>
     </mat-card-header>
 

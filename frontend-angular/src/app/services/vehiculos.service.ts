@@ -12,23 +12,15 @@ export class VehiculosService {
 
   constructor(private http: HttpClient) {}
 
-  /**
-   * Buscar vehículo por placa
-   */
   getByPlaca(placa: string): Observable<Vehiculo> {
     return this.http.get<Vehiculo>(`${this.apiUrl}/placa/${placa}`);
   }
 
-  /**
-   * Crear nuevo vehículo
-   */
   create(vehiculoData: CrearVehiculoDto): Observable<Vehiculo> {
     return this.http.post<Vehiculo>(this.apiUrl, vehiculoData);
   }
 
-  /**
-   * Obtener vehículo por ID
-   */
+
   getById(id: number): Observable<Vehiculo> {
     return this.http.get<Vehiculo>(`${this.apiUrl}/${id}`);
   }

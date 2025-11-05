@@ -1,82 +1,120 @@
 <div class="dashboard-container">
-  <div class="welcome-card">
-    <h2>Dashboard Operador</h2>
-    <p>Panel de control para operaciones de parqueadero</p>
-  </div>
 
   <div class="quick-actions">
-    <h3>Acciones Rápidas</h3>
+    <h3>Acciones Rapidas</h3>
     <div class="actions-grid">
-      <button class="action-btn">
+      <button 
+        class="action-btn"
+        (click)="cambioReservas()"
+      >
         <i class="fas fa-plus-circle"></i>
-        <span>Nueva Reserva</span>
+        <span>{{ mostrarReservasActivas ? 'Mostrar Historial de Reservas' : 'Mostrar Reservas Activas' }}</span>
       </button>
       
-      <button class="action-btn">
+      <button 
+        class="action-btn"
+        (click)="registrarVehiculo()"
+      >
         <i class="fas fa-car"></i>
-        <span>Registrar Vehículo</span>
+        <span>Registrar vehiculo</span>
       </button>
       
-      <button class="action-btn">
+      <button class="action-btn"
+        (click)="verCeldas()">
         <i class="fas fa-th-large"></i>
         <span>Ver Celdas</span>
       </button>
+
+    </div>
+  </div>
+
+ @if (loading) {
+    <div class="loading-contentainer">
+      <mat-spinner></mat-spinner>
+      <p>Cargando datos del dashboard...</p>
+    </div>
+  } @else 
+  {
+
+
+    <div class="estadisticas-grid">
+
+        <mat-card class="estadistica-card">
+          <mat-card-header>
+            <mat-icon class="estadistica-icono parqueaderos">business</mat-icon>
+          </mat-card-header>
+
+
+
+          <mat-card-content>
+            <div class="estadistica-valor">{{ totalParqueaderos }}</div>
+            <div class="estadistica-label">Parqueaderos Activos</div>
+          </mat-card-content>
+        </mat-card>
+
+      <mat-card class="estadistica-card">
+        <mat-card-header>
+          <mat-icon class="estadistica-icono ocupadas">directions_car</mat-icon>
+        </mat-card-header>
+
+        <mat-card-content>
+
+            <div class="estadistica-valor">{{ totalCeldasOcupadas }}</div>
+            <div class="estadistica-label">Celdas Ocupadas</div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="estadistica-card">
+        <mat-card-header>
+          <mat-icon class="estadistica-icono disponibles">local_parking</mat-icon>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="estadistica-valor">{{ totalCeldasDisponibles }}</div>
+          <div class="estadistica-label">Celdas Disponibles</div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="estadistica-card">
+        <mat-card-header>
+          <mat-icon class="estadistica-icono reservas">schedule</mat-icon>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="estadistica-valor">{{ totalReservasActivas }}</div>
+          <div class="estadistica-label">Reservas Activas</div>
+        </mat-card-content>
+      </mat-card>
+
+    </div>
+
+
+
+    @if (!mostrarReservasActivas) {
+
+      <div class="historial-reservas">
+        <h3>Historial de reservas</h3>
+        <app-historial-reservas 
+          [historialReserva]="historial"
+          [loading]="loading">
+
+        </app-historial-reservas>
+      </div>
+    }
+
+
+    @if (mostrarReservasActivas) {
+
+      <div class="reservas-activas">
+        <h3>Reservas Activas</h3>
+        <app-reservas-activas 
+          [reservasActivas]="reservasActivas"
+          [loading]="loading">
+
+        </app-reservas-activas>
+
+      </div>
+
       
-      <button class="action-btn">
-        <i class="fas fa-clock"></i>
-        <span>Estado Actual</span>
-      </button>
-    </div>
-  </div>
+    }
 
-  <div class="operational-stats">
-    <div class="stat-row">
-      <div class="mini-stat">
-        <div class="mini-stat-icon green">
-          <i class="fas fa-check-circle"></i>
-        </div>
-        <div class="mini-stat-content">
-          <h4>Celdas Libres</h4>
-          <p>--</p>
-        </div>
-      </div>
-
-      <div class="mini-stat">
-        <div class="mini-stat-icon red">
-          <i class="fas fa-times-circle"></i>
-        </div>
-        <div class="mini-stat-content">
-          <h4>Celdas Ocupadas</h4>
-          <p>--</p>
-        </div>
-      </div>
-
-      <div class="mini-stat">
-        <div class="mini-stat-icon blue">
-          <i class="fas fa-calendar-check"></i>
-        </div>
-        <div class="mini-stat-content">
-          <h4>Reservas Hoy</h4>
-          <p>--</p>
-        </div>
-      </div>
-
-      <div class="mini-stat">
-        <div class="mini-stat-icon orange">
-          <i class="fas fa-exclamation-triangle"></i>
-        </div>
-        <div class="mini-stat-content">
-          <h4>Pendientes</h4>
-          <p>--</p>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="recent-activity">
-    <h3>Actividad Reciente</h3>
-    <div class="activity-list">
-      <p class="no-activity">No hay actividad reciente para mostrar</p>
-    </div>
-  </div>
+  }
 </div>
